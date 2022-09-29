@@ -1,0 +1,21 @@
+server:
+        servlet:
+                context-path: /api
+        port: 8888
+
+spring:
+        datasource:
+                url: jdbc:postgresql://IP:5432/icpc_information_system?currentSchema=icpc_information_system
+                username: gaussdb
+                password: PWD
+                driverClassName: org.postgresql.Driver
+
+mybatis:
+        mapper-locations: classpath:mapping/*.xml
+        type-aliases-package: com.IcpcInformationSystemBackend.model.entity
+
+ENCODE_KEY: <YOUR ENCODE KEY HERE>
+
+logging:
+        level:
+                com.IcpcInformationSystemBackend: debug

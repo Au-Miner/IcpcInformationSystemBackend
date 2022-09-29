@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.IcpcInformationSystemBackend.dao.TeamDoMapper" >
+  <resultMap id="BaseResultMap" type="com.IcpcInformationSystemBackend.model.entity.TeamDo" >
+    <id column="team_id" property="teamId" jdbcType="VARCHAR" />
+    <result column="chi_team_name" property="chiTeamName" jdbcType="VARCHAR" />
+    <result column="eng_team_name" property="engTeamName" jdbcType="VARCHAR" />
+    <result column="school_id" property="schoolId" jdbcType="VARCHAR" />
+    <result column="member1_id" property="member1Id" jdbcType="VARCHAR" />
+    <result column="member2_id" property="member2Id" jdbcType="VARCHAR" />
+    <result column="member3_id" property="member3Id" jdbcType="VARCHAR" />
+    <result column="coach1_id" property="coach1Id" jdbcType="VARCHAR" />
+    <result column="coach2_id" property="coach2Id" jdbcType="VARCHAR" />
+    <result column="competition_id" property="competitionId" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="reason" property="reason" jdbcType="VARCHAR" />
+    <result column="need_team_certificate" property="needTeamCertificate" jdbcType="INTEGER" />
+    <result column="competition_position" property="competitionPosition" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    team_id, chi_team_name, eng_team_name, school_id, member1_id, member2_id, member3_id, 
+    coach1_id, coach2_id, competition_id, type, state, reason, need_team_certificate, 
+    competition_position
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.IcpcInformationSystemBackend.model.entity.TeamDoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from team
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from team
+    where team_id = #{teamId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from team
+    where team_id = #{teamId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.IcpcInformationSystemBackend.model.entity.TeamDoExample" >
+    delete from team
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.IcpcInformationSystemBackend.model.entity.TeamDo" >
+    insert into team (team_id, chi_team_name, eng_team_name, 
+      school_id, member1_id, member2_id, 
+      member3_id, coach1_id, coach2_id, 
+      competition_id, type, state, 
+      reason, need_team_certificate, competition_position
+      )
+    values (#{teamId,jdbcType=VARCHAR}, #{chiTeamName,jdbcType=VARCHAR}, #{engTeamName,jdbcType=VARCHAR}, 
+      #{schoolId,jdbcType=VARCHAR}, #{member1Id,jdbcType=VARCHAR}, #{member2Id,jdbcType=VARCHAR}, 
+      #{member3Id,jdbcType=VARCHAR}, #{coach1Id,jdbcType=VARCHAR}, #{coach2Id,jdbcType=VARCHAR}, 
+      #{competitionId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{state,jdbcType=INTEGER}, 
+      #{reason,jdbcType=VARCHAR}, #{needTeamCertificate,jdbcType=INTEGER}, #{competitionPosition,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.IcpcInformationSystemBackend.model.entity.TeamDo" >
+    insert into team
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="teamId != null" >
+        team_id,
+      </if>
+      <if test="chiTeamName != null" >
+        chi_team_name,
+      </if>
+      <if test="engTeamName != null" >
+        eng_team_name,
+      </if>
+      <if test="schoolId != null" >
+        school_id,
+      </if>
+      <if test="member1Id != null" >
+        member1_id,
+      </if>
+      <if test="member2Id != null" >
+        member2_id,
+      </if>
+      <if test="member3Id != null" >
+        member3_id,
+      </if>
+      <if test="coach1Id != null" >
+        coach1_id,
+      </if>
+      <if test="coach2Id != null" >
+        coach2_id,
+      </if>
+      <if test="competitionId != null" >
+        competition_id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="reason != null" >
+        reason,
+      </if>
+      <if test="needTeamCertificate != null" >
+        need_team_certificate,
+      </if>
+      <if test="competitionPosition != null" >
+        competition_position,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="teamId != null" >
+        #{teamId,jdbcType=VARCHAR},
+      </if>
+      <if test="chiTeamName != null" >
+        #{chiTeamName,jdbcType=VARCHAR},
+      </if>
+      <if test="engTeamName != null" >
+        #{engTeamName,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolId != null" >
+        #{schoolId,jdbcType=VARCHAR},
+      </if>
+      <if test="member1Id != null" >
+        #{member1Id,jdbcType=VARCHAR},
+      </if>
+      <if test="member2Id != null" >
+        #{member2Id,jdbcType=VARCHAR},
+      </if>
+      <if test="member3Id != null" >
+        #{member3Id,jdbcType=VARCHAR},
+      </if>
+      <if test="coach1Id != null" >
+        #{coach1Id,jdbcType=VARCHAR},
+      </if>
+      <if test="coach2Id != null" >
+        #{coach2Id,jdbcType=VARCHAR},
+      </if>
+      <if test="competitionId != null" >
+        #{competitionId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null" >
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="needTeamCertificate != null" >
+        #{needTeamCertificate,jdbcType=INTEGER},
+      </if>
+      <if test="competitionPosition != null" >
+        #{competitionPosition,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.IcpcInformationSystemBackend.model.entity.TeamDoExample" resultType="java.lang.Integer" >
+    select count(*) from team
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update team
+    <set >
+      <if test="record.teamId != null" >
+        team_id = #{record.teamId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.chiTeamName != null" >
+        chi_team_name = #{record.chiTeamName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.engTeamName != null" >
+        eng_team_name = #{record.engTeamName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.schoolId != null" >
+        school_id = #{record.schoolId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.member1Id != null" >
+        member1_id = #{record.member1Id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.member2Id != null" >
+        member2_id = #{record.member2Id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.member3Id != null" >
+        member3_id = #{record.member3Id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.coach1Id != null" >
+        coach1_id = #{record.coach1Id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.coach2Id != null" >
+        coach2_id = #{record.coach2Id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.competitionId != null" >
+        competition_id = #{record.competitionId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.type != null" >
+        type = #{record.type,jdbcType=INTEGER},
+      </if>
+      <if test="record.state != null" >
+        state = #{record.state,jdbcType=INTEGER},
+      </if>
+      <if test="record.reason != null" >
+        reason = #{record.reason,jdbcType=VARCHAR},
+      </if>
+      <if test="record.needTeamCertificate != null" >
+        need_team_certificate = #{record.needTeamCertificate,jdbcType=INTEGER},
+      </if>
+      <if test="record.competitionPosition != null" >
+        competition_position = #{record.competitionPosition,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update team
+    set team_id = #{record.teamId,jdbcType=VARCHAR},
+      chi_team_name = #{record.chiTeamName,jdbcType=VARCHAR},
+      eng_team_name = #{record.engTeamName,jdbcType=VARCHAR},
+      school_id = #{record.schoolId,jdbcType=VARCHAR},
+      member1_id = #{record.member1Id,jdbcType=VARCHAR},
+      member2_id = #{record.member2Id,jdbcType=VARCHAR},
+      member3_id = #{record.member3Id,jdbcType=VARCHAR},
+      coach1_id = #{record.coach1Id,jdbcType=VARCHAR},
+      coach2_id = #{record.coach2Id,jdbcType=VARCHAR},
+      competition_id = #{record.competitionId,jdbcType=VARCHAR},
+      type = #{record.type,jdbcType=INTEGER},
+      state = #{record.state,jdbcType=INTEGER},
+      reason = #{record.reason,jdbcType=VARCHAR},
+      need_team_certificate = #{record.needTeamCertificate,jdbcType=INTEGER},
+      competition_position = #{record.competitionPosition,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.IcpcInformationSystemBackend.model.entity.TeamDo" >
+    update team
+    <set >
+      <if test="chiTeamName != null" >
+        chi_team_name = #{chiTeamName,jdbcType=VARCHAR},
+      </if>
+      <if test="engTeamName != null" >
+        eng_team_name = #{engTeamName,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolId != null" >
+        school_id = #{schoolId,jdbcType=VARCHAR},
+      </if>
+      <if test="member1Id != null" >
+        member1_id = #{member1Id,jdbcType=VARCHAR},
+      </if>
+      <if test="member2Id != null" >
+        member2_id = #{member2Id,jdbcType=VARCHAR},
+      </if>
+      <if test="member3Id != null" >
+        member3_id = #{member3Id,jdbcType=VARCHAR},
+      </if>
+      <if test="coach1Id != null" >
+        coach1_id = #{coach1Id,jdbcType=VARCHAR},
+      </if>
+      <if test="coach2Id != null" >
+        coach2_id = #{coach2Id,jdbcType=VARCHAR},
+      </if>
+      <if test="competitionId != null" >
+        competition_id = #{competitionId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="needTeamCertificate != null" >
+        need_team_certificate = #{needTeamCertificate,jdbcType=INTEGER},
+      </if>
+      <if test="competitionPosition != null" >
+        competition_position = #{competitionPosition,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where team_id = #{teamId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.IcpcInformationSystemBackend.model.entity.TeamDo" >
+    update team
+    set chi_team_name = #{chiTeamName,jdbcType=VARCHAR},
+      eng_team_name = #{engTeamName,jdbcType=VARCHAR},
+      school_id = #{schoolId,jdbcType=VARCHAR},
+      member1_id = #{member1Id,jdbcType=VARCHAR},
+      member2_id = #{member2Id,jdbcType=VARCHAR},
+      member3_id = #{member3Id,jdbcType=VARCHAR},
+      coach1_id = #{coach1Id,jdbcType=VARCHAR},
+      coach2_id = #{coach2Id,jdbcType=VARCHAR},
+      competition_id = #{competitionId,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      state = #{state,jdbcType=INTEGER},
+      reason = #{reason,jdbcType=VARCHAR},
+      need_team_certificate = #{needTeamCertificate,jdbcType=INTEGER},
+      competition_position = #{competitionPosition,jdbcType=VARCHAR}
+    where team_id = #{teamId,jdbcType=VARCHAR}
+  </update>
+</mapper>
