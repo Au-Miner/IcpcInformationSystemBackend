@@ -14,11 +14,8 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- * @Author:yuban00018
- * @Date:2022/1/30
- * @Description:
- */
+
+
 @Slf4j
 @Component
 public class MyUserDetailService implements UserDetailsService {

@@ -13,8 +13,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import javax.annotation.Resource;
 
 /*
- * @Author:yuban00018
- * @Date:2022/1/30
  * @Description:
  */
 @Configuration
@@ -34,11 +32,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/user/login/**").permitAll()
-                .antMatchers("/user/register/**").permitAll()
-                .antMatchers("/user/**").authenticated()
-                .antMatchers("/statistic/**").authenticated()
-                .antMatchers("/plan/**").authenticated();
+                .antMatchers("/register/**").permitAll();
+                // .antMatchers("/user/register/**").permitAll()
+                // .antMatchers("/plan/**").authenticated()
 
         //请求过滤器，必须要加上，否则无法鉴权
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);

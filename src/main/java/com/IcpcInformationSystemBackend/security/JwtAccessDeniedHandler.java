@@ -12,8 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /*
- * @Author:yuban00018
- * @Date:2022/1/31
  * @Description: 处理没有权限的请求
  */
 @Slf4j

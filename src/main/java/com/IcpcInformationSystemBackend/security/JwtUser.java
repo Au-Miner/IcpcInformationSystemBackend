@@ -8,8 +8,6 @@ import java.util.Collection;
 
 
 /*
- * @Author:yuban00018
- * @Date:2022/1/30
  * @Description: Java Web Token用户
  */
 @Data

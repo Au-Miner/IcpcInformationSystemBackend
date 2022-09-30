@@ -44,9 +44,6 @@ public class JwtTool {
     }
 
     /**
-     * @Author: yuban00018
-     * @Date: 2022/1/30
-     * @Return: token
      * @Description: 生成token
      */
     public String createJwt(String id, String name) {
@@ -64,8 +61,6 @@ public class JwtTool {
     }
 
     /**
-     * @Author: yuban00018
-     * @Date: 2022/1/30
      * @Return: int -> is token valid
      * @Description: 验证token
      */

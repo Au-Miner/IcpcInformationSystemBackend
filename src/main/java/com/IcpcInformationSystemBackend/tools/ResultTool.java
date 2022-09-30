@@ -41,7 +41,7 @@ public class ResultTool {
         return result;
     }
 
-    public static Result error(Integer code,String msg){
+    public static Result error(Integer code, String msg){
         Result result = new Result();
         result.setCode(code);
         result.setMessage(msg);

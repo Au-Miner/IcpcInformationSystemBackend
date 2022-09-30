@@ -7,8 +7,6 @@ public class SchoolDo {
 
     private String engSchoolName;
 
-    private String schoolCode;
-
     private String schoolImg;
 
     private Integer state;
@@ -37,14 +35,6 @@ public class SchoolDo {
 
     public void setEngSchoolName(String engSchoolName) {
         this.engSchoolName = engSchoolName == null ? null : engSchoolName.trim();
-    }
-
-    public String getSchoolCode() {
-        return schoolCode;
-    }
-
-    public void setSchoolCode(String schoolCode) {
-        this.schoolCode = schoolCode == null ? null : schoolCode.trim();
     }
 
     public String getSchoolImg() {

@@ -5,7 +5,6 @@
     <id column="school_id" property="schoolId" jdbcType="VARCHAR" />
     <result column="chi_school_name" property="chiSchoolName" jdbcType="VARCHAR" />
     <result column="eng_school_name" property="engSchoolName" jdbcType="VARCHAR" />
-    <result column="school_code" property="schoolCode" jdbcType="VARCHAR" />
     <result column="school_img" property="schoolImg" jdbcType="VARCHAR" />
     <result column="state" property="state" jdbcType="INTEGER" />
     <result column="school_position" property="schoolPosition" jdbcType="VARCHAR" />
@@ -69,7 +68,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    school_id, chi_school_name, eng_school_name, school_code, school_img, state, school_position
+    school_id, chi_school_name, eng_school_name, school_img, state, school_position
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.IcpcInformationSystemBackend.model.entity.SchoolDoExample" >
     select
@@ -104,11 +103,11 @@
   </delete>
   <insert id="insert" parameterType="com.IcpcInformationSystemBackend.model.entity.SchoolDo" >
     insert into school (school_id, chi_school_name, eng_school_name, 
-      school_code, school_img, state, 
-      school_position)
+      school_img, state, school_position
+      )
     values (#{schoolId,jdbcType=VARCHAR}, #{chiSchoolName,jdbcType=VARCHAR}, #{engSchoolName,jdbcType=VARCHAR}, 
-      #{schoolCode,jdbcType=VARCHAR}, #{schoolImg,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, 
-      #{schoolPosition,jdbcType=VARCHAR})
+      #{schoolImg,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, #{schoolPosition,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.IcpcInformationSystemBackend.model.entity.SchoolDo" >
     insert into school
@@ -121,9 +120,6 @@
       </if>
       <if test="engSchoolName != null" >
         eng_school_name,
-      </if>
-      <if test="schoolCode != null" >
-        school_code,
       </if>
       <if test="schoolImg != null" >
         school_img,
@@ -144,9 +140,6 @@
       </if>
       <if test="engSchoolName != null" >
         #{engSchoolName,jdbcType=VARCHAR},
-      </if>
-      <if test="schoolCode != null" >
-        #{schoolCode,jdbcType=VARCHAR},
       </if>
       <if test="schoolImg != null" >
         #{schoolImg,jdbcType=VARCHAR},
@@ -177,9 +170,6 @@
       <if test="record.engSchoolName != null" >
         eng_school_name = #{record.engSchoolName,jdbcType=VARCHAR},
       </if>
-      <if test="record.schoolCode != null" >
-        school_code = #{record.schoolCode,jdbcType=VARCHAR},
-      </if>
       <if test="record.schoolImg != null" >
         school_img = #{record.schoolImg,jdbcType=VARCHAR},
       </if>
@@ -199,7 +189,6 @@
     set school_id = #{record.schoolId,jdbcType=VARCHAR},
       chi_school_name = #{record.chiSchoolName,jdbcType=VARCHAR},
       eng_school_name = #{record.engSchoolName,jdbcType=VARCHAR},
-      school_code = #{record.schoolCode,jdbcType=VARCHAR},
       school_img = #{record.schoolImg,jdbcType=VARCHAR},
       state = #{record.state,jdbcType=INTEGER},
       school_position = #{record.schoolPosition,jdbcType=VARCHAR}
@@ -215,9 +204,6 @@
       </if>
       <if test="engSchoolName != null" >
         eng_school_name = #{engSchoolName,jdbcType=VARCHAR},
-      </if>
-      <if test="schoolCode != null" >
-        school_code = #{schoolCode,jdbcType=VARCHAR},
       </if>
       <if test="schoolImg != null" >
         school_img = #{schoolImg,jdbcType=VARCHAR},
@@ -235,7 +221,6 @@
     update school
     set chi_school_name = #{chiSchoolName,jdbcType=VARCHAR},
       eng_school_name = #{engSchoolName,jdbcType=VARCHAR},
-      school_code = #{schoolCode,jdbcType=VARCHAR},
       school_img = #{schoolImg,jdbcType=VARCHAR},
       state = #{state,jdbcType=INTEGER},
       school_position = #{schoolPosition,jdbcType=VARCHAR}

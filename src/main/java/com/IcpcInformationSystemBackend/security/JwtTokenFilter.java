@@ -29,8 +29,6 @@ import java.io.PrintWriter;
 import static com.IcpcInformationSystemBackend.model.ConstantRepository.*;
 
 /*
- * @Author:yuban00018
- * @Date:2022/1/31
  * @Description: 请求过滤器
  */
 @Slf4j

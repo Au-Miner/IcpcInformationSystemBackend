@@ -12,11 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Serializable;
 
-/*
- * @Author:yuban00018
- * @Date:2022/1/31
- * @Description: 处理未登录用户
- */
+
 @Slf4j
 @Component
 public class JwtUnauthorizedHandler implements AuthenticationEntryPoint, Serializable {
