@@ -24,8 +24,6 @@ import java.util.Date;
 import static com.IcpcInformationSystemBackend.model.ConstantRepository.*;
 
 /*
- * @Author:yuban00018
- * @Date:2022/1/30
  * @Description: Java Web Token工具类，提供生成和验证Token的功能
  */
 @Slf4j

@@ -6,8 +6,6 @@ import com.IcpcInformationSystemBackend.model.response.Result;
 import java.util.List;
 
 /*
- * @Author:
- * @Date:2022/1/30
  * @Description:
  */
 public class ResultTool {

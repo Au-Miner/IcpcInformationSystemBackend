@@ -1,8 +1,6 @@
 package com.IcpcInformationSystemBackend.model;
 
 /*
- * @Author:yuban00018
- * @Date:2022/1/30
  * @Description:
  */
 public class ConstantRepository {

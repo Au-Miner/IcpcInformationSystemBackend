@@ -1,8 +1,6 @@
 package com.IcpcInformationSystemBackend.exception;
 
 /*
- * @Author:
- * @Date:2022/1/30
  * @Description:
  */
 public class AllException extends Exception implements CommonError {
