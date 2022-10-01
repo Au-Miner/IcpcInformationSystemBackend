@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.IcpcInformationSystemBackend.dao.UserCompetitionDoMapper" >
   <resultMap id="BaseResultMap" type="com.IcpcInformationSystemBackend.model.entity.UserCompetitionDo" >
-    <id column="student_id" property="studentId" jdbcType="VARCHAR" />
+    <id column="student_email" property="studentEmail" jdbcType="VARCHAR" />
     <id column="competition_id" property="competitionId" jdbcType="VARCHAR" />
     <result column="team_id" property="teamId" jdbcType="VARCHAR" />
   </resultMap>
@@ -65,7 +65,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    student_id, competition_id, team_id
+    student_email, competition_id, team_id
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.IcpcInformationSystemBackend.model.entity.UserCompetitionDoExample" >
     select
@@ -86,12 +86,12 @@
     select 
     <include refid="Base_Column_List" />
     from user_competition
-    where student_id = #{studentId,jdbcType=VARCHAR}
+    where student_email = #{studentEmail,jdbcType=VARCHAR}
       and competition_id = #{competitionId,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="com.IcpcInformationSystemBackend.model.entity.UserCompetitionDoKey" >
     delete from user_competition
-    where student_id = #{studentId,jdbcType=VARCHAR}
+    where student_email = #{studentEmail,jdbcType=VARCHAR}
       and competition_id = #{competitionId,jdbcType=VARCHAR}
   </delete>
   <delete id="deleteByExample" parameterType="com.IcpcInformationSystemBackend.model.entity.UserCompetitionDoExample" >
@@ -101,16 +101,16 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.IcpcInformationSystemBackend.model.entity.UserCompetitionDo" >
-    insert into user_competition (student_id, competition_id, team_id
+    insert into user_competition (student_email, competition_id, team_id
       )
-    values (#{studentId,jdbcType=VARCHAR}, #{competitionId,jdbcType=VARCHAR}, #{teamId,jdbcType=VARCHAR}
+    values (#{studentEmail,jdbcType=VARCHAR}, #{competitionId,jdbcType=VARCHAR}, #{teamId,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.IcpcInformationSystemBackend.model.entity.UserCompetitionDo" >
     insert into user_competition
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="studentId != null" >
-        student_id,
+      <if test="studentEmail != null" >
+        student_email,
       </if>
       <if test="competitionId != null" >
         competition_id,
@@ -120,8 +120,8 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="studentId != null" >
-        #{studentId,jdbcType=VARCHAR},
+      <if test="studentEmail != null" >
+        #{studentEmail,jdbcType=VARCHAR},
       </if>
       <if test="competitionId != null" >
         #{competitionId,jdbcType=VARCHAR},
@@ -140,8 +140,8 @@
   <update id="updateByExampleSelective" parameterType="map" >
     update user_competition
     <set >
-      <if test="record.studentId != null" >
-        student_id = #{record.studentId,jdbcType=VARCHAR},
+      <if test="record.studentEmail != null" >
+        student_email = #{record.studentEmail,jdbcType=VARCHAR},
       </if>
       <if test="record.competitionId != null" >
         competition_id = #{record.competitionId,jdbcType=VARCHAR},
@@ -156,7 +156,7 @@
   </update>
   <update id="updateByExample" parameterType="map" >
     update user_competition
-    set student_id = #{record.studentId,jdbcType=VARCHAR},
+    set student_email = #{record.studentEmail,jdbcType=VARCHAR},
       competition_id = #{record.competitionId,jdbcType=VARCHAR},
       team_id = #{record.teamId,jdbcType=VARCHAR}
     <if test="_parameter != null" >
@@ -170,13 +170,13 @@
         team_id = #{teamId,jdbcType=VARCHAR},
       </if>
     </set>
-    where student_id = #{studentId,jdbcType=VARCHAR}
+    where student_email = #{studentEmail,jdbcType=VARCHAR}
       and competition_id = #{competitionId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.IcpcInformationSystemBackend.model.entity.UserCompetitionDo" >
     update user_competition
     set team_id = #{teamId,jdbcType=VARCHAR}
-    where student_id = #{studentId,jdbcType=VARCHAR}
+    where student_email = #{studentEmail,jdbcType=VARCHAR}
       and competition_id = #{competitionId,jdbcType=VARCHAR}
   </update>
 </mapper>

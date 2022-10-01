@@ -2,12 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.IcpcInformationSystemBackend.dao.UserDoMapper" >
   <resultMap id="BaseResultMap" type="com.IcpcInformationSystemBackend.model.entity.UserDo" >
-    <id column="user_id" property="userId" jdbcType="VARCHAR" />
+    <id column="user_email" property="userEmail" jdbcType="VARCHAR" />
     <result column="identity" property="identity" jdbcType="INTEGER" />
     <result column="chi_name" property="chiName" jdbcType="VARCHAR" />
     <result column="eng_name" property="engName" jdbcType="VARCHAR" />
     <result column="telephone" property="telephone" jdbcType="VARCHAR" />
-    <result column="email" property="email" jdbcType="VARCHAR" />
     <result column="state" property="state" jdbcType="INTEGER" />
     <result column="admission_date" property="admissionDate" jdbcType="VARCHAR" />
     <result column="school_id" property="schoolId" jdbcType="VARCHAR" />
@@ -72,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    user_id, identity, chi_name, eng_name, telephone, email, state, admission_date, school_id, 
+    user_email, identity, chi_name, eng_name, telephone, state, admission_date, school_id, 
     cloth_size
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.IcpcInformationSystemBackend.model.entity.UserDoExample" >
@@ -94,11 +93,11 @@
     select 
     <include refid="Base_Column_List" />
     from user
-    where user_id = #{userId,jdbcType=VARCHAR}
+    where user_email = #{userEmail,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from user
-    where user_id = #{userId,jdbcType=VARCHAR}
+    where user_email = #{userEmail,jdbcType=VARCHAR}
   </delete>
   <delete id="deleteByExample" parameterType="com.IcpcInformationSystemBackend.model.entity.UserDoExample" >
     delete from user
@@ -107,20 +106,20 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.IcpcInformationSystemBackend.model.entity.UserDo" >
-    insert into user (user_id, identity, chi_name, 
-      eng_name, telephone, email, 
-      state, admission_date, school_id, 
-      cloth_size)
-    values (#{userId,jdbcType=VARCHAR}, #{identity,jdbcType=INTEGER}, #{chiName,jdbcType=VARCHAR}, 
-      #{engName,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
-      #{state,jdbcType=INTEGER}, #{admissionDate,jdbcType=VARCHAR}, #{schoolId,jdbcType=VARCHAR}, 
-      #{clothSize,jdbcType=VARCHAR})
+    insert into user (user_email, identity, chi_name, 
+      eng_name, telephone, state, 
+      admission_date, school_id, cloth_size
+      )
+    values (#{userEmail,jdbcType=VARCHAR}, #{identity,jdbcType=INTEGER}, #{chiName,jdbcType=VARCHAR}, 
+      #{engName,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, 
+      #{admissionDate,jdbcType=VARCHAR}, #{schoolId,jdbcType=VARCHAR}, #{clothSize,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.IcpcInformationSystemBackend.model.entity.UserDo" >
     insert into user
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="userId != null" >
-        user_id,
+      <if test="userEmail != null" >
+        user_email,
       </if>
       <if test="identity != null" >
         identity,
@@ -133,9 +132,6 @@
       </if>
       <if test="telephone != null" >
         telephone,
-      </if>
-      <if test="email != null" >
-        email,
       </if>
       <if test="state != null" >
         state,
@@ -151,8 +147,8 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="userId != null" >
-        #{userId,jdbcType=VARCHAR},
+      <if test="userEmail != null" >
+        #{userEmail,jdbcType=VARCHAR},
       </if>
       <if test="identity != null" >
         #{identity,jdbcType=INTEGER},
@@ -165,9 +161,6 @@
       </if>
       <if test="telephone != null" >
         #{telephone,jdbcType=VARCHAR},
-      </if>
-      <if test="email != null" >
-        #{email,jdbcType=VARCHAR},
       </if>
       <if test="state != null" >
         #{state,jdbcType=INTEGER},
@@ -192,8 +185,8 @@
   <update id="updateByExampleSelective" parameterType="map" >
     update user
     <set >
-      <if test="record.userId != null" >
-        user_id = #{record.userId,jdbcType=VARCHAR},
+      <if test="record.userEmail != null" >
+        user_email = #{record.userEmail,jdbcType=VARCHAR},
       </if>
       <if test="record.identity != null" >
         identity = #{record.identity,jdbcType=INTEGER},
@@ -206,9 +199,6 @@
       </if>
       <if test="record.telephone != null" >
         telephone = #{record.telephone,jdbcType=VARCHAR},
-      </if>
-      <if test="record.email != null" >
-        email = #{record.email,jdbcType=VARCHAR},
       </if>
       <if test="record.state != null" >
         state = #{record.state,jdbcType=INTEGER},
@@ -229,12 +219,11 @@
   </update>
   <update id="updateByExample" parameterType="map" >
     update user
-    set user_id = #{record.userId,jdbcType=VARCHAR},
+    set user_email = #{record.userEmail,jdbcType=VARCHAR},
       identity = #{record.identity,jdbcType=INTEGER},
       chi_name = #{record.chiName,jdbcType=VARCHAR},
       eng_name = #{record.engName,jdbcType=VARCHAR},
       telephone = #{record.telephone,jdbcType=VARCHAR},
-      email = #{record.email,jdbcType=VARCHAR},
       state = #{record.state,jdbcType=INTEGER},
       admission_date = #{record.admissionDate,jdbcType=VARCHAR},
       school_id = #{record.schoolId,jdbcType=VARCHAR},
@@ -258,9 +247,6 @@
       <if test="telephone != null" >
         telephone = #{telephone,jdbcType=VARCHAR},
       </if>
-      <if test="email != null" >
-        email = #{email,jdbcType=VARCHAR},
-      </if>
       <if test="state != null" >
         state = #{state,jdbcType=INTEGER},
       </if>
@@ -274,7 +260,7 @@
         cloth_size = #{clothSize,jdbcType=VARCHAR},
       </if>
     </set>
-    where user_id = #{userId,jdbcType=VARCHAR}
+    where user_email = #{userEmail,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.IcpcInformationSystemBackend.model.entity.UserDo" >
     update user
@@ -282,11 +268,10 @@
       chi_name = #{chiName,jdbcType=VARCHAR},
       eng_name = #{engName,jdbcType=VARCHAR},
       telephone = #{telephone,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
       state = #{state,jdbcType=INTEGER},
       admission_date = #{admissionDate,jdbcType=VARCHAR},
       school_id = #{schoolId,jdbcType=VARCHAR},
       cloth_size = #{clothSize,jdbcType=VARCHAR}
-    where user_id = #{userId,jdbcType=VARCHAR}
+    where user_email = #{userEmail,jdbcType=VARCHAR}
   </update>
 </mapper>

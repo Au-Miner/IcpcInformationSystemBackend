@@ -6,11 +6,11 @@
     <result column="chi_team_name" property="chiTeamName" jdbcType="VARCHAR" />
     <result column="eng_team_name" property="engTeamName" jdbcType="VARCHAR" />
     <result column="school_id" property="schoolId" jdbcType="VARCHAR" />
-    <result column="member1_id" property="member1Id" jdbcType="VARCHAR" />
-    <result column="member2_id" property="member2Id" jdbcType="VARCHAR" />
-    <result column="member3_id" property="member3Id" jdbcType="VARCHAR" />
-    <result column="coach1_id" property="coach1Id" jdbcType="VARCHAR" />
-    <result column="coach2_id" property="coach2Id" jdbcType="VARCHAR" />
+    <result column="member1_email" property="member1Email" jdbcType="VARCHAR" />
+    <result column="member2_email" property="member2Email" jdbcType="VARCHAR" />
+    <result column="member3_email" property="member3Email" jdbcType="VARCHAR" />
+    <result column="coach1_email" property="coach1Email" jdbcType="VARCHAR" />
+    <result column="coach2_email" property="coach2Email" jdbcType="VARCHAR" />
     <result column="competition_id" property="competitionId" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="INTEGER" />
     <result column="state" property="state" jdbcType="INTEGER" />
@@ -77,8 +77,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    team_id, chi_team_name, eng_team_name, school_id, member1_id, member2_id, member3_id, 
-    coach1_id, coach2_id, competition_id, type, state, reason, need_team_certificate, 
+    team_id, chi_team_name, eng_team_name, school_id, member1_email, member2_email, member3_email, 
+    coach1_email, coach2_email, competition_id, type, state, reason, need_team_certificate, 
     competition_position
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.IcpcInformationSystemBackend.model.entity.TeamDoExample" >
@@ -114,14 +114,14 @@
   </delete>
   <insert id="insert" parameterType="com.IcpcInformationSystemBackend.model.entity.TeamDo" >
     insert into team (team_id, chi_team_name, eng_team_name, 
-      school_id, member1_id, member2_id, 
-      member3_id, coach1_id, coach2_id, 
+      school_id, member1_email, member2_email, 
+      member3_email, coach1_email, coach2_email, 
       competition_id, type, state, 
       reason, need_team_certificate, competition_position
       )
     values (#{teamId,jdbcType=VARCHAR}, #{chiTeamName,jdbcType=VARCHAR}, #{engTeamName,jdbcType=VARCHAR}, 
-      #{schoolId,jdbcType=VARCHAR}, #{member1Id,jdbcType=VARCHAR}, #{member2Id,jdbcType=VARCHAR}, 
-      #{member3Id,jdbcType=VARCHAR}, #{coach1Id,jdbcType=VARCHAR}, #{coach2Id,jdbcType=VARCHAR}, 
+      #{schoolId,jdbcType=VARCHAR}, #{member1Email,jdbcType=VARCHAR}, #{member2Email,jdbcType=VARCHAR}, 
+      #{member3Email,jdbcType=VARCHAR}, #{coach1Email,jdbcType=VARCHAR}, #{coach2Email,jdbcType=VARCHAR}, 
       #{competitionId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{state,jdbcType=INTEGER}, 
       #{reason,jdbcType=VARCHAR}, #{needTeamCertificate,jdbcType=INTEGER}, #{competitionPosition,jdbcType=VARCHAR}
       )
@@ -141,20 +141,20 @@
       <if test="schoolId != null" >
         school_id,
       </if>
-      <if test="member1Id != null" >
-        member1_id,
+      <if test="member1Email != null" >
+        member1_email,
       </if>
-      <if test="member2Id != null" >
-        member2_id,
+      <if test="member2Email != null" >
+        member2_email,
       </if>
-      <if test="member3Id != null" >
-        member3_id,
+      <if test="member3Email != null" >
+        member3_email,
       </if>
-      <if test="coach1Id != null" >
-        coach1_id,
+      <if test="coach1Email != null" >
+        coach1_email,
       </if>
-      <if test="coach2Id != null" >
-        coach2_id,
+      <if test="coach2Email != null" >
+        coach2_email,
       </if>
       <if test="competitionId != null" >
         competition_id,
@@ -188,20 +188,20 @@
       <if test="schoolId != null" >
         #{schoolId,jdbcType=VARCHAR},
       </if>
-      <if test="member1Id != null" >
-        #{member1Id,jdbcType=VARCHAR},
+      <if test="member1Email != null" >
+        #{member1Email,jdbcType=VARCHAR},
       </if>
-      <if test="member2Id != null" >
-        #{member2Id,jdbcType=VARCHAR},
+      <if test="member2Email != null" >
+        #{member2Email,jdbcType=VARCHAR},
       </if>
-      <if test="member3Id != null" >
-        #{member3Id,jdbcType=VARCHAR},
+      <if test="member3Email != null" >
+        #{member3Email,jdbcType=VARCHAR},
       </if>
-      <if test="coach1Id != null" >
-        #{coach1Id,jdbcType=VARCHAR},
+      <if test="coach1Email != null" >
+        #{coach1Email,jdbcType=VARCHAR},
       </if>
-      <if test="coach2Id != null" >
-        #{coach2Id,jdbcType=VARCHAR},
+      <if test="coach2Email != null" >
+        #{coach2Email,jdbcType=VARCHAR},
       </if>
       <if test="competitionId != null" >
         #{competitionId,jdbcType=VARCHAR},
@@ -244,20 +244,20 @@
       <if test="record.schoolId != null" >
         school_id = #{record.schoolId,jdbcType=VARCHAR},
       </if>
-      <if test="record.member1Id != null" >
-        member1_id = #{record.member1Id,jdbcType=VARCHAR},
+      <if test="record.member1Email != null" >
+        member1_email = #{record.member1Email,jdbcType=VARCHAR},
       </if>
-      <if test="record.member2Id != null" >
-        member2_id = #{record.member2Id,jdbcType=VARCHAR},
+      <if test="record.member2Email != null" >
+        member2_email = #{record.member2Email,jdbcType=VARCHAR},
       </if>
-      <if test="record.member3Id != null" >
-        member3_id = #{record.member3Id,jdbcType=VARCHAR},
+      <if test="record.member3Email != null" >
+        member3_email = #{record.member3Email,jdbcType=VARCHAR},
       </if>
-      <if test="record.coach1Id != null" >
-        coach1_id = #{record.coach1Id,jdbcType=VARCHAR},
+      <if test="record.coach1Email != null" >
+        coach1_email = #{record.coach1Email,jdbcType=VARCHAR},
       </if>
-      <if test="record.coach2Id != null" >
-        coach2_id = #{record.coach2Id,jdbcType=VARCHAR},
+      <if test="record.coach2Email != null" >
+        coach2_email = #{record.coach2Email,jdbcType=VARCHAR},
       </if>
       <if test="record.competitionId != null" >
         competition_id = #{record.competitionId,jdbcType=VARCHAR},
@@ -288,11 +288,11 @@
       chi_team_name = #{record.chiTeamName,jdbcType=VARCHAR},
       eng_team_name = #{record.engTeamName,jdbcType=VARCHAR},
       school_id = #{record.schoolId,jdbcType=VARCHAR},
-      member1_id = #{record.member1Id,jdbcType=VARCHAR},
-      member2_id = #{record.member2Id,jdbcType=VARCHAR},
-      member3_id = #{record.member3Id,jdbcType=VARCHAR},
-      coach1_id = #{record.coach1Id,jdbcType=VARCHAR},
-      coach2_id = #{record.coach2Id,jdbcType=VARCHAR},
+      member1_email = #{record.member1Email,jdbcType=VARCHAR},
+      member2_email = #{record.member2Email,jdbcType=VARCHAR},
+      member3_email = #{record.member3Email,jdbcType=VARCHAR},
+      coach1_email = #{record.coach1Email,jdbcType=VARCHAR},
+      coach2_email = #{record.coach2Email,jdbcType=VARCHAR},
       competition_id = #{record.competitionId,jdbcType=VARCHAR},
       type = #{record.type,jdbcType=INTEGER},
       state = #{record.state,jdbcType=INTEGER},
@@ -315,20 +315,20 @@
       <if test="schoolId != null" >
         school_id = #{schoolId,jdbcType=VARCHAR},
       </if>
-      <if test="member1Id != null" >
-        member1_id = #{member1Id,jdbcType=VARCHAR},
+      <if test="member1Email != null" >
+        member1_email = #{member1Email,jdbcType=VARCHAR},
       </if>
-      <if test="member2Id != null" >
-        member2_id = #{member2Id,jdbcType=VARCHAR},
+      <if test="member2Email != null" >
+        member2_email = #{member2Email,jdbcType=VARCHAR},
       </if>
-      <if test="member3Id != null" >
-        member3_id = #{member3Id,jdbcType=VARCHAR},
+      <if test="member3Email != null" >
+        member3_email = #{member3Email,jdbcType=VARCHAR},
       </if>
-      <if test="coach1Id != null" >
-        coach1_id = #{coach1Id,jdbcType=VARCHAR},
+      <if test="coach1Email != null" >
+        coach1_email = #{coach1Email,jdbcType=VARCHAR},
       </if>
-      <if test="coach2Id != null" >
-        coach2_id = #{coach2Id,jdbcType=VARCHAR},
+      <if test="coach2Email != null" >
+        coach2_email = #{coach2Email,jdbcType=VARCHAR},
       </if>
       <if test="competitionId != null" >
         competition_id = #{competitionId,jdbcType=VARCHAR},
@@ -356,11 +356,11 @@
     set chi_team_name = #{chiTeamName,jdbcType=VARCHAR},
       eng_team_name = #{engTeamName,jdbcType=VARCHAR},
       school_id = #{schoolId,jdbcType=VARCHAR},
-      member1_id = #{member1Id,jdbcType=VARCHAR},
-      member2_id = #{member2Id,jdbcType=VARCHAR},
-      member3_id = #{member3Id,jdbcType=VARCHAR},
-      coach1_id = #{coach1Id,jdbcType=VARCHAR},
-      coach2_id = #{coach2Id,jdbcType=VARCHAR},
+      member1_email = #{member1Email,jdbcType=VARCHAR},
+      member2_email = #{member2Email,jdbcType=VARCHAR},
+      member3_email = #{member3Email,jdbcType=VARCHAR},
+      coach1_email = #{coach1Email,jdbcType=VARCHAR},
+      coach2_email = #{coach2Email,jdbcType=VARCHAR},
       competition_id = #{competitionId,jdbcType=VARCHAR},
       type = #{type,jdbcType=INTEGER},
       state = #{state,jdbcType=INTEGER},

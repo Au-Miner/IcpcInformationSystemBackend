@@ -1,16 +1,16 @@
 package com.IcpcInformationSystemBackend.model.entity;
 
 public class PasswordDo {
-    private String userId;
+    private String userEmail;
 
     private String passwd;
 
-    public String getUserId() {
-        return userId;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId == null ? null : userId.trim();
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail == null ? null : userEmail.trim();
     }
 
     public String getPasswd() {

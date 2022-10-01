@@ -6,7 +6,7 @@
     <result column="competition_chi_name" property="competitionChiName" jdbcType="VARCHAR" />
     <result column="competition_eng_name" property="competitionEngName" jdbcType="VARCHAR" />
     <result column="school_id" property="schoolId" jdbcType="VARCHAR" />
-    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="builder_email" property="builderEmail" jdbcType="VARCHAR" />
     <result column="held_position" property="heldPosition" jdbcType="VARCHAR" />
     <result column="registration_start_time" property="registrationStartTime" jdbcType="VARCHAR" />
     <result column="registration_end_time" property="registrationEndTime" jdbcType="VARCHAR" />
@@ -74,9 +74,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    competition_id, competition_chi_name, competition_eng_name, school_id, user_id, held_position, 
-    registration_start_time, registration_end_time, competition_start_time, duration, 
-    competition_introduction, state
+    competition_id, competition_chi_name, competition_eng_name, school_id, builder_email, 
+    held_position, registration_start_time, registration_end_time, competition_start_time, 
+    duration, competition_introduction, state
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.IcpcInformationSystemBackend.model.entity.CompetitionDoExample" >
     select
@@ -111,12 +111,12 @@
   </delete>
   <insert id="insert" parameterType="com.IcpcInformationSystemBackend.model.entity.CompetitionDo" >
     insert into competition (competition_id, competition_chi_name, 
-      competition_eng_name, school_id, user_id, 
+      competition_eng_name, school_id, builder_email, 
       held_position, registration_start_time, registration_end_time, 
       competition_start_time, duration, competition_introduction, 
       state)
     values (#{competitionId,jdbcType=VARCHAR}, #{competitionChiName,jdbcType=VARCHAR}, 
-      #{competitionEngName,jdbcType=VARCHAR}, #{schoolId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, 
+      #{competitionEngName,jdbcType=VARCHAR}, #{schoolId,jdbcType=VARCHAR}, #{builderEmail,jdbcType=VARCHAR}, 
       #{heldPosition,jdbcType=VARCHAR}, #{registrationStartTime,jdbcType=VARCHAR}, #{registrationEndTime,jdbcType=VARCHAR}, 
       #{competitionStartTime,jdbcType=VARCHAR}, #{duration,jdbcType=INTEGER}, #{competitionIntroduction,jdbcType=VARCHAR}, 
       #{state,jdbcType=INTEGER})
@@ -136,8 +136,8 @@
       <if test="schoolId != null" >
         school_id,
       </if>
-      <if test="userId != null" >
-        user_id,
+      <if test="builderEmail != null" >
+        builder_email,
       </if>
       <if test="heldPosition != null" >
         held_position,
@@ -174,8 +174,8 @@
       <if test="schoolId != null" >
         #{schoolId,jdbcType=VARCHAR},
       </if>
-      <if test="userId != null" >
-        #{userId,jdbcType=VARCHAR},
+      <if test="builderEmail != null" >
+        #{builderEmail,jdbcType=VARCHAR},
       </if>
       <if test="heldPosition != null" >
         #{heldPosition,jdbcType=VARCHAR},
@@ -221,8 +221,8 @@
       <if test="record.schoolId != null" >
         school_id = #{record.schoolId,jdbcType=VARCHAR},
       </if>
-      <if test="record.userId != null" >
-        user_id = #{record.userId,jdbcType=VARCHAR},
+      <if test="record.builderEmail != null" >
+        builder_email = #{record.builderEmail,jdbcType=VARCHAR},
       </if>
       <if test="record.heldPosition != null" >
         held_position = #{record.heldPosition,jdbcType=VARCHAR},
@@ -256,7 +256,7 @@
       competition_chi_name = #{record.competitionChiName,jdbcType=VARCHAR},
       competition_eng_name = #{record.competitionEngName,jdbcType=VARCHAR},
       school_id = #{record.schoolId,jdbcType=VARCHAR},
-      user_id = #{record.userId,jdbcType=VARCHAR},
+      builder_email = #{record.builderEmail,jdbcType=VARCHAR},
       held_position = #{record.heldPosition,jdbcType=VARCHAR},
       registration_start_time = #{record.registrationStartTime,jdbcType=VARCHAR},
       registration_end_time = #{record.registrationEndTime,jdbcType=VARCHAR},
@@ -280,8 +280,8 @@
       <if test="schoolId != null" >
         school_id = #{schoolId,jdbcType=VARCHAR},
       </if>
-      <if test="userId != null" >
-        user_id = #{userId,jdbcType=VARCHAR},
+      <if test="builderEmail != null" >
+        builder_email = #{builderEmail,jdbcType=VARCHAR},
       </if>
       <if test="heldPosition != null" >
         held_position = #{heldPosition,jdbcType=VARCHAR},
@@ -312,7 +312,7 @@
     set competition_chi_name = #{competitionChiName,jdbcType=VARCHAR},
       competition_eng_name = #{competitionEngName,jdbcType=VARCHAR},
       school_id = #{schoolId,jdbcType=VARCHAR},
-      user_id = #{userId,jdbcType=VARCHAR},
+      builder_email = #{builderEmail,jdbcType=VARCHAR},
       held_position = #{heldPosition,jdbcType=VARCHAR},
       registration_start_time = #{registrationStartTime,jdbcType=VARCHAR},
       registration_end_time = #{registrationEndTime,jdbcType=VARCHAR},

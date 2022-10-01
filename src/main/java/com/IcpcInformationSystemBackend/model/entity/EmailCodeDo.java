@@ -3,18 +3,18 @@ package com.IcpcInformationSystemBackend.model.entity;
 import java.util.Date;
 
 public class EmailCodeDo {
-    private String email;
+    private String userEmail;
 
     private String verificationCode;
 
     private Date timeOfCode;
 
-    public String getEmail() {
-        return email;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public void setEmail(String email) {
-        this.email = email == null ? null : email.trim();
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail == null ? null : userEmail.trim();
     }
 
     public String getVerificationCode() {

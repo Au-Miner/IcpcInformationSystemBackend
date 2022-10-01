@@ -9,15 +9,15 @@ public class TeamDo {
 
     private String schoolId;
 
-    private String member1Id;
+    private String member1Email;
 
-    private String member2Id;
+    private String member2Email;
 
-    private String member3Id;
+    private String member3Email;
 
-    private String coach1Id;
+    private String coach1Email;
 
-    private String coach2Id;
+    private String coach2Email;
 
     private String competitionId;
 
@@ -63,44 +63,44 @@ public class TeamDo {
         this.schoolId = schoolId == null ? null : schoolId.trim();
     }
 
-    public String getMember1Id() {
-        return member1Id;
+    public String getMember1Email() {
+        return member1Email;
     }
 
-    public void setMember1Id(String member1Id) {
-        this.member1Id = member1Id == null ? null : member1Id.trim();
+    public void setMember1Email(String member1Email) {
+        this.member1Email = member1Email == null ? null : member1Email.trim();
     }
 
-    public String getMember2Id() {
-        return member2Id;
+    public String getMember2Email() {
+        return member2Email;
     }
 
-    public void setMember2Id(String member2Id) {
-        this.member2Id = member2Id == null ? null : member2Id.trim();
+    public void setMember2Email(String member2Email) {
+        this.member2Email = member2Email == null ? null : member2Email.trim();
     }
 
-    public String getMember3Id() {
-        return member3Id;
+    public String getMember3Email() {
+        return member3Email;
     }
 
-    public void setMember3Id(String member3Id) {
-        this.member3Id = member3Id == null ? null : member3Id.trim();
+    public void setMember3Email(String member3Email) {
+        this.member3Email = member3Email == null ? null : member3Email.trim();
     }
 
-    public String getCoach1Id() {
-        return coach1Id;
+    public String getCoach1Email() {
+        return coach1Email;
     }
 
-    public void setCoach1Id(String coach1Id) {
-        this.coach1Id = coach1Id == null ? null : coach1Id.trim();
+    public void setCoach1Email(String coach1Email) {
+        this.coach1Email = coach1Email == null ? null : coach1Email.trim();
     }
 
-    public String getCoach2Id() {
-        return coach2Id;
+    public String getCoach2Email() {
+        return coach2Email;
     }
 
-    public void setCoach2Id(String coach2Id) {
-        this.coach2Id = coach2Id == null ? null : coach2Id.trim();
+    public void setCoach2Email(String coach2Email) {
+        this.coach2Email = coach2Email == null ? null : coach2Email.trim();
     }
 
     public String getCompetitionId() {

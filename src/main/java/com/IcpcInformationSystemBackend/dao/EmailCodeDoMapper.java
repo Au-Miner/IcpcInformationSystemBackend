@@ -10,7 +10,7 @@ public interface EmailCodeDoMapper {
 
     int deleteByExample(EmailCodeDoExample example);
 
-    int deleteByPrimaryKey(String email);
+    int deleteByPrimaryKey(String userEmail);
 
     int insert(EmailCodeDo record);
 
@@ -18,7 +18,7 @@ public interface EmailCodeDoMapper {
 
     List<EmailCodeDo> selectByExample(EmailCodeDoExample example);
 
-    EmailCodeDo selectByPrimaryKey(String email);
+    EmailCodeDo selectByPrimaryKey(String userEmail);
 
     int updateByExampleSelective(@Param("record") EmailCodeDo record, @Param("example") EmailCodeDoExample example);
 

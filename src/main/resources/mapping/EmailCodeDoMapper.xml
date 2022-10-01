@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.IcpcInformationSystemBackend.dao.EmailCodeDoMapper" >
   <resultMap id="BaseResultMap" type="com.IcpcInformationSystemBackend.model.entity.EmailCodeDo" >
-    <id column="email" property="email" jdbcType="VARCHAR" />
+    <id column="user_email" property="userEmail" jdbcType="VARCHAR" />
     <result column="verification_code" property="verificationCode" jdbcType="VARCHAR" />
     <result column="time_of_code" property="timeOfCode" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -65,7 +65,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    email, verification_code, time_of_code
+    user_email, verification_code, time_of_code
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.IcpcInformationSystemBackend.model.entity.EmailCodeDoExample" >
     select
@@ -86,11 +86,11 @@
     select 
     <include refid="Base_Column_List" />
     from email_code
-    where email = #{email,jdbcType=VARCHAR}
+    where user_email = #{userEmail,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from email_code
-    where email = #{email,jdbcType=VARCHAR}
+    where user_email = #{userEmail,jdbcType=VARCHAR}
   </delete>
   <delete id="deleteByExample" parameterType="com.IcpcInformationSystemBackend.model.entity.EmailCodeDoExample" >
     delete from email_code
@@ -99,16 +99,16 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.IcpcInformationSystemBackend.model.entity.EmailCodeDo" >
-    insert into email_code (email, verification_code, time_of_code
+    insert into email_code (user_email, verification_code, time_of_code
       )
-    values (#{email,jdbcType=VARCHAR}, #{verificationCode,jdbcType=VARCHAR}, #{timeOfCode,jdbcType=TIMESTAMP}
+    values (#{userEmail,jdbcType=VARCHAR}, #{verificationCode,jdbcType=VARCHAR}, #{timeOfCode,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.IcpcInformationSystemBackend.model.entity.EmailCodeDo" >
     insert into email_code
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="email != null" >
-        email,
+      <if test="userEmail != null" >
+        user_email,
       </if>
       <if test="verificationCode != null" >
         verification_code,
@@ -118,8 +118,8 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="email != null" >
-        #{email,jdbcType=VARCHAR},
+      <if test="userEmail != null" >
+        #{userEmail,jdbcType=VARCHAR},
       </if>
       <if test="verificationCode != null" >
         #{verificationCode,jdbcType=VARCHAR},
@@ -138,8 +138,8 @@
   <update id="updateByExampleSelective" parameterType="map" >
     update email_code
     <set >
-      <if test="record.email != null" >
-        email = #{record.email,jdbcType=VARCHAR},
+      <if test="record.userEmail != null" >
+        user_email = #{record.userEmail,jdbcType=VARCHAR},
       </if>
       <if test="record.verificationCode != null" >
         verification_code = #{record.verificationCode,jdbcType=VARCHAR},
@@ -154,7 +154,7 @@
   </update>
   <update id="updateByExample" parameterType="map" >
     update email_code
-    set email = #{record.email,jdbcType=VARCHAR},
+    set user_email = #{record.userEmail,jdbcType=VARCHAR},
       verification_code = #{record.verificationCode,jdbcType=VARCHAR},
       time_of_code = #{record.timeOfCode,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -171,12 +171,12 @@
         time_of_code = #{timeOfCode,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where email = #{email,jdbcType=VARCHAR}
+    where user_email = #{userEmail,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.IcpcInformationSystemBackend.model.entity.EmailCodeDo" >
     update email_code
     set verification_code = #{verificationCode,jdbcType=VARCHAR},
       time_of_code = #{timeOfCode,jdbcType=TIMESTAMP}
-    where email = #{email,jdbcType=VARCHAR}
+    where user_email = #{userEmail,jdbcType=VARCHAR}
   </update>
 </mapper>

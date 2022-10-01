@@ -1,16 +1,16 @@
 package com.IcpcInformationSystemBackend.model.entity;
 
 public class UserCompetitionDoKey {
-    private String studentId;
+    private String studentEmail;
 
     private String competitionId;
 
-    public String getStudentId() {
-        return studentId;
+    public String getStudentEmail() {
+        return studentEmail;
     }
 
-    public void setStudentId(String studentId) {
-        this.studentId = studentId == null ? null : studentId.trim();
+    public void setStudentEmail(String studentEmail) {
+        this.studentEmail = studentEmail == null ? null : studentEmail.trim();
     }
 
     public String getCompetitionId() {

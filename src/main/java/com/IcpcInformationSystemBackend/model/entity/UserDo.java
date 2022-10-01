@@ -1,7 +1,7 @@
 package com.IcpcInformationSystemBackend.model.entity;
 
 public class UserDo {
-    private String userId;
+    private String userEmail;
 
     private Integer identity;
 
@@ -11,8 +11,6 @@ public class UserDo {
 
     private String telephone;
 
-    private String email;
-
     private Integer state;
 
     private String admissionDate;
@@ -21,12 +19,12 @@ public class UserDo {
 
     private String clothSize;
 
-    public String getUserId() {
-        return userId;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId == null ? null : userId.trim();
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail == null ? null : userEmail.trim();
     }
 
     public Integer getIdentity() {
@@ -59,14 +57,6 @@ public class UserDo {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone == null ? null : telephone.trim();
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email == null ? null : email.trim();
     }
 
     public Integer getState() {

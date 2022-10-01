@@ -9,7 +9,7 @@ public class CompetitionDo {
 
     private String schoolId;
 
-    private String userId;
+    private String builderEmail;
 
     private String heldPosition;
 
@@ -57,12 +57,12 @@ public class CompetitionDo {
         this.schoolId = schoolId == null ? null : schoolId.trim();
     }
 
-    public String getUserId() {
-        return userId;
+    public String getBuilderEmail() {
+        return builderEmail;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId == null ? null : userId.trim();
+    public void setBuilderEmail(String builderEmail) {
+        this.builderEmail = builderEmail == null ? null : builderEmail.trim();
     }
 
     public String getHeldPosition() {

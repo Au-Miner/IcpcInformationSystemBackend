@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
 public class RegisterSchoolInfo {
 
     @NotBlank(message="学校代码不能为空")
-    @ApiModelProperty(value = "学校代码，非空", example = "10280")
+    @ApiModelProperty(value = "学校代码，非空", example = "xxxxx")
     private String schoolId;
 
     @NotBlank(message="学校中文名不能为空")
@@ -41,18 +41,22 @@ public class RegisterSchoolInfo {
     private String engName;
 
     @NotBlank(message="学校负责人手机号不能为空")
-    @ApiModelProperty(value = "学下负责人手机号，非空", example = "18800311234")
+    @ApiModelProperty(value = "学下负责人手机号，非空", example = "xxxxx")
     private String telephone;
 
     @Email(message = "学校负责人邮箱错误")
     @ApiModelProperty(value = "学校负责人邮箱，非空", example = "12345678@qq.com")
-    private String email;
+    private String userEmail;
 
     @NotBlank(message="邮箱验证码不能为空")
-    @ApiModelProperty(value = "邮箱验证码，非空", example = "123456")
+    @ApiModelProperty(value = "邮箱验证码，非空", example = "12ed5f")
     private String emailCode;
 
     @NotBlank(message="学校负责人尺码不能为空")
     @ApiModelProperty(value = "衣服尺寸，非空", example = "XXL")
     private String clothSize;
+
+    @NotBlank
+    @ApiModelProperty(value = "用户登陆密码，非空", example = "wql011213")
+    private String passwd;
 }

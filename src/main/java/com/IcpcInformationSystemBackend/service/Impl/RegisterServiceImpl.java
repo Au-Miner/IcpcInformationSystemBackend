@@ -1,6 +1,7 @@
 package com.IcpcInformationSystemBackend.service.Impl;
 
 import com.IcpcInformationSystemBackend.dao.EmailCodeDoMapper;
+import com.IcpcInformationSystemBackend.dao.PasswordDoMapper;
 import com.IcpcInformationSystemBackend.dao.SchoolDoMapper;
 import com.IcpcInformationSystemBackend.dao.UserDoMapper;
 import com.IcpcInformationSystemBackend.exception.EmAllException;
@@ -10,6 +11,7 @@ import com.IcpcInformationSystemBackend.model.request.ReigsterUserInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.model.response.SchoolIdResponse;
 import com.IcpcInformationSystemBackend.service.RegisterService;
+import com.IcpcInformationSystemBackend.tools.EmailTool;
 import com.IcpcInformationSystemBackend.tools.ResultTool;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.mail.EmailException;
@@ -36,6 +38,12 @@ public class RegisterServiceImpl implements RegisterService {
     @Resource
     private UserDoMapper userDoMapper;
 
+    @Resource
+    private PasswordDoMapper passwordDoMapper;
+
+    @Resource
+    private EmailTool emailTool;
+
     @Override
     public Result getEmailCode(String emailAddress) {
         try {
@@ -54,7 +62,7 @@ public class RegisterServiceImpl implements RegisterService {
             Timestamp tim = new Timestamp(date.getTime());//将时间转换成Timestamp类型，这样便可以存入到Mysql数据库中
             emailCodeDoMapper.deleteByPrimaryKey(emailAddress);
             EmailCodeDo emailCodeDo = new EmailCodeDo();
-            emailCodeDo.setEmail(emailAddress);
+            emailCodeDo.setUserEmail(emailAddress);
             emailCodeDo.setTimeOfCode(tim);
             emailCodeDo.setVerificationCode(code);
             emailCodeDoMapper.insert(emailCodeDo);
@@ -91,17 +99,19 @@ public class RegisterServiceImpl implements RegisterService {
         schoolDo.setState(1);
 
         UserDoExample userDoExample = new UserDoExample();
-        userDoExample.createCriteria().andEmailEqualTo(registerSchoolInfo.getEmail());
+        userDoExample.createCriteria().andUserEmailEqualTo(registerSchoolInfo.getUserEmail());
         if (userDoMapper.countByExample(userDoExample) > 0)
             return ResultTool.error(EmAllException.EMAIL_HAVE_REGISTERED);
         UserDo userDo = new UserDo();
         BeanUtils.copyProperties(registerSchoolInfo, userDo);
         userDo.setIdentity(4);
         userDo.setState(1);
-        userDo.setUserId(generateUserId());
 
+        PasswordDo passwordDo = new PasswordDo();
+        passwordDo.setUserEmail(userDo.getUserEmail());
+        passwordDo.setPasswd(registerSchoolInfo.getPasswd());
 
-        switch (judgeEmailCode(registerSchoolInfo.getEmail(), registerSchoolInfo.getEmailCode())) {
+        switch (emailTool.judgeEmailCode(registerSchoolInfo.getUserEmail(), registerSchoolInfo.getEmailCode())) {
             case 1:
                 return ResultTool.error(EmAllException.EMAIL_CODE_ERROR);
             case 2:
@@ -114,33 +124,17 @@ public class RegisterServiceImpl implements RegisterService {
             return ResultTool.error(EmAllException.DATABASE_ERR);
         if (userDoMapper.insertSelective(userDo) == 0)
             return ResultTool.error(EmAllException.DATABASE_ERR);
+        if (passwordDoMapper.insertSelective(passwordDo) == 0)
+            return ResultTool.error(EmAllException.DATABASE_ERR);
         return ResultTool.success();
     }
 
-    @Override
-    public String generateUserId() {
-        while (true) {
-            StringBuilder tmp = new StringBuilder();
-            Calendar ca = Calendar.getInstance();
-            tmp.append(ca.get(Calendar.YEAR));
-            tmp = new StringBuilder(tmp.substring(2));
-            if (ca.get(Calendar.MONTH) < 10)
-                tmp.append(0);
-            tmp.append(ca.get(Calendar.MONTH));
-            ThreadLocalRandom random = ThreadLocalRandom.current();
-            for (int i = 0; i < 6; i++)
-                tmp.append(random.nextInt(10));
-            UserDoExample userDoExample = new UserDoExample();
-            userDoExample.createCriteria().andUserIdEqualTo(String.valueOf(tmp));
-            if (userDoMapper.countByExample(userDoExample) == 0)
-                return String.valueOf(tmp);
-        }
-    }
+
 
     @Override
     public Result reigsterUser(ReigsterUserInfo reigsterUserInfo) {
         UserDoExample userDoExample = new UserDoExample();
-        userDoExample.createCriteria().andEmailEqualTo(reigsterUserInfo.getEmail());
+        userDoExample.createCriteria().andUserEmailEqualTo(reigsterUserInfo.getUserEmail());
         if (userDoMapper.countByExample(userDoExample) > 0)
             return ResultTool.error(EmAllException.EMAIL_HAVE_REGISTERED);
 
@@ -149,7 +143,7 @@ public class RegisterServiceImpl implements RegisterService {
         if (userDoMapper.countByExample(userDoExample) == 0)
             return ResultTool.error(EmAllException.SCHOOL_HAVENOT_REGISTERED);
 
-        switch (judgeEmailCode(reigsterUserInfo.getEmail(), reigsterUserInfo.getEmailCode())) {
+        switch (emailTool.judgeEmailCode(reigsterUserInfo.getUserEmail(), reigsterUserInfo.getEmailCode())) {
             case 1:
                 return ResultTool.error(EmAllException.EMAIL_CODE_ERROR);
             case 2:
@@ -157,11 +151,18 @@ public class RegisterServiceImpl implements RegisterService {
             default:
                 break;
         }
+
         UserDo userDo = new UserDo();
         BeanUtils.copyProperties(reigsterUserInfo, userDo);
-        userDo.setUserId(generateUserId());
         userDo.setState(1);
+
+        PasswordDo passwordDo = new PasswordDo();
+        passwordDo.setUserEmail(userDo.getUserEmail());
+        passwordDo.setPasswd(reigsterUserInfo.getPasswd());
+
         if (userDoMapper.insertSelective(userDo) == 0)
+            return ResultTool.error(EmAllException.DATABASE_ERR);
+        if (passwordDoMapper.insertSelective(passwordDo) == 0)
             return ResultTool.error(EmAllException.DATABASE_ERR);
         return ResultTool.success();
     }
@@ -182,28 +183,5 @@ public class RegisterServiceImpl implements RegisterService {
         }catch (Exception e) {
             return ResultTool.error(EmAllException.UNKNOWN_ERROR);
         }
-    }
-
-    @Override
-    public int judgeEmailCode(String email, String emailCode) {
-        EmailCodeDoExample emailCodeDoExample = new EmailCodeDoExample();
-        emailCodeDoExample.createCriteria().andEmailEqualTo(email);
-        List<EmailCodeDo> emailCodeDos = emailCodeDoMapper.selectByExample(emailCodeDoExample);
-        if (emailCodeDos.isEmpty())
-            return 1; // 邮箱验证码错误
-        Calendar ca = Calendar.getInstance();
-        int day1 = ca.get(Calendar.DAY_OF_MONTH);
-        int hour1 = ca.get(Calendar.HOUR_OF_DAY);
-        int min1 = ca.get(Calendar.MINUTE);
-        int day2 = emailCodeDos.get(0).getTimeOfCode().getDate();
-        int hour2 = emailCodeDos.get(0).getTimeOfCode().getHours();
-        int min2 = emailCodeDos.get(0).getTimeOfCode().getMinutes();
-        int a1 = min1 + hour1 * 60 + day1 * 24 * 60;
-        int a2 = min2 + hour2 * 60 + day2 * 24 * 60;
-        if (a1 - a2 > 10)
-            return 2; // 邮箱验证码超时
-        if (!Objects.equals(emailCodeDos.get(0).getVerificationCode(), emailCode))
-            return 1; // 邮箱验证码错误
-        return 0;
     }
 }

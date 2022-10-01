@@ -14,9 +14,5 @@ public interface RegisterService {
 
     String generateCode();
 
-    String generateUserId();
-
     Result getSchoolIdAndName();
-
-    int judgeEmailCode(String email, String emailCode);
 }

@@ -104,73 +104,73 @@ public class UserCompetitionDoExample {
             criteria.add(new Criterion(condition, value1, value2));
         }
 
-        public Criteria andStudentIdIsNull() {
-            addCriterion("student_id is null");
+        public Criteria andStudentEmailIsNull() {
+            addCriterion("student_email is null");
             return (Criteria) this;
         }
 
-        public Criteria andStudentIdIsNotNull() {
-            addCriterion("student_id is not null");
+        public Criteria andStudentEmailIsNotNull() {
+            addCriterion("student_email is not null");
             return (Criteria) this;
         }
 
-        public Criteria andStudentIdEqualTo(String value) {
-            addCriterion("student_id =", value, "studentId");
+        public Criteria andStudentEmailEqualTo(String value) {
+            addCriterion("student_email =", value, "studentEmail");
             return (Criteria) this;
         }
 
-        public Criteria andStudentIdNotEqualTo(String value) {
-            addCriterion("student_id <>", value, "studentId");
+        public Criteria andStudentEmailNotEqualTo(String value) {
+            addCriterion("student_email <>", value, "studentEmail");
             return (Criteria) this;
         }
 
-        public Criteria andStudentIdGreaterThan(String value) {
-            addCriterion("student_id >", value, "studentId");
+        public Criteria andStudentEmailGreaterThan(String value) {
+            addCriterion("student_email >", value, "studentEmail");
             return (Criteria) this;
         }
 
-        public Criteria andStudentIdGreaterThanOrEqualTo(String value) {
-            addCriterion("student_id >=", value, "studentId");
+        public Criteria andStudentEmailGreaterThanOrEqualTo(String value) {
+            addCriterion("student_email >=", value, "studentEmail");
             return (Criteria) this;
         }
 
-        public Criteria andStudentIdLessThan(String value) {
-            addCriterion("student_id <", value, "studentId");
+        public Criteria andStudentEmailLessThan(String value) {
+            addCriterion("student_email <", value, "studentEmail");
             return (Criteria) this;
         }
 
-        public Criteria andStudentIdLessThanOrEqualTo(String value) {
-            addCriterion("student_id <=", value, "studentId");
+        public Criteria andStudentEmailLessThanOrEqualTo(String value) {
+            addCriterion("student_email <=", value, "studentEmail");
             return (Criteria) this;
         }
 
-        public Criteria andStudentIdLike(String value) {
-            addCriterion("student_id like", value, "studentId");
+        public Criteria andStudentEmailLike(String value) {
+            addCriterion("student_email like", value, "studentEmail");
             return (Criteria) this;
         }
 
-        public Criteria andStudentIdNotLike(String value) {
-            addCriterion("student_id not like", value, "studentId");
+        public Criteria andStudentEmailNotLike(String value) {
+            addCriterion("student_email not like", value, "studentEmail");
             return (Criteria) this;
         }
 
-        public Criteria andStudentIdIn(List<String> values) {
-            addCriterion("student_id in", values, "studentId");
+        public Criteria andStudentEmailIn(List<String> values) {
+            addCriterion("student_email in", values, "studentEmail");
             return (Criteria) this;
         }
 
-        public Criteria andStudentIdNotIn(List<String> values) {
-            addCriterion("student_id not in", values, "studentId");
+        public Criteria andStudentEmailNotIn(List<String> values) {
+            addCriterion("student_email not in", values, "studentEmail");
             return (Criteria) this;
         }
 
-        public Criteria andStudentIdBetween(String value1, String value2) {
-            addCriterion("student_id between", value1, value2, "studentId");
+        public Criteria andStudentEmailBetween(String value1, String value2) {
+            addCriterion("student_email between", value1, value2, "studentEmail");
             return (Criteria) this;
         }
 
-        public Criteria andStudentIdNotBetween(String value1, String value2) {
-            addCriterion("student_id not between", value1, value2, "studentId");
+        public Criteria andStudentEmailNotBetween(String value1, String value2) {
+            addCriterion("student_email not between", value1, value2, "studentEmail");
             return (Criteria) this;
         }
 

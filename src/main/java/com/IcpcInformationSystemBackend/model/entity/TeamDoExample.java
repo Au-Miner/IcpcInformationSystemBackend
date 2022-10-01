@@ -384,353 +384,353 @@ public class TeamDoExample {
             return (Criteria) this;
         }
 
-        public Criteria andMember1IdIsNull() {
-            addCriterion("member1_id is null");
+        public Criteria andMember1EmailIsNull() {
+            addCriterion("member1_email is null");
             return (Criteria) this;
         }
 
-        public Criteria andMember1IdIsNotNull() {
-            addCriterion("member1_id is not null");
+        public Criteria andMember1EmailIsNotNull() {
+            addCriterion("member1_email is not null");
             return (Criteria) this;
         }
 
-        public Criteria andMember1IdEqualTo(String value) {
-            addCriterion("member1_id =", value, "member1Id");
+        public Criteria andMember1EmailEqualTo(String value) {
+            addCriterion("member1_email =", value, "member1Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember1IdNotEqualTo(String value) {
-            addCriterion("member1_id <>", value, "member1Id");
+        public Criteria andMember1EmailNotEqualTo(String value) {
+            addCriterion("member1_email <>", value, "member1Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember1IdGreaterThan(String value) {
-            addCriterion("member1_id >", value, "member1Id");
+        public Criteria andMember1EmailGreaterThan(String value) {
+            addCriterion("member1_email >", value, "member1Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember1IdGreaterThanOrEqualTo(String value) {
-            addCriterion("member1_id >=", value, "member1Id");
+        public Criteria andMember1EmailGreaterThanOrEqualTo(String value) {
+            addCriterion("member1_email >=", value, "member1Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember1IdLessThan(String value) {
-            addCriterion("member1_id <", value, "member1Id");
+        public Criteria andMember1EmailLessThan(String value) {
+            addCriterion("member1_email <", value, "member1Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember1IdLessThanOrEqualTo(String value) {
-            addCriterion("member1_id <=", value, "member1Id");
+        public Criteria andMember1EmailLessThanOrEqualTo(String value) {
+            addCriterion("member1_email <=", value, "member1Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember1IdLike(String value) {
-            addCriterion("member1_id like", value, "member1Id");
+        public Criteria andMember1EmailLike(String value) {
+            addCriterion("member1_email like", value, "member1Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember1IdNotLike(String value) {
-            addCriterion("member1_id not like", value, "member1Id");
+        public Criteria andMember1EmailNotLike(String value) {
+            addCriterion("member1_email not like", value, "member1Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember1IdIn(List<String> values) {
-            addCriterion("member1_id in", values, "member1Id");
+        public Criteria andMember1EmailIn(List<String> values) {
+            addCriterion("member1_email in", values, "member1Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember1IdNotIn(List<String> values) {
-            addCriterion("member1_id not in", values, "member1Id");
+        public Criteria andMember1EmailNotIn(List<String> values) {
+            addCriterion("member1_email not in", values, "member1Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember1IdBetween(String value1, String value2) {
-            addCriterion("member1_id between", value1, value2, "member1Id");
+        public Criteria andMember1EmailBetween(String value1, String value2) {
+            addCriterion("member1_email between", value1, value2, "member1Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember1IdNotBetween(String value1, String value2) {
-            addCriterion("member1_id not between", value1, value2, "member1Id");
+        public Criteria andMember1EmailNotBetween(String value1, String value2) {
+            addCriterion("member1_email not between", value1, value2, "member1Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember2IdIsNull() {
-            addCriterion("member2_id is null");
+        public Criteria andMember2EmailIsNull() {
+            addCriterion("member2_email is null");
             return (Criteria) this;
         }
 
-        public Criteria andMember2IdIsNotNull() {
-            addCriterion("member2_id is not null");
+        public Criteria andMember2EmailIsNotNull() {
+            addCriterion("member2_email is not null");
             return (Criteria) this;
         }
 
-        public Criteria andMember2IdEqualTo(String value) {
-            addCriterion("member2_id =", value, "member2Id");
+        public Criteria andMember2EmailEqualTo(String value) {
+            addCriterion("member2_email =", value, "member2Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember2IdNotEqualTo(String value) {
-            addCriterion("member2_id <>", value, "member2Id");
+        public Criteria andMember2EmailNotEqualTo(String value) {
+            addCriterion("member2_email <>", value, "member2Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember2IdGreaterThan(String value) {
-            addCriterion("member2_id >", value, "member2Id");
+        public Criteria andMember2EmailGreaterThan(String value) {
+            addCriterion("member2_email >", value, "member2Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember2IdGreaterThanOrEqualTo(String value) {
-            addCriterion("member2_id >=", value, "member2Id");
+        public Criteria andMember2EmailGreaterThanOrEqualTo(String value) {
+            addCriterion("member2_email >=", value, "member2Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember2IdLessThan(String value) {
-            addCriterion("member2_id <", value, "member2Id");
+        public Criteria andMember2EmailLessThan(String value) {
+            addCriterion("member2_email <", value, "member2Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember2IdLessThanOrEqualTo(String value) {
-            addCriterion("member2_id <=", value, "member2Id");
+        public Criteria andMember2EmailLessThanOrEqualTo(String value) {
+            addCriterion("member2_email <=", value, "member2Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember2IdLike(String value) {
-            addCriterion("member2_id like", value, "member2Id");
+        public Criteria andMember2EmailLike(String value) {
+            addCriterion("member2_email like", value, "member2Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember2IdNotLike(String value) {
-            addCriterion("member2_id not like", value, "member2Id");
+        public Criteria andMember2EmailNotLike(String value) {
+            addCriterion("member2_email not like", value, "member2Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember2IdIn(List<String> values) {
-            addCriterion("member2_id in", values, "member2Id");
+        public Criteria andMember2EmailIn(List<String> values) {
+            addCriterion("member2_email in", values, "member2Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember2IdNotIn(List<String> values) {
-            addCriterion("member2_id not in", values, "member2Id");
+        public Criteria andMember2EmailNotIn(List<String> values) {
+            addCriterion("member2_email not in", values, "member2Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember2IdBetween(String value1, String value2) {
-            addCriterion("member2_id between", value1, value2, "member2Id");
+        public Criteria andMember2EmailBetween(String value1, String value2) {
+            addCriterion("member2_email between", value1, value2, "member2Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember2IdNotBetween(String value1, String value2) {
-            addCriterion("member2_id not between", value1, value2, "member2Id");
+        public Criteria andMember2EmailNotBetween(String value1, String value2) {
+            addCriterion("member2_email not between", value1, value2, "member2Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember3IdIsNull() {
-            addCriterion("member3_id is null");
+        public Criteria andMember3EmailIsNull() {
+            addCriterion("member3_email is null");
             return (Criteria) this;
         }
 
-        public Criteria andMember3IdIsNotNull() {
-            addCriterion("member3_id is not null");
+        public Criteria andMember3EmailIsNotNull() {
+            addCriterion("member3_email is not null");
             return (Criteria) this;
         }
 
-        public Criteria andMember3IdEqualTo(String value) {
-            addCriterion("member3_id =", value, "member3Id");
+        public Criteria andMember3EmailEqualTo(String value) {
+            addCriterion("member3_email =", value, "member3Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember3IdNotEqualTo(String value) {
-            addCriterion("member3_id <>", value, "member3Id");
+        public Criteria andMember3EmailNotEqualTo(String value) {
+            addCriterion("member3_email <>", value, "member3Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember3IdGreaterThan(String value) {
-            addCriterion("member3_id >", value, "member3Id");
+        public Criteria andMember3EmailGreaterThan(String value) {
+            addCriterion("member3_email >", value, "member3Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember3IdGreaterThanOrEqualTo(String value) {
-            addCriterion("member3_id >=", value, "member3Id");
+        public Criteria andMember3EmailGreaterThanOrEqualTo(String value) {
+            addCriterion("member3_email >=", value, "member3Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember3IdLessThan(String value) {
-            addCriterion("member3_id <", value, "member3Id");
+        public Criteria andMember3EmailLessThan(String value) {
+            addCriterion("member3_email <", value, "member3Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember3IdLessThanOrEqualTo(String value) {
-            addCriterion("member3_id <=", value, "member3Id");
+        public Criteria andMember3EmailLessThanOrEqualTo(String value) {
+            addCriterion("member3_email <=", value, "member3Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember3IdLike(String value) {
-            addCriterion("member3_id like", value, "member3Id");
+        public Criteria andMember3EmailLike(String value) {
+            addCriterion("member3_email like", value, "member3Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember3IdNotLike(String value) {
-            addCriterion("member3_id not like", value, "member3Id");
+        public Criteria andMember3EmailNotLike(String value) {
+            addCriterion("member3_email not like", value, "member3Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember3IdIn(List<String> values) {
-            addCriterion("member3_id in", values, "member3Id");
+        public Criteria andMember3EmailIn(List<String> values) {
+            addCriterion("member3_email in", values, "member3Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember3IdNotIn(List<String> values) {
-            addCriterion("member3_id not in", values, "member3Id");
+        public Criteria andMember3EmailNotIn(List<String> values) {
+            addCriterion("member3_email not in", values, "member3Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember3IdBetween(String value1, String value2) {
-            addCriterion("member3_id between", value1, value2, "member3Id");
+        public Criteria andMember3EmailBetween(String value1, String value2) {
+            addCriterion("member3_email between", value1, value2, "member3Email");
             return (Criteria) this;
         }
 
-        public Criteria andMember3IdNotBetween(String value1, String value2) {
-            addCriterion("member3_id not between", value1, value2, "member3Id");
+        public Criteria andMember3EmailNotBetween(String value1, String value2) {
+            addCriterion("member3_email not between", value1, value2, "member3Email");
             return (Criteria) this;
         }
 
-        public Criteria andCoach1IdIsNull() {
-            addCriterion("coach1_id is null");
+        public Criteria andCoach1EmailIsNull() {
+            addCriterion("coach1_email is null");
             return (Criteria) this;
         }
 
-        public Criteria andCoach1IdIsNotNull() {
-            addCriterion("coach1_id is not null");
+        public Criteria andCoach1EmailIsNotNull() {
+            addCriterion("coach1_email is not null");
             return (Criteria) this;
         }
 
-        public Criteria andCoach1IdEqualTo(String value) {
-            addCriterion("coach1_id =", value, "coach1Id");
+        public Criteria andCoach1EmailEqualTo(String value) {
+            addCriterion("coach1_email =", value, "coach1Email");
             return (Criteria) this;
         }
 
-        public Criteria andCoach1IdNotEqualTo(String value) {
-            addCriterion("coach1_id <>", value, "coach1Id");
+        public Criteria andCoach1EmailNotEqualTo(String value) {
+            addCriterion("coach1_email <>", value, "coach1Email");
             return (Criteria) this;
         }
 
-        public Criteria andCoach1IdGreaterThan(String value) {
-            addCriterion("coach1_id >", value, "coach1Id");
+        public Criteria andCoach1EmailGreaterThan(String value) {
+            addCriterion("coach1_email >", value, "coach1Email");
             return (Criteria) this;
         }
 
-        public Criteria andCoach1IdGreaterThanOrEqualTo(String value) {
-            addCriterion("coach1_id >=", value, "coach1Id");
+        public Criteria andCoach1EmailGreaterThanOrEqualTo(String value) {
+            addCriterion("coach1_email >=", value, "coach1Email");
             return (Criteria) this;
         }
 
-        public Criteria andCoach1IdLessThan(String value) {
-            addCriterion("coach1_id <", value, "coach1Id");
+        public Criteria andCoach1EmailLessThan(String value) {
+            addCriterion("coach1_email <", value, "coach1Email");
             return (Criteria) this;
         }
 
-        public Criteria andCoach1IdLessThanOrEqualTo(String value) {
-            addCriterion("coach1_id <=", value, "coach1Id");
+        public Criteria andCoach1EmailLessThanOrEqualTo(String value) {
+            addCriterion("coach1_email <=", value, "coach1Email");
             return (Criteria) this;
         }
 
-        public Criteria andCoach1IdLike(String value) {
-            addCriterion("coach1_id like", value, "coach1Id");
+        public Criteria andCoach1EmailLike(String value) {
+            addCriterion("coach1_email like", value, "coach1Email");
             return (Criteria) this;
         }
 
-        public Criteria andCoach1IdNotLike(String value) {
-            addCriterion("coach1_id not like", value, "coach1Id");
+        public Criteria andCoach1EmailNotLike(String value) {
+            addCriterion("coach1_email not like", value, "coach1Email");
             return (Criteria) this;
         }
 
-        public Criteria andCoach1IdIn(List<String> values) {
-            addCriterion("coach1_id in", values, "coach1Id");
+        public Criteria andCoach1EmailIn(List<String> values) {
+            addCriterion("coach1_email in", values, "coach1Email");
             return (Criteria) this;
         }
 
-        public Criteria andCoach1IdNotIn(List<String> values) {
-            addCriterion("coach1_id not in", values, "coach1Id");
+        public Criteria andCoach1EmailNotIn(List<String> values) {
+            addCriterion("coach1_email not in", values, "coach1Email");
             return (Criteria) this;
         }
 
-        public Criteria andCoach1IdBetween(String value1, String value2) {
-            addCriterion("coach1_id between", value1, value2, "coach1Id");
+        public Criteria andCoach1EmailBetween(String value1, String value2) {
+            addCriterion("coach1_email between", value1, value2, "coach1Email");
             return (Criteria) this;
         }
 
-        public Criteria andCoach1IdNotBetween(String value1, String value2) {
-            addCriterion("coach1_id not between", value1, value2, "coach1Id");
+        public Criteria andCoach1EmailNotBetween(String value1, String value2) {
+            addCriterion("coach1_email not between", value1, value2, "coach1Email");
             return (Criteria) this;
         }
 
-        public Criteria andCoach2IdIsNull() {
-            addCriterion("coach2_id is null");
+        public Criteria andCoach2EmailIsNull() {
+            addCriterion("coach2_email is null");
             return (Criteria) this;
         }
 
-        public Criteria andCoach2IdIsNotNull() {
-            addCriterion("coach2_id is not null");
+        public Criteria andCoach2EmailIsNotNull() {
+            addCriterion("coach2_email is not null");
             return (Criteria) this;
         }
 
-        public Criteria andCoach2IdEqualTo(String value) {
-            addCriterion("coach2_id =", value, "coach2Id");
+        public Criteria andCoach2EmailEqualTo(String value) {
+            addCriterion("coach2_email =", value, "coach2Email");
             return (Criteria) this;
         }
 
-        public Criteria andCoach2IdNotEqualTo(String value) {
-            addCriterion("coach2_id <>", value, "coach2Id");
+        public Criteria andCoach2EmailNotEqualTo(String value) {
+            addCriterion("coach2_email <>", value, "coach2Email");
             return (Criteria) this;
         }
 
-        public Criteria andCoach2IdGreaterThan(String value) {
-            addCriterion("coach2_id >", value, "coach2Id");
+        public Criteria andCoach2EmailGreaterThan(String value) {
+            addCriterion("coach2_email >", value, "coach2Email");
             return (Criteria) this;
         }
 
-        public Criteria andCoach2IdGreaterThanOrEqualTo(String value) {
-            addCriterion("coach2_id >=", value, "coach2Id");
+        public Criteria andCoach2EmailGreaterThanOrEqualTo(String value) {
+            addCriterion("coach2_email >=", value, "coach2Email");
             return (Criteria) this;
         }
 
-        public Criteria andCoach2IdLessThan(String value) {
-            addCriterion("coach2_id <", value, "coach2Id");
+        public Criteria andCoach2EmailLessThan(String value) {
+            addCriterion("coach2_email <", value, "coach2Email");
             return (Criteria) this;
         }
 
-        public Criteria andCoach2IdLessThanOrEqualTo(String value) {
-            addCriterion("coach2_id <=", value, "coach2Id");
+        public Criteria andCoach2EmailLessThanOrEqualTo(String value) {
+            addCriterion("coach2_email <=", value, "coach2Email");
             return (Criteria) this;
         }
 
-        public Criteria andCoach2IdLike(String value) {
-            addCriterion("coach2_id like", value, "coach2Id");
+        public Criteria andCoach2EmailLike(String value) {
+            addCriterion("coach2_email like", value, "coach2Email");
             return (Criteria) this;
         }
 
-        public Criteria andCoach2IdNotLike(String value) {
-            addCriterion("coach2_id not like", value, "coach2Id");
+        public Criteria andCoach2EmailNotLike(String value) {
+            addCriterion("coach2_email not like", value, "coach2Email");
             return (Criteria) this;
         }
 
-        public Criteria andCoach2IdIn(List<String> values) {
-            addCriterion("coach2_id in", values, "coach2Id");
+        public Criteria andCoach2EmailIn(List<String> values) {
+            addCriterion("coach2_email in", values, "coach2Email");
             return (Criteria) this;
         }
 
-        public Criteria andCoach2IdNotIn(List<String> values) {
-            addCriterion("coach2_id not in", values, "coach2Id");
+        public Criteria andCoach2EmailNotIn(List<String> values) {
+            addCriterion("coach2_email not in", values, "coach2Email");
             return (Criteria) this;
         }
 
-        public Criteria andCoach2IdBetween(String value1, String value2) {
-            addCriterion("coach2_id between", value1, value2, "coach2Id");
+        public Criteria andCoach2EmailBetween(String value1, String value2) {
+            addCriterion("coach2_email between", value1, value2, "coach2Email");
             return (Criteria) this;
         }
 
-        public Criteria andCoach2IdNotBetween(String value1, String value2) {
-            addCriterion("coach2_id not between", value1, value2, "coach2Id");
+        public Criteria andCoach2EmailNotBetween(String value1, String value2) {
+            addCriterion("coach2_email not between", value1, value2, "coach2Email");
             return (Criteria) this;
         }
 

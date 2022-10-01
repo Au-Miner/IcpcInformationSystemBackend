@@ -10,7 +10,7 @@ public interface PasswordDoMapper {
 
     int deleteByExample(PasswordDoExample example);
 
-    int deleteByPrimaryKey(String userId);
+    int deleteByPrimaryKey(String userEmail);
 
     int insert(PasswordDo record);
 
@@ -18,7 +18,7 @@ public interface PasswordDoMapper {
 
     List<PasswordDo> selectByExample(PasswordDoExample example);
 
-    PasswordDo selectByPrimaryKey(String userId);
+    PasswordDo selectByPrimaryKey(String userEmail);
 
     int updateByExampleSelective(@Param("record") PasswordDo record, @Param("example") PasswordDoExample example);
 

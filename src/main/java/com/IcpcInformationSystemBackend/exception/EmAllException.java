@@ -10,6 +10,8 @@ public enum EmAllException implements CommonError{
     EMAIL_HAVE_REGISTERED(403, "邮箱已注册"),
     EMAIL_CODE_ERROR(403, "邮箱验证码错误"),
     EMAIL_CODE_OVERTIME(403, "邮箱验证码超时"),
+    NO_SUCH_USER(403, "查无此人"),
+    PASSWD_ERROR(403, "密码错误"),
     DATABASE_ERR(405,"数据库错误"),
     UNKNOWN_ERROR(500,"未知错误"),
 

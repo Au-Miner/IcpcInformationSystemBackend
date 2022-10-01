@@ -384,73 +384,73 @@ public class CompetitionDoExample {
             return (Criteria) this;
         }
 
-        public Criteria andUserIdIsNull() {
-            addCriterion("user_id is null");
+        public Criteria andBuilderEmailIsNull() {
+            addCriterion("builder_email is null");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdIsNotNull() {
-            addCriterion("user_id is not null");
+        public Criteria andBuilderEmailIsNotNull() {
+            addCriterion("builder_email is not null");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdEqualTo(String value) {
-            addCriterion("user_id =", value, "userId");
+        public Criteria andBuilderEmailEqualTo(String value) {
+            addCriterion("builder_email =", value, "builderEmail");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdNotEqualTo(String value) {
-            addCriterion("user_id <>", value, "userId");
+        public Criteria andBuilderEmailNotEqualTo(String value) {
+            addCriterion("builder_email <>", value, "builderEmail");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdGreaterThan(String value) {
-            addCriterion("user_id >", value, "userId");
+        public Criteria andBuilderEmailGreaterThan(String value) {
+            addCriterion("builder_email >", value, "builderEmail");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdGreaterThanOrEqualTo(String value) {
-            addCriterion("user_id >=", value, "userId");
+        public Criteria andBuilderEmailGreaterThanOrEqualTo(String value) {
+            addCriterion("builder_email >=", value, "builderEmail");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdLessThan(String value) {
-            addCriterion("user_id <", value, "userId");
+        public Criteria andBuilderEmailLessThan(String value) {
+            addCriterion("builder_email <", value, "builderEmail");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdLessThanOrEqualTo(String value) {
-            addCriterion("user_id <=", value, "userId");
+        public Criteria andBuilderEmailLessThanOrEqualTo(String value) {
+            addCriterion("builder_email <=", value, "builderEmail");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdLike(String value) {
-            addCriterion("user_id like", value, "userId");
+        public Criteria andBuilderEmailLike(String value) {
+            addCriterion("builder_email like", value, "builderEmail");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdNotLike(String value) {
-            addCriterion("user_id not like", value, "userId");
+        public Criteria andBuilderEmailNotLike(String value) {
+            addCriterion("builder_email not like", value, "builderEmail");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdIn(List<String> values) {
-            addCriterion("user_id in", values, "userId");
+        public Criteria andBuilderEmailIn(List<String> values) {
+            addCriterion("builder_email in", values, "builderEmail");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdNotIn(List<String> values) {
-            addCriterion("user_id not in", values, "userId");
+        public Criteria andBuilderEmailNotIn(List<String> values) {
+            addCriterion("builder_email not in", values, "builderEmail");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdBetween(String value1, String value2) {
-            addCriterion("user_id between", value1, value2, "userId");
+        public Criteria andBuilderEmailBetween(String value1, String value2) {
+            addCriterion("builder_email between", value1, value2, "builderEmail");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdNotBetween(String value1, String value2) {
-            addCriterion("user_id not between", value1, value2, "userId");
+        public Criteria andBuilderEmailNotBetween(String value1, String value2) {
+            addCriterion("builder_email not between", value1, value2, "builderEmail");
             return (Criteria) this;
         }
 

@@ -10,7 +10,7 @@ public interface UserDoMapper {
 
     int deleteByExample(UserDoExample example);
 
-    int deleteByPrimaryKey(String userId);
+    int deleteByPrimaryKey(String userEmail);
 
     int insert(UserDo record);
 
@@ -18,7 +18,7 @@ public interface UserDoMapper {
 
     List<UserDo> selectByExample(UserDoExample example);
 
-    UserDo selectByPrimaryKey(String userId);
+    UserDo selectByPrimaryKey(String userEmail);
 
     int updateByExampleSelective(@Param("record") UserDo record, @Param("example") UserDoExample example);
 

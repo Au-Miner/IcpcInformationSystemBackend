@@ -33,6 +33,6 @@ public class MyUserDetailService implements UserDetailsService {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         grantedAuthorities.add(new SimpleGrantedAuthority(userDo.getIdentity().toString()));
 
-        return new JwtUser(userDo.getUserId(), null, userDo.getIdentity(), grantedAuthorities);
+        return new JwtUser(userDo.getUserEmail(), null, userDo.getIdentity(), grantedAuthorities);
     }
 }
