@@ -11,7 +11,11 @@ public enum EmAllException implements CommonError{
     EMAIL_CODE_ERROR(403, "邮箱验证码错误"),
     EMAIL_CODE_OVERTIME(403, "邮箱验证码超时"),
     NO_SUCH_USER(403, "查无此人"),
+    NO_SUCH_SCHOOL(403, "查无此校"),
     PASSWD_ERROR(403, "密码错误"),
+    USER_IDENTITY_ERROR(403, "用户身份错误"),
+    BAD_FILE_TYPE(403, "文件上传类型错误"),
+    FILE_EMPTY(403, "上传文件为空"),
     DATABASE_ERR(405,"数据库错误"),
     UNKNOWN_ERROR(500,"未知错误"),
 

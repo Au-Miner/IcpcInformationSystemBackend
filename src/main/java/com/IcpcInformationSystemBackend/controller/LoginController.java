@@ -1,14 +1,14 @@
 package com.IcpcInformationSystemBackend.controller;
 
+import com.IcpcInformationSystemBackend.model.request.LoginUserInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.service.LoginService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -21,10 +21,10 @@ public class LoginController {
     @Resource
     LoginService loginService;
 
-    @GetMapping("/loginUser")
-    @ApiOperation(value = "使用id/邮箱+密码，登陆当前账号")
-    public Result loginUser(String key, String password) {
-        return loginService.loginUser(key, password);
+    @PostMapping("/loginUser")
+    @ApiOperation(value = "使用邮箱+密码+身份id，登陆当前账号")
+    public Result loginUser(@ApiParam(name = "用户登录提供的信息", required = true) @Validated @RequestBody LoginUserInfo loginUserInfo) {
+        return loginService.loginUser(loginUserInfo);
     }
 
     @GetMapping("/forgetUser")

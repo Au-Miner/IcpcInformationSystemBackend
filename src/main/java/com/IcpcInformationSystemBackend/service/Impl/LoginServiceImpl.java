@@ -5,8 +5,10 @@ import com.IcpcInformationSystemBackend.dao.PasswordDoMapper;
 import com.IcpcInformationSystemBackend.dao.UserDoMapper;
 import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.entity.*;
+import com.IcpcInformationSystemBackend.model.request.LoginUserInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.service.LoginService;
+import com.IcpcInformationSystemBackend.tools.AuthTool;
 import com.IcpcInformationSystemBackend.tools.EmailTool;
 import com.IcpcInformationSystemBackend.tools.ResultTool;
 import lombok.extern.slf4j.Slf4j;
@@ -28,20 +30,25 @@ public class LoginServiceImpl implements LoginService {
     @Resource
     EmailTool emailTool;
 
+    @Resource
+    AuthTool authTool;
+
     @Override
-    public Result loginUser(String key, String password) {
+    public Result loginUser(LoginUserInfo loginUserInfo) {
         UserDoExample userDoExample = new UserDoExample();
-        userDoExample.createCriteria().andUserEmailEqualTo(key);
+        userDoExample.createCriteria().andUserEmailEqualTo(loginUserInfo.getKey());
         List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
         if (userDos.isEmpty())
             return ResultTool.error(EmAllException.NO_SUCH_USER);
         PasswordDoExample passwordDoExample = new PasswordDoExample();
-        passwordDoExample.createCriteria().andUserEmailEqualTo(key);
+        passwordDoExample.createCriteria().andUserEmailEqualTo(loginUserInfo.getKey());
         List<PasswordDo> passwordDos = passwordDoMapper.selectByExample(passwordDoExample);
         if (passwordDos.isEmpty())
             return ResultTool.error(EmAllException.NO_SUCH_USER);
-        if (!Objects.equals(passwordDos.get(0).getPasswd(), password))
+        if (!Objects.equals(passwordDos.get(0).getPasswd(), loginUserInfo.getPassword()))
             return ResultTool.error(EmAllException.PASSWD_ERROR);
+        if (loginUserInfo.getIdentity() != userDos.get(0).getIdentity())
+            return ResultTool.error(EmAllException.USER_IDENTITY_ERROR);
         return ResultTool.success();
     }
 

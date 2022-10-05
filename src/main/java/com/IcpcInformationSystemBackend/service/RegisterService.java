@@ -6,13 +6,10 @@ import com.IcpcInformationSystemBackend.model.request.ReigsterUserInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;
 
 public interface RegisterService {
-    Result getEmailCode(String emailAddress);
 
     Result registerSchool(RegisterSchoolInfo registerSchoolInfo);
 
     Result reigsterUser(ReigsterUserInfo reigsterUserInfo);
-
-    String generateCode();
 
     Result getSchoolIdAndName();
 }

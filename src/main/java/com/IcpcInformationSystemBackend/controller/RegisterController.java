@@ -23,12 +23,6 @@ public class RegisterController {
     @Resource
     RegisterService registerService;
 
-    @GetMapping("/getEmailCode")
-    @ApiOperation(value = "输入邮箱地址，获取验证码")
-    public Result getEmailCode(String emailAddress) {
-        return registerService.getEmailCode(emailAddress);
-    }
-
     @PostMapping("/registerSchool")
     @ApiOperation(value = "学校注册接口，学校注册的同时也需要注册学校负责人，因此需要提供比较多的信息")
     public Result registerSchool(@ApiParam(name = "学校注册需要提供的信息", required = true) @Validated @RequestBody RegisterSchoolInfo registerSchoolInfo) {
@@ -46,4 +40,6 @@ public class RegisterController {
     public Result getSchoolIdAndName() {
         return registerService.getSchoolIdAndName();
     }
+
+
 }

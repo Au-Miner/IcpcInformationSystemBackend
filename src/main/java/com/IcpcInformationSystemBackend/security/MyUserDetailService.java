@@ -23,9 +23,9 @@ public class MyUserDetailService implements UserDetailsService {
     UserDoMapper userDoMapper;
 
     @Override
-    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
         //从数据库中获取这个用户
-        UserDo userDo = userDoMapper.selectByPrimaryKey(userId);
+        UserDo userDo = userDoMapper.selectByPrimaryKey(userEmail);
         if(userDo == null) {
             throw new UsernameNotFoundException("账号或密码错误!");
         }

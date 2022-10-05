@@ -24,8 +24,8 @@ public class RegisterSchoolInfo {
     @ApiModelProperty(value = "学校英文名，非空", example = "Shanghai University")
     private String engSchoolName;
 
-    @NotBlank(message="学校校徽不能为空")
-    @ApiModelProperty(value = "学校照片，非空", example = "C:/")
+    @NotBlank(message="学校照片地址不能为空")
+    @ApiModelProperty(value = "学校照片地址，非空", example = "C:/")
     private String schoolImg;
 
     @NotBlank(message="学校位置不能为空")

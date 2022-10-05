@@ -12,7 +12,7 @@ import java.util.Collection;
  */
 @Data
 public class JwtUser implements UserDetails {
-    private String id;
+    private String id; //用户邮箱
     private String password;
     private int identity; //用户身份的数字
     private final Collection<? extends GrantedAuthority> authorities;  //用户角色权限
