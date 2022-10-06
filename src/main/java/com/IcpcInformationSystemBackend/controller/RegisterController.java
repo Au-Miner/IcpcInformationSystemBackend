@@ -21,7 +21,7 @@ import javax.annotation.Resource;
 @Api(tags = "注册接口类")
 public class RegisterController {
     @Resource
-    RegisterService registerService;
+    private RegisterService registerService;
 
     @PostMapping("/registerSchool")
     @ApiOperation(value = "学校注册接口，学校注册的同时也需要注册学校负责人，因此需要提供比较多的信息")

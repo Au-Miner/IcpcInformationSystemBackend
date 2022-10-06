@@ -1,17 +1,22 @@
 package com.icpcinformationsystembackend;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.concurrent.ThreadLocalRandom;
 
 // @SpringBootTest
 class IcpcInformationSystemBackendApplicationTests {
 
+    //用户身份程序样式
+    public final static String[] IDENTITY = {
+            "",
+            "ROLE_STUDENT",
+            "ROLE_COACH",
+            "ROLE_ADMINISTRATOR",
+            "ROLE_CHAIRMAN",
+    };
+
     @Test
     void contextLoads() {
+        System.out.println(IDENTITY[2]);
     }
 
 }

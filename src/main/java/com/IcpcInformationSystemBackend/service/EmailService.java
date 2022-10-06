@@ -7,7 +7,7 @@ import com.IcpcInformationSystemBackend.model.response.Result;
 public interface EmailService {
     Result sendEmailCode(String emailAddress);
 
-    Result sendEmailMessage(EmailMessageInfo emailMessageInfo);
+    Result sendEmailMessage(String userEmail, String message);
 
     String generateCode();
 }

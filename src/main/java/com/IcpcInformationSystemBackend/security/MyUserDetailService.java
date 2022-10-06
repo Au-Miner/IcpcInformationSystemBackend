@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.IcpcInformationSystemBackend.model.ConstantRepository.IDENTITY;
 
 
 @Slf4j
@@ -31,8 +32,7 @@ public class MyUserDetailService implements UserDetailsService {
         }
 
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority(userDo.getIdentity().toString()));
-
+        grantedAuthorities.add(new SimpleGrantedAuthority(IDENTITY[userDo.getIdentity()]));
         return new JwtUser(userDo.getUserEmail(), null, userDo.getIdentity(), grantedAuthorities);
     }
 }

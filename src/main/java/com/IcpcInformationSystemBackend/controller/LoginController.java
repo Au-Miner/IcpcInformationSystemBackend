@@ -19,7 +19,7 @@ import javax.annotation.Resource;
 @Api(tags = "登陆接口类")
 public class LoginController {
     @Resource
-    LoginService loginService;
+    private LoginService loginService;
 
     @PostMapping("/loginUser")
     @ApiOperation(value = "使用邮箱+密码+身份id，登陆当前账号")

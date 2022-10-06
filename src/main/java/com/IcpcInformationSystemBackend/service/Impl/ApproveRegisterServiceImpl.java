@@ -7,6 +7,8 @@ import com.IcpcInformationSystemBackend.model.entity.SchoolDo;
 import com.IcpcInformationSystemBackend.model.entity.SchoolDoExample;
 import com.IcpcInformationSystemBackend.model.entity.UserDo;
 import com.IcpcInformationSystemBackend.model.entity.UserDoExample;
+import com.IcpcInformationSystemBackend.model.request.ApproveSchoolInfo;
+import com.IcpcInformationSystemBackend.model.request.ApproveUserInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.model.response.SchoolInfoResponse;
 import com.IcpcInformationSystemBackend.model.response.UserInfoResponse;
@@ -26,6 +28,7 @@ import java.util.List;
 public class ApproveRegisterServiceImpl implements ApproveRegisterService {
     @Resource
     private SchoolDoMapper schoolDoMapper;
+
     @Resource
     private UserDoMapper userDoMapper;
 
@@ -77,6 +80,7 @@ public class ApproveRegisterServiceImpl implements ApproveRegisterService {
         }
         return ResultTool.success(resList);
     }
+
     @Override
     public Result getStudentRegitsterInfo() {
         String userEmail = authTool.getUserId();
@@ -103,5 +107,71 @@ public class ApproveRegisterServiceImpl implements ApproveRegisterService {
             }
         }
         return ResultTool.success(resList);
+    }
+
+    @Override
+    public Result approveSchoolRegister(ApproveSchoolInfo approveSchoolInfo) {
+        UserDoExample userDoExample = new UserDoExample();
+        userDoExample.createCriteria().andUserEmailEqualTo(approveSchoolInfo.getUserEmail());
+        List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
+        if (userDos.isEmpty())
+            return ResultTool.error(EmAllException.NO_SUCH_USER);
+        if (userDos.get(0).getState() != 1)
+            return ResultTool.error(EmAllException.USER_DONT_NEED_APPROVE);
+        SchoolDoExample schoolDoExample = new SchoolDoExample();
+        schoolDoExample.createCriteria().andSchoolIdEqualTo(approveSchoolInfo.getSchoolId());
+        List<SchoolDo> schoolDos = schoolDoMapper.selectByExample(schoolDoExample);
+        if (schoolDos.isEmpty())
+            return ResultTool.error(EmAllException.NO_SUCH_SCHOOL);
+        if (schoolDos.get(0).getState() != 1)
+            return ResultTool.error(EmAllException.SCHOOL_DONT_NEED_APPROVE);
+        log.info("审批结果：" + approveSchoolInfo.getApproveResult());
+        if (approveSchoolInfo.getApproveResult() != 2 && approveSchoolInfo.getApproveResult() != 3)
+            return ResultTool.error(EmAllException.BAD_REQUEST);
+        schoolDos.get(0).setState(approveSchoolInfo.getApproveResult());
+        userDos.get(0).setState(approveSchoolInfo.getApproveResult());
+        if (schoolDoMapper.updateByPrimaryKeySelective(schoolDos.get(0)) == 0)
+            return ResultTool.error(EmAllException.DATABASE_ERR);
+        if (userDoMapper.updateByPrimaryKeySelective(userDos.get(0)) == 0)
+            return ResultTool.error(EmAllException.DATABASE_ERR);
+        return ResultTool.success();
+    }
+
+    @Override
+    public Result approveCoachRegister(ApproveUserInfo approveUserInfo) {
+        UserDoExample userDoExample = new UserDoExample();
+        userDoExample.createCriteria().andUserEmailEqualTo(approveUserInfo.getUserEmail());
+        List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
+        if (userDos.isEmpty())
+            return ResultTool.error(EmAllException.NO_SUCH_USER);
+        if (userDos.get(0).getState() != 1)
+            return ResultTool.error(EmAllException.USER_DONT_NEED_APPROVE);
+        if (userDos.get(0).getIdentity() != 2)
+            return ResultTool.error(EmAllException.USER_IDENTITY_ERROR);
+        if (approveUserInfo.getApproveResult() != 2 && approveUserInfo.getApproveResult() != 3)
+            return ResultTool.error(EmAllException.BAD_REQUEST);
+        userDos.get(0).setState(approveUserInfo.getApproveResult());
+        if (userDoMapper.updateByPrimaryKeySelective(userDos.get(0)) == 0)
+            return ResultTool.error(EmAllException.DATABASE_ERR);
+        return ResultTool.success();
+    }
+
+    @Override
+    public Result approveStudentRegister(ApproveUserInfo approveUserInfo) {
+        UserDoExample userDoExample = new UserDoExample();
+        userDoExample.createCriteria().andUserEmailEqualTo(approveUserInfo.getUserEmail());
+        List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
+        if (userDos.isEmpty())
+            return ResultTool.error(EmAllException.NO_SUCH_USER);
+        if (userDos.get(0).getState() != 1)
+            return ResultTool.error(EmAllException.USER_DONT_NEED_APPROVE);
+        if (userDos.get(0).getIdentity() != 1)
+            return ResultTool.error(EmAllException.USER_IDENTITY_ERROR);
+        if (approveUserInfo.getApproveResult() != 2 && approveUserInfo.getApproveResult() != 3)
+            return ResultTool.error(EmAllException.BAD_REQUEST);
+        userDos.get(0).setState(approveUserInfo.getApproveResult());
+        if (userDoMapper.updateByPrimaryKeySelective(userDos.get(0)) == 0)
+            return ResultTool.error(EmAllException.DATABASE_ERR);
+        return ResultTool.success();
     }
 }

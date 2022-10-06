@@ -36,10 +36,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login/**").permitAll()
                 .antMatchers("/file/**").permitAll()
                 .antMatchers("/email/sendEmailCode").permitAll()
-                .antMatchers("/email/sendEmailMessage").authenticated()
-                .antMatchers("/approveRegister/**").permitAll();
-                // .antMatchers("/user/register/**").permitAll()
-                // .antMatchers("/plan/**").authenticated()
+                .antMatchers("/email/sendEmailMessage").authenticated()//authenticated()
+                .antMatchers("/administrator/**").hasRole("ADMINISTRATOR")//hasRole("ADMINISTRATOR")
+                .antMatchers("/chairman/**").hasRole("CHAIRMAN")//hasRole("CHAIRMAN")
+                .antMatchers("/coach/**").hasRole("COACH")//hasRole("COACH")
+                .antMatchers("/student/**").hasRole("STUDENT")//hasRole("STUDENT")
+                ;
+
 
         //请求过滤器，必须要加上，否则无法鉴权
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);

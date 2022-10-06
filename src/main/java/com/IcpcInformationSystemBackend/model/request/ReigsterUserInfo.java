@@ -18,7 +18,7 @@ public class ReigsterUserInfo {
     private String userEmail;
 
     @NotNull(message="用户身份不能为空")
-    @ApiModelProperty(value = "用户身份，非空", example = "1")
+    @ApiModelProperty(value = "用户身份（只能1或者2），非空", example = "1选手2教练")
     private int identity;
 
     @NotBlank(message="用户中文名不能为空")
@@ -30,11 +30,11 @@ public class ReigsterUserInfo {
     private String engName;
 
     @NotBlank(message="用户手机号不能为空")
-    @ApiModelProperty(value = "用户手机号，非空", example = "18800311234")
+    @ApiModelProperty(value = "用户手机号，非空", example = "例如18800311234")
     private String telephone;
 
     @NotBlank(message="邮箱验证码不能为空")
-    @ApiModelProperty(value = "邮箱验证码，非空", example = "123456")
+    @ApiModelProperty(value = "邮箱验证码，非空", example = "例如123456")
     private String emailCode;
 
     @NotBlank(message="用户入学日期不能为空")
@@ -42,7 +42,7 @@ public class ReigsterUserInfo {
     private String admissionDate;
 
     @NotBlank(message="用户所属学校代码不能为空")
-    @ApiModelProperty(value = "学校代码，非空", example = "12345")
+    @ApiModelProperty(value = "学校代码，非空", example = "例如12345")
     private String schoolId;
 
     @NotBlank(message="用户尺码不能为空")

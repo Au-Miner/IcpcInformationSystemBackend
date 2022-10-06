@@ -52,7 +52,7 @@ public class EmailServiceImpl implements EmailService {
             return ResultTool.success();
         } catch (EmailException e) {
             e.printStackTrace();
-            return ResultTool.error(EmAllException.EMAIL_SEND_ERROR);
+            return ResultTool.error(EmAllException.EMAIL_SEND_WRONG);
         }
     }
 
@@ -71,22 +71,22 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public Result sendEmailMessage(EmailMessageInfo emailMessageInfo) {
+    public Result sendEmailMessage(String userEmail, String message) {
         try {
             HtmlEmail email = new HtmlEmail();  //创建一个HtmlEmail实例对象
             email.setHostName("smtp.qq.com");   //邮箱的SMTP服务器，一般123邮箱的是smtp.123.com,qq邮箱为smtp.qq.com
             email.setCharset("utf-8");          //设置发送的字符类型
-            email.addTo(emailMessageInfo.getEmail());          //设置收件人
+            email.addTo(userEmail);          //设置收件人
             email.setFrom("358671982@qq.com","ICPC上海大学");                      //发送人的邮箱为自己的，用户名可以随便填
             email.setAuthentication("358671982@qq.com", emailAuthenticationCode);   //设置发送人到的邮箱和用户名和授权码(授权码是自己设置的)
             email.setSubject("邮件通知");            //设置发送主题
             String code = generateCode();
-            email.setMsg(emailMessageInfo.getMessage());          //设置发送内容
+            email.setMsg(message);          //设置发送内容
             email.send();                       //进行发送
             return ResultTool.success();
         } catch (EmailException e) {
             e.printStackTrace();
-            return ResultTool.error(EmAllException.EMAIL_SEND_ERROR);
+            return ResultTool.error(EmAllException.EMAIL_SEND_WRONG);
         }
     }
 }

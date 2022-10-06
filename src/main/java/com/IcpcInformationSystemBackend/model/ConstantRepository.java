@@ -11,4 +11,14 @@ public class ConstantRepository {
     public final static int TOKEN_VALID = 1;
     public final static String TOKEN_HEADER = "Bearer ";
     public static final String TOKEN_NAME = "Authorization";
+
+
+    //用户身份程序样式
+    public final static String[] IDENTITY = {
+            "",
+            "ROLE_STUDENT",
+            "ROLE_COACH",
+            "ROLE_ADMINISTRATOR",
+            "ROLE_CHAIRMAN",
+    };
 }

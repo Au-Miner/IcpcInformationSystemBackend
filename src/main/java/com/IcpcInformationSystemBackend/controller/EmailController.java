@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 @Api(tags = "邮箱接口类")
 public class EmailController {
     @Resource
-    EmailService emailService;
+    private EmailService emailService;
 
     @GetMapping("/sendEmailCode")
     @ApiOperation(value = "输入邮箱地址，获取验证码")
@@ -31,6 +31,6 @@ public class EmailController {
     @PostMapping("/sendEmailMessage")
     @ApiOperation(value = "向目标邮箱发送邮件")
     public Result sendEmailMessage(@ApiParam(name = "发送邮件需提供的信息", required = true) @Validated @RequestBody EmailMessageInfo emailMessageInfo) {
-        return emailService.sendEmailMessage(emailMessageInfo);
+        return emailService.sendEmailMessage(emailMessageInfo.getEmail(), emailMessageInfo.getMessage());
     }
 }

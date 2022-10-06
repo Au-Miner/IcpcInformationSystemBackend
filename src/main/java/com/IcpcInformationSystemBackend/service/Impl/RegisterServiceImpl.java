@@ -41,16 +41,26 @@ public class RegisterServiceImpl implements RegisterService {
     public Result registerSchool(RegisterSchoolInfo registerSchoolInfo) {
         SchoolDoExample schoolDoExample = new SchoolDoExample();
         schoolDoExample.createCriteria().andSchoolIdEqualTo(registerSchoolInfo.getSchoolId());
-        if (schoolDoMapper.countByExample(schoolDoExample) > 0)
-            return ResultTool.error(EmAllException.SCHOOL_HAVE_REGISTERED);
+        List<SchoolDo> schoolDos = schoolDoMapper.selectByExample(schoolDoExample);
+        if (!schoolDos.isEmpty()) {
+            if (schoolDos.get(0).getState() != 3)
+                return ResultTool.error(EmAllException.SCHOOL_HAVE_REGISTERED);
+            if (schoolDoMapper.deleteByExample(schoolDoExample) == 0)
+                return ResultTool.error(EmAllException.DATABASE_ERR);
+        }
         SchoolDo schoolDo = new SchoolDo();
         BeanUtils.copyProperties(registerSchoolInfo, schoolDo);
         schoolDo.setState(1);
 
         UserDoExample userDoExample = new UserDoExample();
         userDoExample.createCriteria().andUserEmailEqualTo(registerSchoolInfo.getUserEmail());
-        if (userDoMapper.countByExample(userDoExample) > 0)
-            return ResultTool.error(EmAllException.EMAIL_HAVE_REGISTERED);
+        List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
+        if (!userDos.isEmpty()) {
+            if (userDos.get(0).getState() != 3)
+                return ResultTool.error(EmAllException.EMAIL_HAVE_REGISTERED);
+            if (userDoMapper.deleteByExample(userDoExample) == 0)
+                return ResultTool.error(EmAllException.DATABASE_ERR);
+        }
         UserDo userDo = new UserDo();
         BeanUtils.copyProperties(registerSchoolInfo, userDo);
         userDo.setIdentity(4);
@@ -62,7 +72,7 @@ public class RegisterServiceImpl implements RegisterService {
 
         switch (emailTool.judgeEmailCode(registerSchoolInfo.getUserEmail(), registerSchoolInfo.getEmailCode())) {
             case 1:
-                return ResultTool.error(EmAllException.EMAIL_CODE_ERROR);
+                return ResultTool.error(EmAllException.EMAIL_CODE_WRONG);
             case 2:
                 return ResultTool.error(EmAllException.EMAIL_CODE_OVERTIME);
             default:
@@ -82,19 +92,26 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     public Result reigsterUser(ReigsterUserInfo reigsterUserInfo) {
+        if (reigsterUserInfo.getIdentity() != 1 && reigsterUserInfo.getIdentity() != 2)
+            return ResultTool.error(EmAllException.BAD_REQUEST);
         UserDoExample userDoExample = new UserDoExample();
         userDoExample.createCriteria().andUserEmailEqualTo(reigsterUserInfo.getUserEmail());
-        if (userDoMapper.countByExample(userDoExample) > 0)
-            return ResultTool.error(EmAllException.EMAIL_HAVE_REGISTERED);
+        List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
+        if (!userDos.isEmpty()) {
+            if (userDos.get(0).getState() != 3)
+                return ResultTool.error(EmAllException.EMAIL_HAVE_REGISTERED);
+            if (userDoMapper.deleteByExample(userDoExample) == 0)
+                return ResultTool.error(EmAllException.DATABASE_ERR);
+        }
 
         userDoExample.clear();
         userDoExample.createCriteria().andSchoolIdEqualTo(reigsterUserInfo.getSchoolId());
         if (userDoMapper.countByExample(userDoExample) == 0)
-            return ResultTool.error(EmAllException.SCHOOL_HAVENOT_REGISTERED);
+            return ResultTool.error(EmAllException.SCHOOL_NOT_REGISTERED);
 
         switch (emailTool.judgeEmailCode(reigsterUserInfo.getUserEmail(), reigsterUserInfo.getEmailCode())) {
             case 1:
-                return ResultTool.error(EmAllException.EMAIL_CODE_ERROR);
+                return ResultTool.error(EmAllException.EMAIL_CODE_WRONG);
             case 2:
                 return ResultTool.error(EmAllException.EMAIL_CODE_OVERTIME);
             default:

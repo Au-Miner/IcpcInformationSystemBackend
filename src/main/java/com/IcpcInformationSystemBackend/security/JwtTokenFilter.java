@@ -51,7 +51,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         String token = request.getHeader(TOKEN_NAME);
         if (token == null) {
             filterChain.doFilter(request, response);
-            return;
         } else {
             try {
                 token = token.split(" ")[1];//remove the Bearer prefix
@@ -62,8 +61,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             switch (jwtTool.validateToken(token)) {
                 case TOKEN_VALID:
                     DecodedJWT decodedJWT = JWT.decode(token);
-                    String userId = decodedJWT.getSubject();
-                    UserDetails userDetails = myUserDetailService.loadUserByUsername(userId);
+                    String userEmail = decodedJWT.getSubject();
+                    UserDetails userDetails = myUserDetailService.loadUserByUsername(userEmail);
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(userDetails,
                                     null, userDetails.getAuthorities());

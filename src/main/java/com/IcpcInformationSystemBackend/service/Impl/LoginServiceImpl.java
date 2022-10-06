@@ -2,16 +2,20 @@ package com.IcpcInformationSystemBackend.service.Impl;
 
 
 import com.IcpcInformationSystemBackend.dao.PasswordDoMapper;
+import com.IcpcInformationSystemBackend.dao.SchoolDoMapper;
 import com.IcpcInformationSystemBackend.dao.UserDoMapper;
 import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.entity.*;
 import com.IcpcInformationSystemBackend.model.request.LoginUserInfo;
+import com.IcpcInformationSystemBackend.model.response.LoginResponse;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.service.LoginService;
 import com.IcpcInformationSystemBackend.tools.AuthTool;
 import com.IcpcInformationSystemBackend.tools.EmailTool;
+import com.IcpcInformationSystemBackend.tools.JwtTool;
 import com.IcpcInformationSystemBackend.tools.ResultTool;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -22,16 +26,22 @@ import java.util.Objects;
 @Service
 public class LoginServiceImpl implements LoginService {
     @Resource
-    UserDoMapper userDoMapper;
+    private UserDoMapper userDoMapper;
 
     @Resource
-    PasswordDoMapper passwordDoMapper;
+    private PasswordDoMapper passwordDoMapper;
 
     @Resource
-    EmailTool emailTool;
+    private SchoolDoMapper schoolDoMapper;
 
     @Resource
-    AuthTool authTool;
+    private EmailTool emailTool;
+
+    @Resource
+    private AuthTool authTool;
+
+    @Resource
+    private JwtTool jwtTool;
 
     @Override
     public Result loginUser(LoginUserInfo loginUserInfo) {
@@ -46,10 +56,20 @@ public class LoginServiceImpl implements LoginService {
         if (passwordDos.isEmpty())
             return ResultTool.error(EmAllException.NO_SUCH_USER);
         if (!Objects.equals(passwordDos.get(0).getPasswd(), loginUserInfo.getPassword()))
-            return ResultTool.error(EmAllException.PASSWD_ERROR);
+            return ResultTool.error(EmAllException.PASSWD_WRONG);
         if (loginUserInfo.getIdentity() != userDos.get(0).getIdentity())
             return ResultTool.error(EmAllException.USER_IDENTITY_ERROR);
-        return ResultTool.success();
+        LoginResponse loginResponse = new LoginResponse();
+        BeanUtils.copyProperties(userDos.get(0), loginResponse);
+        loginResponse.setToken(jwtTool.createJwt(
+                userDos.get(0).getUserEmail(), //邮箱
+                userDos.get(0).getChiName()    //中文名
+        ));
+        SchoolDoExample schoolDoExample = new SchoolDoExample();
+        schoolDoExample.createCriteria().andSchoolIdEqualTo(userDos.get(0).getSchoolId());
+        List<SchoolDo> schoolDos = schoolDoMapper.selectByExample(schoolDoExample);
+        loginResponse.setChiSchoolName(schoolDos.get(0).getChiSchoolName());
+        return ResultTool.success(loginResponse);
     }
 
 
@@ -63,7 +83,7 @@ public class LoginServiceImpl implements LoginService {
         int mark = emailTool.judgeEmailCode(email, emailCode);
         switch (mark) {
             case 1:
-                return ResultTool.error(EmAllException.EMAIL_CODE_ERROR);
+                return ResultTool.error(EmAllException.EMAIL_CODE_WRONG);
             case 2:
                 return ResultTool.error(EmAllException.EMAIL_CODE_OVERTIME);
             default:
