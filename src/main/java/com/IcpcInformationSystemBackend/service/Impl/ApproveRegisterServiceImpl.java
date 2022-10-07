@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -118,6 +119,10 @@ public class ApproveRegisterServiceImpl implements ApproveRegisterService {
             return ResultTool.error(EmAllException.NO_SUCH_USER);
         if (userDos.get(0).getState() != 1)
             return ResultTool.error(EmAllException.USER_DONT_NEED_APPROVE);
+        if (!Objects.equals(userDos.get(0).getSchoolId(), approveSchoolInfo.getSchoolId()))
+            return ResultTool.error(EmAllException.BAD_REQUEST);
+        if (userDos.get(0).getIdentity() != 4)
+            return ResultTool.error(EmAllException.BAD_REQUEST);
         SchoolDoExample schoolDoExample = new SchoolDoExample();
         schoolDoExample.createCriteria().andSchoolIdEqualTo(approveSchoolInfo.getSchoolId());
         List<SchoolDo> schoolDos = schoolDoMapper.selectByExample(schoolDoExample);
