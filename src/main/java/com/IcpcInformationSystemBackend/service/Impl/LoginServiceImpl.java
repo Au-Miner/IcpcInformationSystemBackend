@@ -57,8 +57,10 @@ public class LoginServiceImpl implements LoginService {
             return ResultTool.error(EmAllException.NO_SUCH_USER);
         if (!Objects.equals(passwordDos.get(0).getPasswd(), loginUserInfo.getPassword()))
             return ResultTool.error(EmAllException.PASSWD_WRONG);
-        if (loginUserInfo.getIdentity() != userDos.get(0).getIdentity())
+        if (!Objects.equals(loginUserInfo.getIdentity(), userDos.get(0).getIdentity()))
             return ResultTool.error(EmAllException.USER_IDENTITY_ERROR);
+        if (userDos.get(0).getState() != 2)
+            return ResultTool.error(EmAllException.USER_DONT_APPROVE_SUCCESS);
         LoginResponse loginResponse = new LoginResponse();
         BeanUtils.copyProperties(userDos.get(0), loginResponse);
         loginResponse.setToken(jwtTool.createJwt(

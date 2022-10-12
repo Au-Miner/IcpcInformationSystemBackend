@@ -19,7 +19,7 @@ public class ReigsterUserInfo {
 
     @NotNull(message="用户身份不能为空")
     @ApiModelProperty(value = "用户身份（只能1或者2），非空", example = "1选手2教练")
-    private int identity;
+    private Integer identity;
 
     @NotBlank(message="用户中文名不能为空")
     @ApiModelProperty(value = "用户中文名，非空", example = "王启隆")

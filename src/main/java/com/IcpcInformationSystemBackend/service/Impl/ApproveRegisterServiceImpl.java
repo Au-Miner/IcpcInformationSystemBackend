@@ -145,6 +145,12 @@ public class ApproveRegisterServiceImpl implements ApproveRegisterService {
     @Override
     public Result approveCoachRegister(ApproveUserInfo approveUserInfo) {
         UserDoExample userDoExample = new UserDoExample();
+        userDoExample.createCriteria().andUserEmailEqualTo(authTool.getUserId());
+        List<UserDo> userDos1 = userDoMapper.selectByExample(userDoExample);
+        if (userDos1.isEmpty())
+            return ResultTool.error(EmAllException.TOKEN_ERROR);
+        String schoolId = userDos1.get(0).getSchoolId();
+        userDoExample.clear();
         userDoExample.createCriteria().andUserEmailEqualTo(approveUserInfo.getUserEmail());
         List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
         if (userDos.isEmpty())
@@ -153,6 +159,8 @@ public class ApproveRegisterServiceImpl implements ApproveRegisterService {
             return ResultTool.error(EmAllException.USER_DONT_NEED_APPROVE);
         if (userDos.get(0).getIdentity() != 2)
             return ResultTool.error(EmAllException.USER_IDENTITY_ERROR);
+        if (!Objects.equals(userDos.get(0).getSchoolId(), schoolId))
+            return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
         if (approveUserInfo.getApproveResult() != 2 && approveUserInfo.getApproveResult() != 3)
             return ResultTool.error(EmAllException.BAD_REQUEST);
         userDos.get(0).setState(approveUserInfo.getApproveResult());
@@ -164,6 +172,12 @@ public class ApproveRegisterServiceImpl implements ApproveRegisterService {
     @Override
     public Result approveStudentRegister(ApproveUserInfo approveUserInfo) {
         UserDoExample userDoExample = new UserDoExample();
+        userDoExample.createCriteria().andUserEmailEqualTo(authTool.getUserId());
+        List<UserDo> userDos1 = userDoMapper.selectByExample(userDoExample);
+        if (userDos1.isEmpty())
+            return ResultTool.error(EmAllException.TOKEN_ERROR);
+        String schoolId = userDos1.get(0).getSchoolId();
+        userDoExample.clear();
         userDoExample.createCriteria().andUserEmailEqualTo(approveUserInfo.getUserEmail());
         List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
         if (userDos.isEmpty())
@@ -172,6 +186,8 @@ public class ApproveRegisterServiceImpl implements ApproveRegisterService {
             return ResultTool.error(EmAllException.USER_DONT_NEED_APPROVE);
         if (userDos.get(0).getIdentity() != 1)
             return ResultTool.error(EmAllException.USER_IDENTITY_ERROR);
+        if (!Objects.equals(userDos.get(0).getSchoolId(), schoolId))
+            return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
         if (approveUserInfo.getApproveResult() != 2 && approveUserInfo.getApproveResult() != 3)
             return ResultTool.error(EmAllException.BAD_REQUEST);
         userDos.get(0).setState(approveUserInfo.getApproveResult());

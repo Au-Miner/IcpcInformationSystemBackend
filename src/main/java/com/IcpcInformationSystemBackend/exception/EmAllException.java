@@ -25,6 +25,8 @@ public enum EmAllException implements CommonError{
     PASSWD_WRONG(403, "密码错误"),
     USER_IDENTITY_ERROR(403, "用户身份错误"),
     USER_DONT_NEED_APPROVE(403, "用户无需审批"),
+    USER_DONT_APPROVE_SUCCESS(403, "用户未审批通过"),
+    AUTHORIZATION_ERROR(403, "权限错误"),
 
     //其他
     DATABASE_ERR(405,"数据库错误"),

@@ -20,5 +20,5 @@ public class LoginUserInfo {
 
     @NotNull(message="用户身份不能为空")
     @ApiModelProperty(value = "用户身份，非空", example = "1或者2或者3或者4")
-    private int identity;
+    private Integer identity;
 }

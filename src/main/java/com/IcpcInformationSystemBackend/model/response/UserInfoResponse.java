@@ -18,5 +18,5 @@ public class UserInfoResponse {
     private String schoolId;
     private String chiSchoolName;
     private String clothSize;
-    private String state;
+    private Integer state;
 }

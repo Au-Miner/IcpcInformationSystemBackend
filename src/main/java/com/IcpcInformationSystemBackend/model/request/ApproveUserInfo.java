@@ -18,7 +18,7 @@ public class ApproveUserInfo {
 
     @NotNull(message = "审批结果")
     @ApiModelProperty(value = "审批结果，非空", example = "2批准，3驳回")
-    private int approveResult;
+    private Integer approveResult;
 
     @NotBlank(message = "审批理由")
     @ApiModelProperty(value = "审批理由，非空", example = "资料审核合格")
