@@ -1,9 +1,8 @@
 package com.IcpcInformationSystemBackend.controller;
 
-import com.IcpcInformationSystemBackend.model.request.ApproveSchoolInfo;
 import com.IcpcInformationSystemBackend.model.request.ApproveUserInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;
-import com.IcpcInformationSystemBackend.service.ApproveRegisterService;
+import com.IcpcInformationSystemBackend.service.ApproveService;
 import com.IcpcInformationSystemBackend.service.EmailService;
 import com.IcpcInformationSystemBackend.tools.ResultTool;
 import io.swagger.annotations.Api;
@@ -23,27 +22,27 @@ import javax.annotation.Resource;
 @Api(tags = "学校负责人接口类")
 public class ChairmanController {
     @Resource
-    private ApproveRegisterService approveRegisterService;
+    private ApproveService approveService;
 
     @Resource
     private EmailService emailService;
 
     @GetMapping("/getCoachRegitsterInfo")
-    @ApiOperation(value = "学校负责人在审核教练注册账号时在此接口获取学生所有相关信息")
+    @ApiOperation(value = "学校负责人在审核教练注册账号时在此接口获取教练所有相关信息")
     public Result getCoachRegitsterInfo() {
-        return approveRegisterService.getCoachRegitsterInfo();
+        return approveService.getCoachRegitsterInfo();
     }
 
     @GetMapping("/getStudentRegitsterInfo")
-    @ApiOperation(value = "学校负责人在审核学生注册账号时在此接口获取教练所有相关信息")
+    @ApiOperation(value = "学校负责人在审核学生注册账号时在此接口获取学生所有相关信息")
     public Result getStudentRegitsterInfo() {
-        return approveRegisterService.getStudentRegitsterInfo();
+        return approveService.getStudentRegitsterInfo();
     }
 
     @PostMapping("/approveCoachRegister")
     @ApiOperation(value = "学校负责人审批教练注册账号")
     public Result approveCoachRegister(@ApiParam(name = "审批教练时需要提供的信息", required = true) @Validated @RequestBody ApproveUserInfo approveUserInfo) {
-        Result res1 = approveRegisterService.approveCoachRegister(approveUserInfo);
+        Result res1 = approveService.approveCoachRegister(approveUserInfo);
         if (res1.getCode() != 200)
             return res1;
         Result res2 = emailService.sendEmailMessage(approveUserInfo.getUserEmail(), approveUserInfo.getApproveReason());
@@ -55,7 +54,7 @@ public class ChairmanController {
     @PostMapping("/approveStudentRegister")
     @ApiOperation(value = "学校负责人审批选手注册账号")
     public Result approveStudentRegister(@ApiParam(name = "审批选手时需要提供的信息", required = true) @Validated @RequestBody ApproveUserInfo approveUserInfo) {
-        Result res1 = approveRegisterService.approveStudentRegister(approveUserInfo);
+        Result res1 = approveService.approveStudentRegister(approveUserInfo);
         if (res1.getCode() != 200)
             return res1;
         Result res2 = emailService.sendEmailMessage(approveUserInfo.getUserEmail(), approveUserInfo.getApproveReason());

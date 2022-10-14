@@ -5,6 +5,8 @@ import com.IcpcInformationSystemBackend.dao.UserDoMapper;
 import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.entity.*;
 import com.IcpcInformationSystemBackend.model.request.CompetitionInfo;
+import com.IcpcInformationSystemBackend.model.request.CompetitionModifyInfo;
+import com.IcpcInformationSystemBackend.model.response.CompetitionInfoResponse;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.service.CompetitionService;
 import com.IcpcInformationSystemBackend.tools.AuthTool;
@@ -14,6 +16,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
@@ -35,22 +38,19 @@ public class CompetitionServiceImpl implements CompetitionService {
     public Result buildCompetition(CompetitionInfo competitionInfo) {
         CompetitionDo competitionDo = new CompetitionDo();
         BeanUtils.copyProperties(competitionInfo, competitionDo);
-        if (!Objects.equals(competitionDo.getCompetitionId(), "")) {
-            log.info("比赛id号非空！");
+        if (!Objects.equals(competitionDo.getCompetitionId(), ""))
             return ResultTool.error(EmAllException.BAD_REQUEST);
-        }
         competitionDo.setCompetitionId(generateCompetitionId());
         String userEmail = authTool.getUserId();
-        competitionDo.setBuilderEmail(userEmail);
         UserDoExample userDoExample = new UserDoExample();
         userDoExample.createCriteria().andUserEmailEqualTo(userEmail);
         List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
         if (userDos.isEmpty())
             return ResultTool.error(EmAllException.NO_SUCH_USER);
-        if (userDos.get(0).getState() == 1)
+        if (userDos.get(0).getUserState() != 2)
             return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
         competitionDo.setBuilderEmail(userEmail);
-        competitionDo.setState(1);
+        competitionDo.setCompetitionState(1);
         competitionDo.setSchoolId(userDos.get(0).getSchoolId());
         String duration = competitionInfo.getDuration();
         if (!judgeDuration(duration))
@@ -92,5 +92,96 @@ public class CompetitionServiceImpl implements CompetitionService {
             if (competitionDoMapper.countByExample(competitionDoExample) == 0)
                 return String.valueOf(tmp);
         }
+    }
+
+    @Override
+    public Result rebuildCompetition(CompetitionInfo competitionInfo) {
+        CompetitionDo competitionDo = new CompetitionDo();
+        BeanUtils.copyProperties(competitionInfo, competitionDo);
+        if (Objects.equals(competitionDo.getCompetitionId(), ""))
+            return ResultTool.error(EmAllException.BAD_REQUEST);
+        CompetitionDoExample competitionDoExample = new CompetitionDoExample();
+        competitionDoExample.createCriteria().andCompetitionIdEqualTo(competitionDo.getCompetitionId());
+        List<CompetitionDo> competitionDos = competitionDoMapper.selectByExample(competitionDoExample);
+        if (competitionDos.isEmpty())
+            return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);
+        if (!Objects.equals(competitionDos.get(0).getBuilderEmail(), authTool.getUserId()))
+            return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
+        competitionDo.setCompetitionState(1);
+        competitionDo.setApproveReason("");
+        if (competitionDoMapper.updateByPrimaryKeySelective(competitionDo) == 0)
+            return ResultTool.error(EmAllException.DATABASE_ERR);
+        return ResultTool.success();
+    }
+
+    @Override
+    public Result getOwnCompetitionInfo() {
+        String userEmail = authTool.getUserId();
+        CompetitionDoExample competitionDoExample = new CompetitionDoExample();
+        competitionDoExample.createCriteria().andBuilderEmailEqualTo(userEmail);
+        List<CompetitionDo> competitionDos = competitionDoMapper.selectByExample(competitionDoExample);
+        ArrayList<CompetitionInfoResponse> res = new ArrayList<>();
+        for (CompetitionDo competitionDo : competitionDos) {
+            CompetitionInfoResponse competitionInfoResponse = new CompetitionInfoResponse();
+            BeanUtils.copyProperties(competitionDo, competitionInfoResponse);
+            res.add(competitionInfoResponse);
+        }
+        return ResultTool.success(res);
+    }
+
+    @Override
+    public Result getAllCompetitionInfo() {
+        CompetitionDoExample competitionDoExample = new CompetitionDoExample();
+        competitionDoExample.createCriteria().getAllCriteria();
+        ArrayList<CompetitionInfoResponse> res = new ArrayList<>();
+        for (CompetitionDo competitionDo : competitionDoMapper.selectByExample(competitionDoExample)) {
+            CompetitionInfoResponse competitionInfoResponse = new CompetitionInfoResponse();
+            BeanUtils.copyProperties(competitionDo, competitionInfoResponse);
+            UserDoExample userDoExample = new UserDoExample();
+            userDoExample.createCriteria().andUserEmailEqualTo(competitionDo.getBuilderEmail());
+            List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
+            if (userDos.isEmpty())
+                return ResultTool.error(EmAllException.DATABASE_ERR);
+            BeanUtils.copyProperties(userDos.get(0), competitionInfoResponse);
+            res.add(competitionInfoResponse);
+        }
+        return ResultTool.success(res);
+    }
+
+    @Override
+    public Result getAllAcceptCompetitionInfo() {
+        CompetitionDoExample competitionDoExample = new CompetitionDoExample();
+        competitionDoExample.createCriteria().getAllCriteria();
+        ArrayList<CompetitionInfoResponse> res = new ArrayList<>();
+        for (CompetitionDo competitionDo : competitionDoMapper.selectByExample(competitionDoExample)) {
+            if (competitionDo.getCompetitionState() != 2)
+                continue;
+            CompetitionInfoResponse competitionInfoResponse = new CompetitionInfoResponse();
+            BeanUtils.copyProperties(competitionDo, competitionInfoResponse);
+            UserDoExample userDoExample = new UserDoExample();
+            userDoExample.createCriteria().andUserEmailEqualTo(competitionDo.getBuilderEmail());
+            List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
+            if (userDos.isEmpty())
+                return ResultTool.error(EmAllException.DATABASE_ERR);
+            BeanUtils.copyProperties(userDos.get(0), competitionInfoResponse);
+            res.add(competitionInfoResponse);
+        }
+        return ResultTool.success(res);
+    }
+
+    @Override
+    public Result modifyCompetition(CompetitionModifyInfo competitionModifyInfo) {
+        CompetitionDoExample competitionDoExample = new CompetitionDoExample();
+        competitionDoExample.createCriteria().andCompetitionIdEqualTo(competitionModifyInfo.getCompetitionId());
+        List<CompetitionDo> competitionDos = competitionDoMapper.selectByExample(competitionDoExample);
+        if (competitionDos.isEmpty())
+            return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);
+        if (!Objects.equals(competitionDos.get(0).getBuilderEmail(), authTool.getUserId()))
+            return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
+        CompetitionDo competitionDo = new CompetitionDo();
+        BeanUtils.copyProperties(competitionModifyInfo, competitionDo);
+        if (competitionDoMapper.updateByPrimaryKeySelective(competitionDo) == 0)
+            return ResultTool.error(EmAllException.DATABASE_ERR);
+        return ResultTool.success();
     }
 }

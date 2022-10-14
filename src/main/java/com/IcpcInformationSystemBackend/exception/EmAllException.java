@@ -28,6 +28,10 @@ public enum EmAllException implements CommonError{
     USER_DONT_APPROVE_SUCCESS(403, "用户未审批通过"),
     AUTHORIZATION_ERROR(403, "权限错误"),
 
+    //比赛相关
+    NO_SUCH_COMPETITION(403,"查无此赛"),
+    COMPETITION_DONT_NEED_APPROVE(403,"比赛无需审批"),
+
     //其他
     DATABASE_ERR(405,"数据库错误"),
     UNKNOWN_ERROR(500,"未知错误"),

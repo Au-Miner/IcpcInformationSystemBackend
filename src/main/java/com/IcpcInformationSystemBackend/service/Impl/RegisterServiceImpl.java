@@ -43,20 +43,20 @@ public class RegisterServiceImpl implements RegisterService {
         schoolDoExample.createCriteria().andSchoolIdEqualTo(registerSchoolInfo.getSchoolId());
         List<SchoolDo> schoolDos = schoolDoMapper.selectByExample(schoolDoExample);
         if (!schoolDos.isEmpty()) {
-            if (schoolDos.get(0).getState() != 3)
+            if (schoolDos.get(0).getSchoolState() != 3)
                 return ResultTool.error(EmAllException.SCHOOL_HAVE_REGISTERED);
             if (schoolDoMapper.deleteByExample(schoolDoExample) == 0)
                 return ResultTool.error(EmAllException.DATABASE_ERR);
         }
         SchoolDo schoolDo = new SchoolDo();
         BeanUtils.copyProperties(registerSchoolInfo, schoolDo);
-        schoolDo.setState(1);
+        schoolDo.setSchoolState(1);
 
         UserDoExample userDoExample = new UserDoExample();
         userDoExample.createCriteria().andUserEmailEqualTo(registerSchoolInfo.getUserEmail());
         List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
         if (!userDos.isEmpty()) {
-            if (userDos.get(0).getState() != 3)
+            if (userDos.get(0).getUserState() != 3)
                 return ResultTool.error(EmAllException.EMAIL_HAVE_REGISTERED);
             if (userDoMapper.deleteByExample(userDoExample) == 0)
                 return ResultTool.error(EmAllException.DATABASE_ERR);
@@ -64,7 +64,7 @@ public class RegisterServiceImpl implements RegisterService {
         UserDo userDo = new UserDo();
         BeanUtils.copyProperties(registerSchoolInfo, userDo);
         userDo.setIdentity(4);
-        userDo.setState(1);
+        userDo.setUserState(1);
 
         PasswordDo passwordDo = new PasswordDo();
         passwordDo.setUserEmail(userDo.getUserEmail());
@@ -98,7 +98,7 @@ public class RegisterServiceImpl implements RegisterService {
         userDoExample.createCriteria().andUserEmailEqualTo(reigsterUserInfo.getUserEmail());
         List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
         if (!userDos.isEmpty()) {
-            if (userDos.get(0).getState() != 3)
+            if (userDos.get(0).getUserState() != 3)
                 return ResultTool.error(EmAllException.EMAIL_HAVE_REGISTERED);
             if (userDoMapper.deleteByExample(userDoExample) == 0)
                 return ResultTool.error(EmAllException.DATABASE_ERR);
@@ -120,7 +120,7 @@ public class RegisterServiceImpl implements RegisterService {
 
         UserDo userDo = new UserDo();
         BeanUtils.copyProperties(reigsterUserInfo, userDo);
-        userDo.setState(1);
+        userDo.setUserState(1);
 
         PasswordDo passwordDo = new PasswordDo();
         passwordDo.setUserEmail(userDo.getUserEmail());
@@ -141,9 +141,11 @@ public class RegisterServiceImpl implements RegisterService {
             List<SchoolDo> schoolDos = schoolDoMapper.selectByExample(schoolDoExample);
             List<SchoolIdResponse> resList = new ArrayList<>();
             for (SchoolDo schoolDo : schoolDos) {
-                SchoolIdResponse schoolIdResponse = new SchoolIdResponse();
-                BeanUtils.copyProperties(schoolDo, schoolIdResponse);
-                resList.add(schoolIdResponse);
+                if (schoolDo.getSchoolState() == 2) {
+                    SchoolIdResponse schoolIdResponse = new SchoolIdResponse();
+                    BeanUtils.copyProperties(schoolDo, schoolIdResponse);
+                    resList.add(schoolIdResponse);
+                }
             }
             return ResultTool.success(resList);
         }catch (Exception e) {

@@ -42,6 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/chairman/**").hasRole("CHAIRMAN")//hasRole("CHAIRMAN")
                 .antMatchers("/coach/**").hasRole("COACH")//hasRole("COACH")
                 .antMatchers("/student/**").hasRole("STUDENT")//hasRole("STUDENT")
+                .antMatchers("/competitionChairman/**").hasAnyRole("ADMINISTRATOR", "CHAIRMAN", "COACH")//hasAnyRole
                 ;
 
 

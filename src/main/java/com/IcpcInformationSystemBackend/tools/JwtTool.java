@@ -63,7 +63,7 @@ public class JwtTool {
      * @Description: 验证token
      */
     public int validateToken(String token) {
-        log.info(token);
+        // log.info(token);
         try {
             Algorithm algorithm = Algorithm.HMAC256(ENCODE_KEY.getBytes());
             if (jwtVerifier == null) {
@@ -72,13 +72,13 @@ public class JwtTool {
             }
             jwtVerifier.verify(token);
         } catch (SignatureVerificationException e) {
-            log.info("Token check failed: {}", e.toString());
+            // log.info("Token check failed: {}", e.toString());
             return TOKEN_VERIFICATION_EXCEPTION;
         } catch (TokenExpiredException e) {
-            log.info("Token expired: {}", e.toString());
+            // log.info("Token expired: {}", e.toString());
             return TOKEN_EXPIRED_EXCEPTION;
         } catch (JWTDecodeException | IllegalArgumentException e) {
-            log.info("Token Invalid: {}", e.toString());
+            // log.info("Token Invalid: {}", e.toString());
             return TOKEN_FAKE_EXCEPTION;
         }
         //解码token

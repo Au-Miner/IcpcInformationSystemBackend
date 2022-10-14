@@ -59,7 +59,7 @@ public class LoginServiceImpl implements LoginService {
             return ResultTool.error(EmAllException.PASSWD_WRONG);
         if (!Objects.equals(loginUserInfo.getIdentity(), userDos.get(0).getIdentity()))
             return ResultTool.error(EmAllException.USER_IDENTITY_ERROR);
-        if (userDos.get(0).getState() != 2)
+        if (userDos.get(0).getUserState() != 2)
             return ResultTool.error(EmAllException.USER_DONT_APPROVE_SUCCESS);
         LoginResponse loginResponse = new LoginResponse();
         BeanUtils.copyProperties(userDos.get(0), loginResponse);

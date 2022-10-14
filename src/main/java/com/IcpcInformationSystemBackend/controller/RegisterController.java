@@ -40,6 +40,4 @@ public class RegisterController {
     public Result getSchoolIdAndName() {
         return registerService.getSchoolIdAndName();
     }
-
-
 }

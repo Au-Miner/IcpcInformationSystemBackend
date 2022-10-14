@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.IcpcInformationSystemBackend.dao.CompetitionDoMapper" >
+  <resultMap id="BaseResultMap" type="com.IcpcInformationSystemBackend.model.entity.CompetitionDo" >
+    <id column="competition_id" property="competitionId" jdbcType="VARCHAR" />
+    <result column="competition_chi_name" property="competitionChiName" jdbcType="VARCHAR" />
+    <result column="competition_eng_name" property="competitionEngName" jdbcType="VARCHAR" />
+    <result column="school_id" property="schoolId" jdbcType="VARCHAR" />
+    <result column="builder_email" property="builderEmail" jdbcType="VARCHAR" />
+    <result column="held_position" property="heldPosition" jdbcType="VARCHAR" />
+    <result column="registration_start_time" property="registrationStartTime" jdbcType="TIMESTAMP" />
+    <result column="registration_end_time" property="registrationEndTime" jdbcType="TIMESTAMP" />
+    <result column="pay_start_time" property="payStartTime" jdbcType="TIMESTAMP" />
+    <result column="pay_end_time" property="payEndTime" jdbcType="TIMESTAMP" />
+    <result column="competition_start_time" property="competitionStartTime" jdbcType="TIMESTAMP" />
+    <result column="duration" property="duration" jdbcType="VARCHAR" />
+    <result column="competition_introduction" property="competitionIntroduction" jdbcType="VARCHAR" />
+    <result column="competition_state" property="competitionState" jdbcType="INTEGER" />
+    <result column="approve_reason" property="approveReason" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    competition_id, competition_chi_name, competition_eng_name, school_id, builder_email, 
+    held_position, registration_start_time, registration_end_time, pay_start_time, pay_end_time, 
+    competition_start_time, duration, competition_introduction, competition_state, approve_reason
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.IcpcInformationSystemBackend.model.entity.CompetitionDoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from competition
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from competition
+    where competition_id = #{competitionId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from competition
+    where competition_id = #{competitionId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.IcpcInformationSystemBackend.model.entity.CompetitionDoExample" >
+    delete from competition
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.IcpcInformationSystemBackend.model.entity.CompetitionDo" >
+    insert into competition (competition_id, competition_chi_name, 
+      competition_eng_name, school_id, builder_email, 
+      held_position, registration_start_time, 
+      registration_end_time, pay_start_time, 
+      pay_end_time, competition_start_time, duration, 
+      competition_introduction, competition_state, 
+      approve_reason)
+    values (#{competitionId,jdbcType=VARCHAR}, #{competitionChiName,jdbcType=VARCHAR}, 
+      #{competitionEngName,jdbcType=VARCHAR}, #{schoolId,jdbcType=VARCHAR}, #{builderEmail,jdbcType=VARCHAR}, 
+      #{heldPosition,jdbcType=VARCHAR}, #{registrationStartTime,jdbcType=TIMESTAMP}, 
+      #{registrationEndTime,jdbcType=TIMESTAMP}, #{payStartTime,jdbcType=TIMESTAMP}, 
+      #{payEndTime,jdbcType=TIMESTAMP}, #{competitionStartTime,jdbcType=TIMESTAMP}, #{duration,jdbcType=VARCHAR}, 
+      #{competitionIntroduction,jdbcType=VARCHAR}, #{competitionState,jdbcType=INTEGER}, 
+      #{approveReason,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.IcpcInformationSystemBackend.model.entity.CompetitionDo" >
+    insert into competition
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="competitionId != null" >
+        competition_id,
+      </if>
+      <if test="competitionChiName != null" >
+        competition_chi_name,
+      </if>
+      <if test="competitionEngName != null" >
+        competition_eng_name,
+      </if>
+      <if test="schoolId != null" >
+        school_id,
+      </if>
+      <if test="builderEmail != null" >
+        builder_email,
+      </if>
+      <if test="heldPosition != null" >
+        held_position,
+      </if>
+      <if test="registrationStartTime != null" >
+        registration_start_time,
+      </if>
+      <if test="registrationEndTime != null" >
+        registration_end_time,
+      </if>
+      <if test="payStartTime != null" >
+        pay_start_time,
+      </if>
+      <if test="payEndTime != null" >
+        pay_end_time,
+      </if>
+      <if test="competitionStartTime != null" >
+        competition_start_time,
+      </if>
+      <if test="duration != null" >
+        duration,
+      </if>
+      <if test="competitionIntroduction != null" >
+        competition_introduction,
+      </if>
+      <if test="competitionState != null" >
+        competition_state,
+      </if>
+      <if test="approveReason != null" >
+        approve_reason,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="competitionId != null" >
+        #{competitionId,jdbcType=VARCHAR},
+      </if>
+      <if test="competitionChiName != null" >
+        #{competitionChiName,jdbcType=VARCHAR},
+      </if>
+      <if test="competitionEngName != null" >
+        #{competitionEngName,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolId != null" >
+        #{schoolId,jdbcType=VARCHAR},
+      </if>
+      <if test="builderEmail != null" >
+        #{builderEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="heldPosition != null" >
+        #{heldPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationStartTime != null" >
+        #{registrationStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registrationEndTime != null" >
+        #{registrationEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payStartTime != null" >
+        #{payStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payEndTime != null" >
+        #{payEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="competitionStartTime != null" >
+        #{competitionStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="duration != null" >
+        #{duration,jdbcType=VARCHAR},
+      </if>
+      <if test="competitionIntroduction != null" >
+        #{competitionIntroduction,jdbcType=VARCHAR},
+      </if>
+      <if test="competitionState != null" >
+        #{competitionState,jdbcType=INTEGER},
+      </if>
+      <if test="approveReason != null" >
+        #{approveReason,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.IcpcInformationSystemBackend.model.entity.CompetitionDoExample" resultType="java.lang.Integer" >
+    select count(*) from competition
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update competition
+    <set >
+      <if test="record.competitionId != null" >
+        competition_id = #{record.competitionId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.competitionChiName != null" >
+        competition_chi_name = #{record.competitionChiName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.competitionEngName != null" >
+        competition_eng_name = #{record.competitionEngName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.schoolId != null" >
+        school_id = #{record.schoolId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.builderEmail != null" >
+        builder_email = #{record.builderEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.heldPosition != null" >
+        held_position = #{record.heldPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="record.registrationStartTime != null" >
+        registration_start_time = #{record.registrationStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.registrationEndTime != null" >
+        registration_end_time = #{record.registrationEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.payStartTime != null" >
+        pay_start_time = #{record.payStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.payEndTime != null" >
+        pay_end_time = #{record.payEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.competitionStartTime != null" >
+        competition_start_time = #{record.competitionStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.duration != null" >
+        duration = #{record.duration,jdbcType=VARCHAR},
+      </if>
+      <if test="record.competitionIntroduction != null" >
+        competition_introduction = #{record.competitionIntroduction,jdbcType=VARCHAR},
+      </if>
+      <if test="record.competitionState != null" >
+        competition_state = #{record.competitionState,jdbcType=INTEGER},
+      </if>
+      <if test="record.approveReason != null" >
+        approve_reason = #{record.approveReason,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update competition
+    set competition_id = #{record.competitionId,jdbcType=VARCHAR},
+      competition_chi_name = #{record.competitionChiName,jdbcType=VARCHAR},
+      competition_eng_name = #{record.competitionEngName,jdbcType=VARCHAR},
+      school_id = #{record.schoolId,jdbcType=VARCHAR},
+      builder_email = #{record.builderEmail,jdbcType=VARCHAR},
+      held_position = #{record.heldPosition,jdbcType=VARCHAR},
+      registration_start_time = #{record.registrationStartTime,jdbcType=TIMESTAMP},
+      registration_end_time = #{record.registrationEndTime,jdbcType=TIMESTAMP},
+      pay_start_time = #{record.payStartTime,jdbcType=TIMESTAMP},
+      pay_end_time = #{record.payEndTime,jdbcType=TIMESTAMP},
+      competition_start_time = #{record.competitionStartTime,jdbcType=TIMESTAMP},
+      duration = #{record.duration,jdbcType=VARCHAR},
+      competition_introduction = #{record.competitionIntroduction,jdbcType=VARCHAR},
+      competition_state = #{record.competitionState,jdbcType=INTEGER},
+      approve_reason = #{record.approveReason,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.IcpcInformationSystemBackend.model.entity.CompetitionDo" >
+    update competition
+    <set >
+      <if test="competitionChiName != null" >
+        competition_chi_name = #{competitionChiName,jdbcType=VARCHAR},
+      </if>
+      <if test="competitionEngName != null" >
+        competition_eng_name = #{competitionEngName,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolId != null" >
+        school_id = #{schoolId,jdbcType=VARCHAR},
+      </if>
+      <if test="builderEmail != null" >
+        builder_email = #{builderEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="heldPosition != null" >
+        held_position = #{heldPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationStartTime != null" >
+        registration_start_time = #{registrationStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registrationEndTime != null" >
+        registration_end_time = #{registrationEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payStartTime != null" >
+        pay_start_time = #{payStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payEndTime != null" >
+        pay_end_time = #{payEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="competitionStartTime != null" >
+        competition_start_time = #{competitionStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="duration != null" >
+        duration = #{duration,jdbcType=VARCHAR},
+      </if>
+      <if test="competitionIntroduction != null" >
+        competition_introduction = #{competitionIntroduction,jdbcType=VARCHAR},
+      </if>
+      <if test="competitionState != null" >
+        competition_state = #{competitionState,jdbcType=INTEGER},
+      </if>
+      <if test="approveReason != null" >
+        approve_reason = #{approveReason,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where competition_id = #{competitionId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.IcpcInformationSystemBackend.model.entity.CompetitionDo" >
+    update competition
+    set competition_chi_name = #{competitionChiName,jdbcType=VARCHAR},
+      competition_eng_name = #{competitionEngName,jdbcType=VARCHAR},
+      school_id = #{schoolId,jdbcType=VARCHAR},
+      builder_email = #{builderEmail,jdbcType=VARCHAR},
+      held_position = #{heldPosition,jdbcType=VARCHAR},
+      registration_start_time = #{registrationStartTime,jdbcType=TIMESTAMP},
+      registration_end_time = #{registrationEndTime,jdbcType=TIMESTAMP},
+      pay_start_time = #{payStartTime,jdbcType=TIMESTAMP},
+      pay_end_time = #{payEndTime,jdbcType=TIMESTAMP},
+      competition_start_time = #{competitionStartTime,jdbcType=TIMESTAMP},
+      duration = #{duration,jdbcType=VARCHAR},
+      competition_introduction = #{competitionIntroduction,jdbcType=VARCHAR},
+      competition_state = #{competitionState,jdbcType=INTEGER},
+      approve_reason = #{approveReason,jdbcType=VARCHAR}
+    where competition_id = #{competitionId,jdbcType=VARCHAR}
+  </update>
+</mapper>

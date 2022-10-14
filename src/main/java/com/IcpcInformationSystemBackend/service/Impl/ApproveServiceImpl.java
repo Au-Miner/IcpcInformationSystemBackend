@@ -1,18 +1,18 @@
 package com.IcpcInformationSystemBackend.service.Impl;
 
+import com.IcpcInformationSystemBackend.dao.CompetitionDoMapper;
 import com.IcpcInformationSystemBackend.dao.SchoolDoMapper;
 import com.IcpcInformationSystemBackend.dao.UserDoMapper;
 import com.IcpcInformationSystemBackend.exception.EmAllException;
-import com.IcpcInformationSystemBackend.model.entity.SchoolDo;
-import com.IcpcInformationSystemBackend.model.entity.SchoolDoExample;
-import com.IcpcInformationSystemBackend.model.entity.UserDo;
-import com.IcpcInformationSystemBackend.model.entity.UserDoExample;
+import com.IcpcInformationSystemBackend.model.entity.*;
+import com.IcpcInformationSystemBackend.model.request.ApproveCompetitionInfo;
 import com.IcpcInformationSystemBackend.model.request.ApproveSchoolInfo;
 import com.IcpcInformationSystemBackend.model.request.ApproveUserInfo;
+import com.IcpcInformationSystemBackend.model.response.CompetitionInfoResponse;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.model.response.SchoolInfoResponse;
 import com.IcpcInformationSystemBackend.model.response.UserInfoResponse;
-import com.IcpcInformationSystemBackend.service.ApproveRegisterService;
+import com.IcpcInformationSystemBackend.service.ApproveService;
 import com.IcpcInformationSystemBackend.tools.AuthTool;
 import com.IcpcInformationSystemBackend.tools.ResultTool;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ import java.util.Objects;
 
 @Slf4j
 @Service
-public class ApproveRegisterServiceImpl implements ApproveRegisterService {
+public class ApproveServiceImpl implements ApproveService {
     @Resource
     private SchoolDoMapper schoolDoMapper;
 
@@ -35,6 +35,9 @@ public class ApproveRegisterServiceImpl implements ApproveRegisterService {
 
     @Resource
     private AuthTool authTool;
+
+    @Resource
+    private CompetitionDoMapper competitionDoMapper;
 
     @Override
     public Result getSchoolRegitsterInfo() {
@@ -117,7 +120,7 @@ public class ApproveRegisterServiceImpl implements ApproveRegisterService {
         List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
         if (userDos.isEmpty())
             return ResultTool.error(EmAllException.NO_SUCH_USER);
-        if (userDos.get(0).getState() != 1)
+        if (userDos.get(0).getUserState() != 1)
             return ResultTool.error(EmAllException.USER_DONT_NEED_APPROVE);
         if (!Objects.equals(userDos.get(0).getSchoolId(), approveSchoolInfo.getSchoolId()))
             return ResultTool.error(EmAllException.BAD_REQUEST);
@@ -128,13 +131,12 @@ public class ApproveRegisterServiceImpl implements ApproveRegisterService {
         List<SchoolDo> schoolDos = schoolDoMapper.selectByExample(schoolDoExample);
         if (schoolDos.isEmpty())
             return ResultTool.error(EmAllException.NO_SUCH_SCHOOL);
-        if (schoolDos.get(0).getState() != 1)
+        if (schoolDos.get(0).getSchoolState() != 1)
             return ResultTool.error(EmAllException.SCHOOL_DONT_NEED_APPROVE);
-        log.info("审批结果：" + approveSchoolInfo.getApproveResult());
         if (approveSchoolInfo.getApproveResult() != 2 && approveSchoolInfo.getApproveResult() != 3)
             return ResultTool.error(EmAllException.BAD_REQUEST);
-        schoolDos.get(0).setState(approveSchoolInfo.getApproveResult());
-        userDos.get(0).setState(approveSchoolInfo.getApproveResult());
+        schoolDos.get(0).setSchoolState(approveSchoolInfo.getApproveResult());
+        userDos.get(0).setUserState(approveSchoolInfo.getApproveResult());
         if (schoolDoMapper.updateByPrimaryKeySelective(schoolDos.get(0)) == 0)
             return ResultTool.error(EmAllException.DATABASE_ERR);
         if (userDoMapper.updateByPrimaryKeySelective(userDos.get(0)) == 0)
@@ -155,7 +157,7 @@ public class ApproveRegisterServiceImpl implements ApproveRegisterService {
         List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
         if (userDos.isEmpty())
             return ResultTool.error(EmAllException.NO_SUCH_USER);
-        if (userDos.get(0).getState() != 1)
+        if (userDos.get(0).getUserState() != 1)
             return ResultTool.error(EmAllException.USER_DONT_NEED_APPROVE);
         if (userDos.get(0).getIdentity() != 2)
             return ResultTool.error(EmAllException.USER_IDENTITY_ERROR);
@@ -163,7 +165,7 @@ public class ApproveRegisterServiceImpl implements ApproveRegisterService {
             return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
         if (approveUserInfo.getApproveResult() != 2 && approveUserInfo.getApproveResult() != 3)
             return ResultTool.error(EmAllException.BAD_REQUEST);
-        userDos.get(0).setState(approveUserInfo.getApproveResult());
+        userDos.get(0).setUserState(approveUserInfo.getApproveResult());
         if (userDoMapper.updateByPrimaryKeySelective(userDos.get(0)) == 0)
             return ResultTool.error(EmAllException.DATABASE_ERR);
         return ResultTool.success();
@@ -182,7 +184,7 @@ public class ApproveRegisterServiceImpl implements ApproveRegisterService {
         List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
         if (userDos.isEmpty())
             return ResultTool.error(EmAllException.NO_SUCH_USER);
-        if (userDos.get(0).getState() != 1)
+        if (userDos.get(0).getUserState() != 1)
             return ResultTool.error(EmAllException.USER_DONT_NEED_APPROVE);
         if (userDos.get(0).getIdentity() != 1)
             return ResultTool.error(EmAllException.USER_IDENTITY_ERROR);
@@ -190,8 +192,26 @@ public class ApproveRegisterServiceImpl implements ApproveRegisterService {
             return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
         if (approveUserInfo.getApproveResult() != 2 && approveUserInfo.getApproveResult() != 3)
             return ResultTool.error(EmAllException.BAD_REQUEST);
-        userDos.get(0).setState(approveUserInfo.getApproveResult());
+        userDos.get(0).setUserState(approveUserInfo.getApproveResult());
         if (userDoMapper.updateByPrimaryKeySelective(userDos.get(0)) == 0)
+            return ResultTool.error(EmAllException.DATABASE_ERR);
+        return ResultTool.success();
+    }
+
+    @Override
+    public Result approveCompetitionRegister(ApproveCompetitionInfo approveCompetitionInfo) {
+        CompetitionDoExample competitionDoExample = new CompetitionDoExample();
+        competitionDoExample.createCriteria().andCompetitionIdEqualTo(approveCompetitionInfo.getCompetitionId());
+        List<CompetitionDo> competitionDos = competitionDoMapper.selectByExample(competitionDoExample);
+        if (competitionDos.isEmpty())
+            return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);
+        if (competitionDos.get(0).getCompetitionState() != 1)
+            return ResultTool.error(EmAllException.COMPETITION_DONT_NEED_APPROVE);
+        if (approveCompetitionInfo.getApproveResult() != 2 && approveCompetitionInfo.getApproveResult() != 3)
+            return ResultTool.error(EmAllException.BAD_REQUEST);
+        BeanUtils.copyProperties(approveCompetitionInfo, competitionDos.get(0));
+        competitionDos.get(0).setCompetitionState(approveCompetitionInfo.getApproveResult());
+        if (competitionDoMapper.updateByPrimaryKeySelective(competitionDos.get(0)) == 0)
             return ResultTool.error(EmAllException.DATABASE_ERR);
         return ResultTool.success();
     }
