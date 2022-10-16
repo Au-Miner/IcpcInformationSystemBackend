@@ -1,5 +1,6 @@
 package com.IcpcInformationSystemBackend.model.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -39,6 +40,7 @@ public class ReigsterUserInfo {
 
     @NotBlank(message="用户入学日期不能为空")
     @ApiModelProperty(value = "用户入学时间，非空", example = "2022-09")
+    @JsonFormat(pattern = "yyyy-MM",timezone = "GMT+8")
     private String admissionDate;
 
     @NotBlank(message="用户所属学校代码不能为空")

@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 @ApiModel(value = "修改比赛信息时需要提供的信息")
-public class CompetitionModifyInfo {
+public class ModifyCompetitionInfo {
     @NotBlank
     @ApiModelProperty(value = "比赛id号，如果为空表示创建比赛，如果非空表示比赛信息修改", example = "xxxxx")
     private String competitionId;

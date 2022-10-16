@@ -9,6 +9,7 @@ public enum EmAllException implements CommonError{
     EMAIL_HAVE_REGISTERED(403, "邮箱已注册"),
     EMAIL_CODE_WRONG(403, "邮箱验证码错误"),
     EMAIL_CODE_OVERTIME(403, "邮箱验证码超时"),
+    EMAIL_FORMAT_ERROR(403, "邮箱格式错误"),
 
     //文件相关
     BAD_FILE_TYPE(403, "文件上传类型错误"),
@@ -31,6 +32,10 @@ public enum EmAllException implements CommonError{
     //比赛相关
     NO_SUCH_COMPETITION(403,"查无此赛"),
     COMPETITION_DONT_NEED_APPROVE(403,"比赛无需审批"),
+
+    //队伍相关
+    TEAM_USERS_NOT_SAME_SCHOOL(403, "队伍成员不属于同一学校"),
+    USER_HAS_SIGN_UP_4_COMPETITION(403, "选手已经报名该比赛"),
 
     //其他
     DATABASE_ERR(405,"数据库错误"),

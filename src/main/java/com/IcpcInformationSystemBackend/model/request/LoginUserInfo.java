@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @ApiModel(value = "登录用户需要提供的信息")
 public class LoginUserInfo {
     @NotBlank(message="用户邮箱不能为空")
-    @ApiModelProperty(value = "用户邮箱，非空", example = "xxxxx")
+    @ApiModelProperty(value = "用户邮箱，非空", example = "1840347063@qq.com")
     private String key;
 
     @NotBlank(message="用户密码不能为空")

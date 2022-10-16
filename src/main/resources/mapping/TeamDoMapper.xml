@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.IcpcInformationSystemBackend.dao.TeamDoMapper" >
   <resultMap id="BaseResultMap" type="com.IcpcInformationSystemBackend.model.entity.TeamDo" >
+    <id column="competition_id" property="competitionId" jdbcType="VARCHAR" />
     <id column="team_id" property="teamId" jdbcType="VARCHAR" />
     <result column="chi_team_name" property="chiTeamName" jdbcType="VARCHAR" />
     <result column="eng_team_name" property="engTeamName" jdbcType="VARCHAR" />
@@ -11,7 +12,6 @@
     <result column="member3_email" property="member3Email" jdbcType="VARCHAR" />
     <result column="coach1_email" property="coach1Email" jdbcType="VARCHAR" />
     <result column="coach2_email" property="coach2Email" jdbcType="VARCHAR" />
-    <result column="competition_id" property="competitionId" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="INTEGER" />
     <result column="team_state" property="teamState" jdbcType="INTEGER" />
     <result column="reason" property="reason" jdbcType="VARCHAR" />
@@ -77,9 +77,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    team_id, chi_team_name, eng_team_name, school_id, member1_email, member2_email, member3_email, 
-    coach1_email, coach2_email, competition_id, type, team_state, reason, need_team_certificate, 
-    competition_position
+    competition_id, team_id, chi_team_name, eng_team_name, school_id, member1_email, 
+    member2_email, member3_email, coach1_email, coach2_email, type, team_state, reason, 
+    need_team_certificate, competition_position
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.IcpcInformationSystemBackend.model.entity.TeamDoExample" >
     select
@@ -96,15 +96,17 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.IcpcInformationSystemBackend.model.entity.TeamDoKey" >
     select 
     <include refid="Base_Column_List" />
     from team
-    where team_id = #{teamId,jdbcType=VARCHAR}
+    where competition_id = #{competitionId,jdbcType=VARCHAR}
+      and team_id = #{teamId,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+  <delete id="deleteByPrimaryKey" parameterType="com.IcpcInformationSystemBackend.model.entity.TeamDoKey" >
     delete from team
-    where team_id = #{teamId,jdbcType=VARCHAR}
+    where competition_id = #{competitionId,jdbcType=VARCHAR}
+      and team_id = #{teamId,jdbcType=VARCHAR}
   </delete>
   <delete id="deleteByExample" parameterType="com.IcpcInformationSystemBackend.model.entity.TeamDoExample" >
     delete from team
@@ -113,22 +115,25 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.IcpcInformationSystemBackend.model.entity.TeamDo" >
-    insert into team (team_id, chi_team_name, eng_team_name, 
-      school_id, member1_email, member2_email, 
-      member3_email, coach1_email, coach2_email, 
-      competition_id, type, team_state, 
+    insert into team (competition_id, team_id, chi_team_name, 
+      eng_team_name, school_id, member1_email, 
+      member2_email, member3_email, coach1_email, 
+      coach2_email, type, team_state, 
       reason, need_team_certificate, competition_position
       )
-    values (#{teamId,jdbcType=VARCHAR}, #{chiTeamName,jdbcType=VARCHAR}, #{engTeamName,jdbcType=VARCHAR}, 
-      #{schoolId,jdbcType=VARCHAR}, #{member1Email,jdbcType=VARCHAR}, #{member2Email,jdbcType=VARCHAR}, 
-      #{member3Email,jdbcType=VARCHAR}, #{coach1Email,jdbcType=VARCHAR}, #{coach2Email,jdbcType=VARCHAR}, 
-      #{competitionId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{teamState,jdbcType=INTEGER}, 
+    values (#{competitionId,jdbcType=VARCHAR}, #{teamId,jdbcType=VARCHAR}, #{chiTeamName,jdbcType=VARCHAR}, 
+      #{engTeamName,jdbcType=VARCHAR}, #{schoolId,jdbcType=VARCHAR}, #{member1Email,jdbcType=VARCHAR}, 
+      #{member2Email,jdbcType=VARCHAR}, #{member3Email,jdbcType=VARCHAR}, #{coach1Email,jdbcType=VARCHAR}, 
+      #{coach2Email,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{teamState,jdbcType=INTEGER}, 
       #{reason,jdbcType=VARCHAR}, #{needTeamCertificate,jdbcType=INTEGER}, #{competitionPosition,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.IcpcInformationSystemBackend.model.entity.TeamDo" >
     insert into team
     <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="competitionId != null" >
+        competition_id,
+      </if>
       <if test="teamId != null" >
         team_id,
       </if>
@@ -156,9 +161,6 @@
       <if test="coach2Email != null" >
         coach2_email,
       </if>
-      <if test="competitionId != null" >
-        competition_id,
-      </if>
       <if test="type != null" >
         type,
       </if>
@@ -176,6 +178,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="competitionId != null" >
+        #{competitionId,jdbcType=VARCHAR},
+      </if>
       <if test="teamId != null" >
         #{teamId,jdbcType=VARCHAR},
       </if>
@@ -203,9 +208,6 @@
       <if test="coach2Email != null" >
         #{coach2Email,jdbcType=VARCHAR},
       </if>
-      <if test="competitionId != null" >
-        #{competitionId,jdbcType=VARCHAR},
-      </if>
       <if test="type != null" >
         #{type,jdbcType=INTEGER},
       </if>
@@ -232,6 +234,9 @@
   <update id="updateByExampleSelective" parameterType="map" >
     update team
     <set >
+      <if test="record.competitionId != null" >
+        competition_id = #{record.competitionId,jdbcType=VARCHAR},
+      </if>
       <if test="record.teamId != null" >
         team_id = #{record.teamId,jdbcType=VARCHAR},
       </if>
@@ -259,9 +264,6 @@
       <if test="record.coach2Email != null" >
         coach2_email = #{record.coach2Email,jdbcType=VARCHAR},
       </if>
-      <if test="record.competitionId != null" >
-        competition_id = #{record.competitionId,jdbcType=VARCHAR},
-      </if>
       <if test="record.type != null" >
         type = #{record.type,jdbcType=INTEGER},
       </if>
@@ -284,7 +286,8 @@
   </update>
   <update id="updateByExample" parameterType="map" >
     update team
-    set team_id = #{record.teamId,jdbcType=VARCHAR},
+    set competition_id = #{record.competitionId,jdbcType=VARCHAR},
+      team_id = #{record.teamId,jdbcType=VARCHAR},
       chi_team_name = #{record.chiTeamName,jdbcType=VARCHAR},
       eng_team_name = #{record.engTeamName,jdbcType=VARCHAR},
       school_id = #{record.schoolId,jdbcType=VARCHAR},
@@ -293,7 +296,6 @@
       member3_email = #{record.member3Email,jdbcType=VARCHAR},
       coach1_email = #{record.coach1Email,jdbcType=VARCHAR},
       coach2_email = #{record.coach2Email,jdbcType=VARCHAR},
-      competition_id = #{record.competitionId,jdbcType=VARCHAR},
       type = #{record.type,jdbcType=INTEGER},
       team_state = #{record.teamState,jdbcType=INTEGER},
       reason = #{record.reason,jdbcType=VARCHAR},
@@ -330,9 +332,6 @@
       <if test="coach2Email != null" >
         coach2_email = #{coach2Email,jdbcType=VARCHAR},
       </if>
-      <if test="competitionId != null" >
-        competition_id = #{competitionId,jdbcType=VARCHAR},
-      </if>
       <if test="type != null" >
         type = #{type,jdbcType=INTEGER},
       </if>
@@ -349,7 +348,8 @@
         competition_position = #{competitionPosition,jdbcType=VARCHAR},
       </if>
     </set>
-    where team_id = #{teamId,jdbcType=VARCHAR}
+    where competition_id = #{competitionId,jdbcType=VARCHAR}
+      and team_id = #{teamId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.IcpcInformationSystemBackend.model.entity.TeamDo" >
     update team
@@ -361,12 +361,12 @@
       member3_email = #{member3Email,jdbcType=VARCHAR},
       coach1_email = #{coach1Email,jdbcType=VARCHAR},
       coach2_email = #{coach2Email,jdbcType=VARCHAR},
-      competition_id = #{competitionId,jdbcType=VARCHAR},
       type = #{type,jdbcType=INTEGER},
       team_state = #{teamState,jdbcType=INTEGER},
       reason = #{reason,jdbcType=VARCHAR},
       need_team_certificate = #{needTeamCertificate,jdbcType=INTEGER},
       competition_position = #{competitionPosition,jdbcType=VARCHAR}
-    where team_id = #{teamId,jdbcType=VARCHAR}
+    where competition_id = #{competitionId,jdbcType=VARCHAR}
+      and team_id = #{teamId,jdbcType=VARCHAR}
   </update>
 </mapper>

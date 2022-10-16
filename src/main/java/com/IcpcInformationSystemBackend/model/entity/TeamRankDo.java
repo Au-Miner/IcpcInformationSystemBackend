@@ -1,21 +1,11 @@
 package com.IcpcInformationSystemBackend.model.entity;
 
-public class TeamRankDo {
-    private String teamId;
-
+public class TeamRankDo extends TeamRankDoKey {
     private String teamCertificate;
 
     private Integer rnk;
 
     private String photos;
-
-    public String getTeamId() {
-        return teamId;
-    }
-
-    public void setTeamId(String teamId) {
-        this.teamId = teamId == null ? null : teamId.trim();
-    }
 
     public String getTeamCertificate() {
         return teamCertificate;

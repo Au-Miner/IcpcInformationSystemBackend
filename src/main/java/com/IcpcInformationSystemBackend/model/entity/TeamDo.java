@@ -1,8 +1,6 @@
 package com.IcpcInformationSystemBackend.model.entity;
 
-public class TeamDo {
-    private String teamId;
-
+public class TeamDo extends TeamDoKey {
     private String chiTeamName;
 
     private String engTeamName;
@@ -19,8 +17,6 @@ public class TeamDo {
 
     private String coach2Email;
 
-    private String competitionId;
-
     private Integer type;
 
     private Integer teamState;
@@ -30,14 +26,6 @@ public class TeamDo {
     private Integer needTeamCertificate;
 
     private String competitionPosition;
-
-    public String getTeamId() {
-        return teamId;
-    }
-
-    public void setTeamId(String teamId) {
-        this.teamId = teamId == null ? null : teamId.trim();
-    }
 
     public String getChiTeamName() {
         return chiTeamName;
@@ -101,14 +89,6 @@ public class TeamDo {
 
     public void setCoach2Email(String coach2Email) {
         this.coach2Email = coach2Email == null ? null : coach2Email.trim();
-    }
-
-    public String getCompetitionId() {
-        return competitionId;
-    }
-
-    public void setCompetitionId(String competitionId) {
-        this.competitionId = competitionId == null ? null : competitionId.trim();
     }
 
     public Integer getType() {

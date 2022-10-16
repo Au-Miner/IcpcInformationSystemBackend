@@ -1,7 +1,7 @@
 package com.IcpcInformationSystemBackend.service;
 
 import com.IcpcInformationSystemBackend.model.request.CompetitionInfo;
-import com.IcpcInformationSystemBackend.model.request.CompetitionModifyInfo;
+import com.IcpcInformationSystemBackend.model.request.ModifyCompetitionInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;
 
 public interface CompetitionService {
@@ -15,7 +15,7 @@ public interface CompetitionService {
 
     Result getAllAcceptCompetitionInfo();
 
-    Result modifyCompetition(CompetitionModifyInfo competitionModifyInfo);
+    Result modifyCompetition(ModifyCompetitionInfo modifyCompetitionInfo);
 
     String generateCompetitionId();
 }

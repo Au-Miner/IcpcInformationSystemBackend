@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.IcpcInformationSystemBackend.dao.TeamRankDoMapper" >
   <resultMap id="BaseResultMap" type="com.IcpcInformationSystemBackend.model.entity.TeamRankDo" >
+    <id column="competition_id" property="competitionId" jdbcType="VARCHAR" />
     <id column="team_id" property="teamId" jdbcType="VARCHAR" />
     <result column="team_certificate" property="teamCertificate" jdbcType="VARCHAR" />
     <result column="rnk" property="rnk" jdbcType="INTEGER" />
@@ -66,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    team_id, team_certificate, rnk, photos
+    competition_id, team_id, team_certificate, rnk, photos
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.IcpcInformationSystemBackend.model.entity.TeamRankDoExample" >
     select
@@ -83,15 +84,17 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.IcpcInformationSystemBackend.model.entity.TeamRankDoKey" >
     select 
     <include refid="Base_Column_List" />
     from team_rank
-    where team_id = #{teamId,jdbcType=VARCHAR}
+    where competition_id = #{competitionId,jdbcType=VARCHAR}
+      and team_id = #{teamId,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+  <delete id="deleteByPrimaryKey" parameterType="com.IcpcInformationSystemBackend.model.entity.TeamRankDoKey" >
     delete from team_rank
-    where team_id = #{teamId,jdbcType=VARCHAR}
+    where competition_id = #{competitionId,jdbcType=VARCHAR}
+      and team_id = #{teamId,jdbcType=VARCHAR}
   </delete>
   <delete id="deleteByExample" parameterType="com.IcpcInformationSystemBackend.model.entity.TeamRankDoExample" >
     delete from team_rank
@@ -100,14 +103,17 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.IcpcInformationSystemBackend.model.entity.TeamRankDo" >
-    insert into team_rank (team_id, team_certificate, rnk, 
-      photos)
-    values (#{teamId,jdbcType=VARCHAR}, #{teamCertificate,jdbcType=VARCHAR}, #{rnk,jdbcType=INTEGER}, 
-      #{photos,jdbcType=VARCHAR})
+    insert into team_rank (competition_id, team_id, team_certificate, 
+      rnk, photos)
+    values (#{competitionId,jdbcType=VARCHAR}, #{teamId,jdbcType=VARCHAR}, #{teamCertificate,jdbcType=VARCHAR}, 
+      #{rnk,jdbcType=INTEGER}, #{photos,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.IcpcInformationSystemBackend.model.entity.TeamRankDo" >
     insert into team_rank
     <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="competitionId != null" >
+        competition_id,
+      </if>
       <if test="teamId != null" >
         team_id,
       </if>
@@ -122,6 +128,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="competitionId != null" >
+        #{competitionId,jdbcType=VARCHAR},
+      </if>
       <if test="teamId != null" >
         #{teamId,jdbcType=VARCHAR},
       </if>
@@ -145,6 +154,9 @@
   <update id="updateByExampleSelective" parameterType="map" >
     update team_rank
     <set >
+      <if test="record.competitionId != null" >
+        competition_id = #{record.competitionId,jdbcType=VARCHAR},
+      </if>
       <if test="record.teamId != null" >
         team_id = #{record.teamId,jdbcType=VARCHAR},
       </if>
@@ -164,7 +176,8 @@
   </update>
   <update id="updateByExample" parameterType="map" >
     update team_rank
-    set team_id = #{record.teamId,jdbcType=VARCHAR},
+    set competition_id = #{record.competitionId,jdbcType=VARCHAR},
+      team_id = #{record.teamId,jdbcType=VARCHAR},
       team_certificate = #{record.teamCertificate,jdbcType=VARCHAR},
       rnk = #{record.rnk,jdbcType=INTEGER},
       photos = #{record.photos,jdbcType=VARCHAR}
@@ -185,13 +198,15 @@
         photos = #{photos,jdbcType=VARCHAR},
       </if>
     </set>
-    where team_id = #{teamId,jdbcType=VARCHAR}
+    where competition_id = #{competitionId,jdbcType=VARCHAR}
+      and team_id = #{teamId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.IcpcInformationSystemBackend.model.entity.TeamRankDo" >
     update team_rank
     set team_certificate = #{teamCertificate,jdbcType=VARCHAR},
       rnk = #{rnk,jdbcType=INTEGER},
       photos = #{photos,jdbcType=VARCHAR}
-    where team_id = #{teamId,jdbcType=VARCHAR}
+    where competition_id = #{competitionId,jdbcType=VARCHAR}
+      and team_id = #{teamId,jdbcType=VARCHAR}
   </update>
 </mapper>

@@ -11,6 +11,8 @@ import javax.annotation.Resource;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 @Component
@@ -18,6 +20,7 @@ public class EmailTool {
 
     @Resource
     private EmailCodeDoMapper emailCodeDoMapper;
+
     public int judgeEmailCode(String email, String emailCode) {
         EmailCodeDoExample emailCodeDoExample = new EmailCodeDoExample();
         emailCodeDoExample.createCriteria().andUserEmailEqualTo(email);
@@ -38,5 +41,17 @@ public class EmailTool {
         if (!Objects.equals(emailCodeDos.get(0).getVerificationCode(), emailCode))
             return 1; // 邮箱验证码错误
         return 0;
+    }
+
+    public boolean judgeEmailFormatIfRight(String email) {
+            boolean flag = false;
+            String regEx1 = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+            Pattern p;
+            Matcher m;
+            p = Pattern.compile(regEx1);
+            m = p.matcher(email);
+            if(m.matches())
+                flag = true;
+            return flag;
     }
 }

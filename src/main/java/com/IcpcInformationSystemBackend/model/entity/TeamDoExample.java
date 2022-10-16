@@ -104,6 +104,76 @@ public class TeamDoExample {
             criteria.add(new Criterion(condition, value1, value2));
         }
 
+        public Criteria andCompetitionIdIsNull() {
+            addCriterion("competition_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompetitionIdIsNotNull() {
+            addCriterion("competition_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompetitionIdEqualTo(String value) {
+            addCriterion("competition_id =", value, "competitionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompetitionIdNotEqualTo(String value) {
+            addCriterion("competition_id <>", value, "competitionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompetitionIdGreaterThan(String value) {
+            addCriterion("competition_id >", value, "competitionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompetitionIdGreaterThanOrEqualTo(String value) {
+            addCriterion("competition_id >=", value, "competitionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompetitionIdLessThan(String value) {
+            addCriterion("competition_id <", value, "competitionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompetitionIdLessThanOrEqualTo(String value) {
+            addCriterion("competition_id <=", value, "competitionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompetitionIdLike(String value) {
+            addCriterion("competition_id like", value, "competitionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompetitionIdNotLike(String value) {
+            addCriterion("competition_id not like", value, "competitionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompetitionIdIn(List<String> values) {
+            addCriterion("competition_id in", values, "competitionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompetitionIdNotIn(List<String> values) {
+            addCriterion("competition_id not in", values, "competitionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompetitionIdBetween(String value1, String value2) {
+            addCriterion("competition_id between", value1, value2, "competitionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompetitionIdNotBetween(String value1, String value2) {
+            addCriterion("competition_id not between", value1, value2, "competitionId");
+            return (Criteria) this;
+        }
+
         public Criteria andTeamIdIsNull() {
             addCriterion("team_id is null");
             return (Criteria) this;
@@ -731,76 +801,6 @@ public class TeamDoExample {
 
         public Criteria andCoach2EmailNotBetween(String value1, String value2) {
             addCriterion("coach2_email not between", value1, value2, "coach2Email");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompetitionIdIsNull() {
-            addCriterion("competition_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompetitionIdIsNotNull() {
-            addCriterion("competition_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompetitionIdEqualTo(String value) {
-            addCriterion("competition_id =", value, "competitionId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompetitionIdNotEqualTo(String value) {
-            addCriterion("competition_id <>", value, "competitionId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompetitionIdGreaterThan(String value) {
-            addCriterion("competition_id >", value, "competitionId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompetitionIdGreaterThanOrEqualTo(String value) {
-            addCriterion("competition_id >=", value, "competitionId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompetitionIdLessThan(String value) {
-            addCriterion("competition_id <", value, "competitionId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompetitionIdLessThanOrEqualTo(String value) {
-            addCriterion("competition_id <=", value, "competitionId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompetitionIdLike(String value) {
-            addCriterion("competition_id like", value, "competitionId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompetitionIdNotLike(String value) {
-            addCriterion("competition_id not like", value, "competitionId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompetitionIdIn(List<String> values) {
-            addCriterion("competition_id in", values, "competitionId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompetitionIdNotIn(List<String> values) {
-            addCriterion("competition_id not in", values, "competitionId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompetitionIdBetween(String value1, String value2) {
-            addCriterion("competition_id between", value1, value2, "competitionId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompetitionIdNotBetween(String value1, String value2) {
-            addCriterion("competition_id not between", value1, value2, "competitionId");
             return (Criteria) this;
         }
 

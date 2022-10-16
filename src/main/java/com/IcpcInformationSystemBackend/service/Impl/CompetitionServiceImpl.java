@@ -5,7 +5,7 @@ import com.IcpcInformationSystemBackend.dao.UserDoMapper;
 import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.entity.*;
 import com.IcpcInformationSystemBackend.model.request.CompetitionInfo;
-import com.IcpcInformationSystemBackend.model.request.CompetitionModifyInfo;
+import com.IcpcInformationSystemBackend.model.request.ModifyCompetitionInfo;
 import com.IcpcInformationSystemBackend.model.response.CompetitionInfoResponse;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.service.CompetitionService;
@@ -170,16 +170,16 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public Result modifyCompetition(CompetitionModifyInfo competitionModifyInfo) {
+    public Result modifyCompetition(ModifyCompetitionInfo modifyCompetitionInfo) {
         CompetitionDoExample competitionDoExample = new CompetitionDoExample();
-        competitionDoExample.createCriteria().andCompetitionIdEqualTo(competitionModifyInfo.getCompetitionId());
+        competitionDoExample.createCriteria().andCompetitionIdEqualTo(modifyCompetitionInfo.getCompetitionId());
         List<CompetitionDo> competitionDos = competitionDoMapper.selectByExample(competitionDoExample);
         if (competitionDos.isEmpty())
             return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);
         if (!Objects.equals(competitionDos.get(0).getBuilderEmail(), authTool.getUserId()))
             return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
         CompetitionDo competitionDo = new CompetitionDo();
-        BeanUtils.copyProperties(competitionModifyInfo, competitionDo);
+        BeanUtils.copyProperties(modifyCompetitionInfo, competitionDo);
         if (competitionDoMapper.updateByPrimaryKeySelective(competitionDo) == 0)
             return ResultTool.error(EmAllException.DATABASE_ERR);
         return ResultTool.success();
