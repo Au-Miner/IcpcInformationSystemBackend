@@ -5,7 +5,6 @@ import com.IcpcInformationSystemBackend.dao.UserDoMapper;
 import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.entity.*;
 import com.IcpcInformationSystemBackend.model.request.CompetitionInfo;
-import com.IcpcInformationSystemBackend.model.request.ModifyCompetitionInfo;
 import com.IcpcInformationSystemBackend.model.response.CompetitionInfoResponse;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.service.CompetitionService;
@@ -94,8 +93,9 @@ public class CompetitionServiceImpl implements CompetitionService {
         }
     }
 
+    // state为3表示重新申请创建比赛，state为2表示申请修改比赛信息
     @Override
-    public Result rebuildCompetition(CompetitionInfo competitionInfo) {
+    public Result rebuildCompetition(CompetitionInfo competitionInfo, int state) {
         CompetitionDo competitionDo = new CompetitionDo();
         BeanUtils.copyProperties(competitionInfo, competitionDo);
         if (Objects.equals(competitionDo.getCompetitionId(), ""))
@@ -105,6 +105,8 @@ public class CompetitionServiceImpl implements CompetitionService {
         List<CompetitionDo> competitionDos = competitionDoMapper.selectByExample(competitionDoExample);
         if (competitionDos.isEmpty())
             return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);
+        if (competitionDos.get(0).getCompetitionState() != state)
+            return ResultTool.error(EmAllException.COMPETITION_STATE_ERROR);
         if (!Objects.equals(competitionDos.get(0).getBuilderEmail(), authTool.getUserId()))
             return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
         competitionDo.setCompetitionState(1);
@@ -167,21 +169,5 @@ public class CompetitionServiceImpl implements CompetitionService {
             res.add(competitionInfoResponse);
         }
         return ResultTool.success(res);
-    }
-
-    @Override
-    public Result modifyCompetition(ModifyCompetitionInfo modifyCompetitionInfo) {
-        CompetitionDoExample competitionDoExample = new CompetitionDoExample();
-        competitionDoExample.createCriteria().andCompetitionIdEqualTo(modifyCompetitionInfo.getCompetitionId());
-        List<CompetitionDo> competitionDos = competitionDoMapper.selectByExample(competitionDoExample);
-        if (competitionDos.isEmpty())
-            return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);
-        if (!Objects.equals(competitionDos.get(0).getBuilderEmail(), authTool.getUserId()))
-            return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
-        CompetitionDo competitionDo = new CompetitionDo();
-        BeanUtils.copyProperties(modifyCompetitionInfo, competitionDo);
-        if (competitionDoMapper.updateByPrimaryKeySelective(competitionDo) == 0)
-            return ResultTool.error(EmAllException.DATABASE_ERR);
-        return ResultTool.success();
     }
 }

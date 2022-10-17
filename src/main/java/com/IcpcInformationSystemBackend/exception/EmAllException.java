@@ -32,6 +32,7 @@ public enum EmAllException implements CommonError{
     //比赛相关
     NO_SUCH_COMPETITION(403,"查无此赛"),
     COMPETITION_DONT_NEED_APPROVE(403,"比赛无需审批"),
+    COMPETITION_STATE_ERROR(403, "比赛状态错误"),
 
     //队伍相关
     TEAM_USERS_NOT_SAME_SCHOOL(403, "队伍成员不属于同一学校"),
