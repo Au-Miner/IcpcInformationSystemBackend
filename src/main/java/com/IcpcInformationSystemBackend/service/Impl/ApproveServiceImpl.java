@@ -2,18 +2,18 @@ package com.IcpcInformationSystemBackend.service.Impl;
 
 import com.IcpcInformationSystemBackend.dao.CompetitionDoMapper;
 import com.IcpcInformationSystemBackend.dao.SchoolDoMapper;
+import com.IcpcInformationSystemBackend.dao.TeamDoMapper;
 import com.IcpcInformationSystemBackend.dao.UserDoMapper;
 import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.entity.*;
 import com.IcpcInformationSystemBackend.model.request.ApproveCompetitionInfo;
 import com.IcpcInformationSystemBackend.model.request.ApproveSchoolInfo;
+import com.IcpcInformationSystemBackend.model.request.ApproveTeamInfo;
 import com.IcpcInformationSystemBackend.model.request.ApproveUserInfo;
-import com.IcpcInformationSystemBackend.model.response.CompetitionInfoResponse;
-import com.IcpcInformationSystemBackend.model.response.Result;
-import com.IcpcInformationSystemBackend.model.response.SchoolInfoResponse;
-import com.IcpcInformationSystemBackend.model.response.UserInfoResponse;
+import com.IcpcInformationSystemBackend.model.response.*;
 import com.IcpcInformationSystemBackend.service.ApproveService;
 import com.IcpcInformationSystemBackend.tools.AuthTool;
+import com.IcpcInformationSystemBackend.tools.CommonTool;
 import com.IcpcInformationSystemBackend.tools.ResultTool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -37,7 +37,13 @@ public class ApproveServiceImpl implements ApproveService {
     private AuthTool authTool;
 
     @Resource
+    private CommonTool commonTool;
+
+    @Resource
     private CompetitionDoMapper competitionDoMapper;
+
+    @Resource
+    private TeamDoMapper teamDoMapper;
 
     @Override
     public Result getSchoolRegitsterInfo() {
@@ -120,8 +126,8 @@ public class ApproveServiceImpl implements ApproveService {
         List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
         if (userDos.isEmpty())
             return ResultTool.error(EmAllException.NO_SUCH_USER);
-        if (userDos.get(0).getUserState() != 1)
-            return ResultTool.error(EmAllException.USER_DONT_NEED_APPROVE);
+        // if (userDos.get(0).getUserState() != 1)
+        //     return ResultTool.error(EmAllException.USER_DONT_NEED_APPROVE);
         if (!Objects.equals(userDos.get(0).getSchoolId(), approveSchoolInfo.getSchoolId()))
             return ResultTool.error(EmAllException.BAD_REQUEST);
         if (userDos.get(0).getIdentity() != 4)
@@ -131,8 +137,8 @@ public class ApproveServiceImpl implements ApproveService {
         List<SchoolDo> schoolDos = schoolDoMapper.selectByExample(schoolDoExample);
         if (schoolDos.isEmpty())
             return ResultTool.error(EmAllException.NO_SUCH_SCHOOL);
-        if (schoolDos.get(0).getSchoolState() != 1)
-            return ResultTool.error(EmAllException.SCHOOL_DONT_NEED_APPROVE);
+        // if (schoolDos.get(0).getSchoolState() != 1)
+        //     return ResultTool.error(EmAllException.SCHOOL_DONT_NEED_APPROVE);
         if (approveSchoolInfo.getApproveResult() != 2 && approveSchoolInfo.getApproveResult() != 3)
             return ResultTool.error(EmAllException.BAD_REQUEST);
         schoolDos.get(0).setSchoolState(approveSchoolInfo.getApproveResult());
@@ -157,8 +163,8 @@ public class ApproveServiceImpl implements ApproveService {
         List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
         if (userDos.isEmpty())
             return ResultTool.error(EmAllException.NO_SUCH_USER);
-        if (userDos.get(0).getUserState() != 1)
-            return ResultTool.error(EmAllException.USER_DONT_NEED_APPROVE);
+        // if (userDos.get(0).getUserState() != 1)
+        //     return ResultTool.error(EmAllException.USER_DONT_NEED_APPROVE);
         if (userDos.get(0).getIdentity() != 2)
             return ResultTool.error(EmAllException.USER_IDENTITY_ERROR);
         if (!Objects.equals(userDos.get(0).getSchoolId(), schoolId))
@@ -184,8 +190,8 @@ public class ApproveServiceImpl implements ApproveService {
         List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
         if (userDos.isEmpty())
             return ResultTool.error(EmAllException.NO_SUCH_USER);
-        if (userDos.get(0).getUserState() != 1)
-            return ResultTool.error(EmAllException.USER_DONT_NEED_APPROVE);
+        // if (userDos.get(0).getUserState() != 1)
+        //     return ResultTool.error(EmAllException.USER_DONT_NEED_APPROVE);
         if (userDos.get(0).getIdentity() != 1)
             return ResultTool.error(EmAllException.USER_IDENTITY_ERROR);
         if (!Objects.equals(userDos.get(0).getSchoolId(), schoolId))
@@ -205,13 +211,58 @@ public class ApproveServiceImpl implements ApproveService {
         List<CompetitionDo> competitionDos = competitionDoMapper.selectByExample(competitionDoExample);
         if (competitionDos.isEmpty())
             return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);
-        if (competitionDos.get(0).getCompetitionState() != 1)
-            return ResultTool.error(EmAllException.COMPETITION_DONT_NEED_APPROVE);
+        // if (competitionDos.get(0).getCompetitionState() != 1)
+        //     return ResultTool.error(EmAllException.COMPETITION_DONT_NEED_APPROVE);
         if (approveCompetitionInfo.getApproveResult() != 2 && approveCompetitionInfo.getApproveResult() != 3)
             return ResultTool.error(EmAllException.BAD_REQUEST);
         BeanUtils.copyProperties(approveCompetitionInfo, competitionDos.get(0));
         competitionDos.get(0).setCompetitionState(approveCompetitionInfo.getApproveResult());
         if (competitionDoMapper.updateByPrimaryKeySelective(competitionDos.get(0)) == 0)
+            return ResultTool.error(EmAllException.DATABASE_ERR);
+        return ResultTool.success();
+    }
+
+    @Override
+    public Result getTeamInfoByCompetitionId(String competitionId) {
+        if (!commonTool.judgeCompetitionIdIfExists(competitionId))
+            return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);
+        TeamDoExample teamDoExample = new TeamDoExample();
+        TeamDoExample.Criteria criteria1 = teamDoExample.createCriteria();
+        criteria1.andCompetitionIdEqualTo(competitionId).andCoach1EmailEqualTo(authTool.getUserId());
+        TeamDoExample.Criteria criteria2 = teamDoExample.createCriteria();
+        criteria2.andCompetitionIdEqualTo(competitionId).andCoach2EmailEqualTo(authTool.getUserId());
+        teamDoExample.or(criteria2);
+        List<TeamDo> teamDos = teamDoMapper.selectByExample(teamDoExample);
+        ArrayList<TeamInfoResponse> res = new ArrayList<>();
+        for (TeamDo teamDo : teamDos) {
+            TeamInfoResponse teamInfoResponse = new TeamInfoResponse();
+            BeanUtils.copyProperties(teamDo, teamInfoResponse);
+            teamInfoResponse.setMember1chiName(commonTool.getChiNameByUserEmail(teamDo.getMember1Email()));
+            teamInfoResponse.setMember2chiName(commonTool.getChiNameByUserEmail(teamDo.getMember2Email()));
+            teamInfoResponse.setMember3chiName(commonTool.getChiNameByUserEmail(teamDo.getMember3Email()));
+            teamInfoResponse.setCoach1chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach1Email()));
+            teamInfoResponse.setCoach2chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach2Email()));
+            res.add(teamInfoResponse);
+        }
+        return ResultTool.success(res);
+    }
+
+    @Override
+    public Result approveTeamInfoByTeamId(ApproveTeamInfo approveTeamInfo) {
+        TeamDoExample teamDoExample = new TeamDoExample();
+        teamDoExample.createCriteria().andTeamIdEqualTo(approveTeamInfo.getTeamId()).andCompetitionIdEqualTo(approveTeamInfo.getCompetitionId());
+        List<TeamDo> teamDos = teamDoMapper.selectByExample(teamDoExample);
+        if (teamDos.isEmpty())
+            return ResultTool.error(EmAllException.NO_SUCH_TEAM);
+        if (!Objects.equals(teamDos.get(0).getCoach1Email(), authTool.getUserId()) && !Objects.equals(teamDos.get(0).getCoach2Email(), authTool.getUserId()))
+            return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
+        if (approveTeamInfo.getApproveResult() != 2 && approveTeamInfo.getApproveResult() != 3)
+            return ResultTool.error(EmAllException.BAD_REQUEST);
+        // if (teamDos.get(0).getTeamState() != 1)
+        //     return ResultTool.error(EmAllException.TEAM_DONT_NEED_APPROVE);
+        teamDos.get(0).setReason(approveTeamInfo.getApproveReason());
+        teamDos.get(0).setTeamState(approveTeamInfo.getApproveResult());
+        if (teamDoMapper.updateByPrimaryKeySelective(teamDos.get(0)) == 0)
             return ResultTool.error(EmAllException.DATABASE_ERR);
         return ResultTool.success();
     }

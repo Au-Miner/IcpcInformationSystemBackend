@@ -1,13 +1,16 @@
 package com.IcpcInformationSystemBackend.service.Impl;
 
+import com.IcpcInformationSystemBackend.dao.CompetitionDoMapper;
 import com.IcpcInformationSystemBackend.dao.TeamDoMapper;
 import com.IcpcInformationSystemBackend.dao.UserCompetitionDoMapper;
+import com.IcpcInformationSystemBackend.exception.AllException;
 import com.IcpcInformationSystemBackend.exception.EmAllException;
-import com.IcpcInformationSystemBackend.model.entity.TeamDo;
-import com.IcpcInformationSystemBackend.model.entity.TeamDoExample;
-import com.IcpcInformationSystemBackend.model.entity.UserCompetitionDo;
+import com.IcpcInformationSystemBackend.model.entity.*;
+import com.IcpcInformationSystemBackend.model.request.ApproveTeamInfo;
 import com.IcpcInformationSystemBackend.model.request.RegisterTeamInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;
+import com.IcpcInformationSystemBackend.model.response.TeamInfoResponse;
+import com.IcpcInformationSystemBackend.service.CompetitionService;
 import com.IcpcInformationSystemBackend.service.TeamService;
 import com.IcpcInformationSystemBackend.tools.AuthTool;
 import com.IcpcInformationSystemBackend.tools.EmailTool;
@@ -18,7 +21,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -31,6 +36,9 @@ public class TeamServiceImpl implements TeamService {
 
     @Resource
     private UserCompetitionDoMapper userCompetitionDoMapper;
+
+    @Resource
+    private CompetitionDoMapper competitionDoMapper;
 
     @Resource
     private AuthTool authTool;

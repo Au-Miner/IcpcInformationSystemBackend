@@ -1,5 +1,6 @@
 package com.IcpcInformationSystemBackend.service;
 
+import com.IcpcInformationSystemBackend.model.request.ApproveTeamInfo;
 import com.IcpcInformationSystemBackend.model.request.RegisterTeamInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;
 

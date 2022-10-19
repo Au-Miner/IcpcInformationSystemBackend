@@ -39,6 +39,17 @@ public class CommonTool {
         return userDos.get(0).getSchoolId();
     }
 
+    public String getChiNameByUserEmail(String userEmail) {
+        if (Objects.equals(userEmail, ""))
+            return "";
+        UserDoExample userDoExample = new UserDoExample();
+        userDoExample.createCriteria().andUserEmailEqualTo(userEmail);
+        List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
+        if (userDos.isEmpty())
+            return "";
+        return userDos.get(0).getChiName();
+    }
+
     public boolean judgeUserEmailIfExists(String userEmail) {
         UserDoExample userDoExample = new UserDoExample();
         userDoExample.createCriteria().andUserEmailEqualTo(userEmail);

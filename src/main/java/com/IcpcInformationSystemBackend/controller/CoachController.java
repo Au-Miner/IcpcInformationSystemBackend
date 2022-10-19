@@ -1,10 +1,12 @@
 package com.IcpcInformationSystemBackend.controller;
 
+import com.IcpcInformationSystemBackend.model.request.ApproveTeamInfo;
 import com.IcpcInformationSystemBackend.model.request.ApproveUserInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.service.ApproveService;
 import com.IcpcInformationSystemBackend.service.CompetitionService;
 import com.IcpcInformationSystemBackend.service.EmailService;
+import com.IcpcInformationSystemBackend.service.TeamService;
 import com.IcpcInformationSystemBackend.tools.ResultTool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,6 +33,9 @@ public class CoachController {
     @Resource
     private CompetitionService competitionService;
 
+    @Resource
+    private TeamService teamService;
+
     @GetMapping("/getStudentRegitsterInfo")
     @ApiOperation(value = "教练在审核学生时在此接口获取选手所有相关信息")
     public Result getStudentRegitsterInfo() {
@@ -53,5 +58,17 @@ public class CoachController {
     @ApiOperation(value = "教练获取所有已批准通过比赛信息")
     public Result getAcceptCompetitionInfo() {
         return competitionService.getAllAcceptCompetitionInfo();
+    }
+
+    @GetMapping("/getTeamInfoByCompetitionId")
+    @ApiOperation(value = "教练根据比赛id获取当前学校所有小队信息")
+    public Result getTeamInfoByCompetitionId(String competitionId) {
+        return approveService.getTeamInfoByCompetitionId(competitionId);
+    }
+
+    @PostMapping("/approveTeamInfoByTeamId")
+    @ApiOperation(value = "教练根据比赛id获取当前学校所有小队信息")
+    public Result approveTeamInfoByTeamId(@ApiParam(name = "审批选手时需要提供的信息", required = true) @Validated @RequestBody ApproveTeamInfo approveTeamInfo) {
+        return approveService.approveTeamInfoByTeamId(approveTeamInfo);
     }
 }

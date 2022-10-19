@@ -1,22 +1,15 @@
 package com.icpcinformationsystembackend;
 
 import org.junit.jupiter.api.Test;
+import redis.clients.jedis.Jedis;
 
 // @SpringBootTest
 class IcpcInformationSystemBackendApplicationTests {
-
-    //用户身份程序样式
-    public final static String[] IDENTITY = {
-            "",
-            "ROLE_STUDENT",
-            "ROLE_COACH",
-            "ROLE_ADMINISTRATOR",
-            "ROLE_CHAIRMAN",
-    };
-
     @Test
     void contextLoads() {
-        System.out.println(IDENTITY[2]);
+        Jedis jedis = new Jedis("124.222.109.34", 6379);
+        //测试
+        String ping = jedis.ping();
+        System.out.println(ping);
     }
-
 }
