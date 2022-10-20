@@ -39,6 +39,7 @@ public enum EmAllException implements CommonError{
     TEAM_USERS_NOT_SAME_SCHOOL(403, "队伍成员不属于同一学校"),
     TEAM_DONT_NEED_APPROVE(403, "队伍无需审批"),
     USER_HAS_SIGN_UP_4_COMPETITION(403, "选手已经报名该比赛"),
+    USER_NOT_SIGN_UP_4_COMPETITION(403, "选手没有报名该比赛"),
 
     //其他
     DATABASE_ERR(405,"数据库错误"),

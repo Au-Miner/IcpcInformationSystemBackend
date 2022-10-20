@@ -12,6 +12,9 @@ import javax.validation.constraints.NotNull;
 @Data
 @ApiModel(value = "创建小组时需要提供的信息")
 public class RegisterTeamInfo {
+    @ApiModelProperty(value = "队伍id号，如果为空表示申请创建队伍，如果非空表示重新申请创建队伍", example = "xxxxx")
+    private String teamId;
+
     @NotBlank
     @Length(max = 30, message = "长度过长！")
     @ApiModelProperty(value = "队伍中文名，非空", example = "还是你懂得多啊")
@@ -40,8 +43,8 @@ public class RegisterTeamInfo {
     @Email(message = "教练1邮箱错误")
     @ApiModelProperty(value = "主教练邮箱，非空", example = "2212721955@qq.com")
     private String coach1Email;
-    
-    @ApiModelProperty(value = "副教练邮箱，允许非空", example = "11@qq.com")
+
+    @ApiModelProperty(value = "副教练邮箱，允许非空", example = "")
     private String coach2Email;
 
     @NotBlank

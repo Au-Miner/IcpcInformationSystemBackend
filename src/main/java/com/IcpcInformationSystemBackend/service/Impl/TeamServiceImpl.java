@@ -50,13 +50,23 @@ public class TeamServiceImpl implements TeamService {
     private EmailTool emailTool;
 
     @Override
-    public Result signUp4Competition(RegisterTeamInfo registerTeamInfo) {
+    public Result signUp4Competition(RegisterTeamInfo registerTeamInfo, boolean ifFirstCreateTeam) {
+        if (ifFirstCreateTeam) {
+            if (!Objects.equals(registerTeamInfo.getTeamId(), ""))
+                return ResultTool.error(EmAllException.BAD_REQUEST);
+        }
+        else {
+            if (Objects.equals(registerTeamInfo.getTeamId(), ""))
+                return ResultTool.error(EmAllException.BAD_REQUEST);
+        }
         if (!Objects.equals(authTool.getUserId(), registerTeamInfo.getMember1Email()) && !Objects.equals(authTool.getUserId(), registerTeamInfo.getMember2Email()) && !Objects.equals(authTool.getUserId(), registerTeamInfo.getMember3Email()))
             return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
         if (!commonTool.judgeSchoolIdIfExists(registerTeamInfo.getSchoolId()))
             return ResultTool.error(EmAllException.NO_SUCH_SCHOOL);
         if (!commonTool.judgeCompetitionIdIfExists(registerTeamInfo.getCompetitionId()))
             return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);
+        if (!commonTool.judgeCompetitionStateIfPass(registerTeamInfo.getCompetitionId()))
+            return ResultTool.error(EmAllException.COMPETITION_STATE_ERROR);
         if (!commonTool.judgeUserEmailIfExists(registerTeamInfo.getMember1Email()))
             return ResultTool.error(EmAllException.NO_SUCH_USER);
         if (!commonTool.judgeUserEmailIfExists(registerTeamInfo.getMember2Email()))
@@ -90,7 +100,11 @@ public class TeamServiceImpl implements TeamService {
             return ResultTool.error(EmAllException.BAD_REQUEST);
         if (registerTeamInfo.getNeedTeamCertificate() != 1 && registerTeamInfo.getNeedTeamCertificate() != 2)
             return ResultTool.error(EmAllException.BAD_REQUEST);
-        String teamId = generateTeamId(registerTeamInfo.getCompetitionId());
+        String teamId;
+        if (ifFirstCreateTeam)
+            teamId = generateTeamId(registerTeamInfo.getCompetitionId());
+        else
+            teamId = registerTeamInfo.getTeamId();
         TeamDo teamDo = new TeamDo();
         BeanUtils.copyProperties(registerTeamInfo, teamDo);
         teamDo.setTeamId(teamId);
@@ -130,5 +144,45 @@ public class TeamServiceImpl implements TeamService {
             if (teamDoMapper.countByExample(teamDoExample) == 0)
                 return String.valueOf(tmp);
         }
+    }
+
+    @Override
+    public Result getOwnTeamInfo(String competitionId) {
+        if (Objects.equals(competitionId, ""))
+            return ResultTool.error(EmAllException.BAD_REQUEST);
+        String teamId = commonTool.getTeamIdByUserEmailAndCompetitionId(authTool.getUserId(), competitionId);
+        if (Objects.equals(teamId, ""))
+            return ResultTool.error(EmAllException.USER_NOT_SIGN_UP_4_COMPETITION);
+        TeamInfoResponse teamInfoResponse = new TeamInfoResponse();
+        TeamDo teamDo = commonTool.getTeamByCompetitionIdAndTeamId(competitionId, teamId);
+        if (teamDo == null)
+            return ResultTool.error(EmAllException.NO_SUCH_TEAM);
+        BeanUtils.copyProperties(teamDo, teamInfoResponse);
+        teamInfoResponse.setMember1chiName(commonTool.getChiNameByUserEmail(teamDo.getMember1Email()));
+        teamInfoResponse.setMember2chiName(commonTool.getChiNameByUserEmail(teamDo.getMember2Email()));
+        teamInfoResponse.setMember3chiName(commonTool.getChiNameByUserEmail(teamDo.getMember3Email()));
+        teamInfoResponse.setCoach1chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach1Email()));
+        teamInfoResponse.setCoach2chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach2Email()));
+        ArrayList<TeamInfoResponse> res = new ArrayList<>();
+        res.add(teamInfoResponse);
+        return ResultTool.success(res);
+    }
+
+    @Override
+    public Result deleteTeamInfo(String competitionId, String teamId) {
+        TeamDo teamDo = commonTool.getTeamByCompetitionIdAndTeamId(competitionId, teamId);
+        if (!Objects.equals(teamDo.getMember1Email(), authTool.getUserId()) && !Objects.equals(teamDo.getMember2Email(), authTool.getUserId())
+        && !Objects.equals(teamDo.getMember3Email(), authTool.getUserId()) && !Objects.equals(teamDo.getCoach1Email(), authTool.getUserId())
+        && !Objects.equals(teamDo.getCoach2Email(), authTool.getUserId()))
+            return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
+        UserCompetitionDoExample userCompetitionDoExample = new UserCompetitionDoExample();
+        userCompetitionDoExample.createCriteria().andTeamIdEqualTo(teamId).andCompetitionIdEqualTo(competitionId);
+        if (userCompetitionDoMapper.deleteByExample(userCompetitionDoExample) == 0)
+            return ResultTool.error(EmAllException.DATABASE_ERR);
+        TeamDoExample teamDoExample = new TeamDoExample();
+        teamDoExample.createCriteria().andTeamIdEqualTo(teamId).andCompetitionIdEqualTo(competitionId);
+        if (teamDoMapper.deleteByExample(teamDoExample) == 0)
+            return ResultTool.error(EmAllException.DATABASE_ERR);
+        return ResultTool.success();
     }
 }

@@ -2,7 +2,6 @@ package com.IcpcInformationSystemBackend.tools;
 
 import com.IcpcInformationSystemBackend.dao.*;
 import com.IcpcInformationSystemBackend.model.entity.*;
-import com.IcpcInformationSystemBackend.model.request.CompetitionInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -50,6 +49,26 @@ public class CommonTool {
         return userDos.get(0).getChiName();
     }
 
+    public String getTeamIdByUserEmailAndCompetitionId(String userEmail, String competitionId) {
+        if (Objects.equals(userEmail, "") || Objects.equals(competitionId, ""))
+            return "";
+        UserCompetitionDoExample userCompetitionDoExample = new UserCompetitionDoExample();
+        userCompetitionDoExample.createCriteria().andCompetitionIdEqualTo(competitionId).andStudentEmailEqualTo(userEmail);
+        List<UserCompetitionDo> userCompetitionDos = userCompetitionDoMapper.selectByExample(userCompetitionDoExample);
+        if (userCompetitionDos.isEmpty())
+            return "";
+        return userCompetitionDos.get(0).getTeamId();
+    }
+
+    public TeamDo getTeamByCompetitionIdAndTeamId(String competitionId, String teamId) {
+        TeamDoExample teamDoExample = new TeamDoExample();
+        teamDoExample.createCriteria().andCompetitionIdEqualTo(competitionId).andTeamIdEqualTo(teamId);
+        List<TeamDo> teamDos = teamDoMapper.selectByExample(teamDoExample);
+        if (teamDos.isEmpty())
+            return null;
+        return teamDos.get(0);
+    }
+
     public boolean judgeUserEmailIfExists(String userEmail) {
         UserDoExample userDoExample = new UserDoExample();
         userDoExample.createCriteria().andUserEmailEqualTo(userEmail);
@@ -83,5 +102,14 @@ public class CommonTool {
         userCompetitionDoExample.createCriteria().andStudentEmailEqualTo(userEmail).andCompetitionIdEqualTo(competitionId);
         List<UserCompetitionDo> userCompetitionDos = userCompetitionDoMapper.selectByExample(userCompetitionDoExample);
         return !userCompetitionDos.isEmpty();
+    }
+
+    public boolean judgeCompetitionStateIfPass(String competitionId) {
+        CompetitionDoExample competitionDoExample = new CompetitionDoExample();
+        competitionDoExample.createCriteria().andCompetitionIdEqualTo(competitionId);
+        List<CompetitionDo> competitionDos = competitionDoMapper.selectByExample(competitionDoExample);
+        if (competitionDos.isEmpty())
+            return false;
+        return competitionDos.get(0).getCompetitionState() == 2;
     }
 }

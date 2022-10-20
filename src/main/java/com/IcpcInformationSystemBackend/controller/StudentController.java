@@ -1,6 +1,5 @@
 package com.IcpcInformationSystemBackend.controller;
 
-import com.IcpcInformationSystemBackend.model.request.CompetitionInfo;
 import com.IcpcInformationSystemBackend.model.request.RegisterTeamInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.service.ApproveService;
@@ -40,6 +39,27 @@ public class StudentController {
     @PostMapping("/signUp4Competition")
     @ApiOperation(value = "选手通过提交队伍信息来报名比赛")
     public Result signUp4Competition(@ApiParam(name = "报名比赛创建队伍需要提供的信息", required = true) @Validated @RequestBody RegisterTeamInfo registerTeamInfo) {
-        return teamService.signUp4Competition(registerTeamInfo);
+        return teamService.signUp4Competition(registerTeamInfo, true);
+    }
+
+    @GetMapping("/getOwnTeamInfo")
+    @ApiOperation(value = "选手查看自己的队伍报名信息")
+    public Result getOwnTeamInfo(String competitionId) {
+        return teamService.getOwnTeamInfo(competitionId);
+    }
+
+    @PostMapping("/reSignUp4Competition")
+    @ApiOperation(value = "选手通过提交队伍信息来重新报名比赛")
+    public Result reSignUp4Competition(@ApiParam(name = "重新报名比赛创建队伍需要提供的信息", required = true) @Validated @RequestBody RegisterTeamInfo registerTeamInfo) {
+        Result result = teamService.deleteTeamInfo(registerTeamInfo.getCompetitionId(), registerTeamInfo.getTeamId());
+        if (result.getCode() != 200)
+            return result;
+        return teamService.signUp4Competition(registerTeamInfo, false);
+    }
+
+    @GetMapping("/deleteTeamInfo")
+    @ApiOperation(value = "选手删除自己队伍信息")
+    public Result deleteTeamInfo(String competitionId, String teamId) {
+        return teamService.deleteTeamInfo(competitionId, teamId);
     }
 }

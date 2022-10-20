@@ -4,7 +4,7 @@ import com.IcpcInformationSystemBackend.dao.CompetitionDoMapper;
 import com.IcpcInformationSystemBackend.dao.UserDoMapper;
 import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.entity.*;
-import com.IcpcInformationSystemBackend.model.request.CompetitionInfo;
+import com.IcpcInformationSystemBackend.model.request.RegisterCompetitionInfo;
 import com.IcpcInformationSystemBackend.model.response.CompetitionInfoResponse;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.service.CompetitionService;
@@ -34,9 +34,9 @@ public class CompetitionServiceImpl implements CompetitionService {
     private AuthTool authTool;
 
     @Override
-    public Result buildCompetition(CompetitionInfo competitionInfo) {
+    public Result buildCompetition(RegisterCompetitionInfo registerCompetitionInfo) {
         CompetitionDo competitionDo = new CompetitionDo();
-        BeanUtils.copyProperties(competitionInfo, competitionDo);
+        BeanUtils.copyProperties(registerCompetitionInfo, competitionDo);
         if (!Objects.equals(competitionDo.getCompetitionId(), ""))
             return ResultTool.error(EmAllException.BAD_REQUEST);
         competitionDo.setCompetitionId(generateCompetitionId());
@@ -51,7 +51,7 @@ public class CompetitionServiceImpl implements CompetitionService {
         competitionDo.setBuilderEmail(userEmail);
         competitionDo.setCompetitionState(1);
         competitionDo.setSchoolId(userDos.get(0).getSchoolId());
-        String duration = competitionInfo.getDuration();
+        String duration = registerCompetitionInfo.getDuration();
         if (!judgeDuration(duration))
             return ResultTool.error(EmAllException.BAD_REQUEST);
         if (competitionDoMapper.insertSelective(competitionDo) == 0)
@@ -63,6 +63,8 @@ public class CompetitionServiceImpl implements CompetitionService {
         if (duration.length() != 5)
             return false;
         if (duration.charAt(2) != ':')
+            return false;
+        if (duration.charAt(3) >= '6')
             return false;
         for (int i = 0; i < 5; i++) {
             if (i == 2)
@@ -95,9 +97,9 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     // state为3表示重新申请创建比赛，state为2表示申请修改比赛信息
     @Override
-    public Result rebuildCompetition(CompetitionInfo competitionInfo, int state) {
+    public Result rebuildCompetition(RegisterCompetitionInfo registerCompetitionInfo, int state) {
         CompetitionDo competitionDo = new CompetitionDo();
-        BeanUtils.copyProperties(competitionInfo, competitionDo);
+        BeanUtils.copyProperties(registerCompetitionInfo, competitionDo);
         if (Objects.equals(competitionDo.getCompetitionId(), ""))
             return ResultTool.error(EmAllException.BAD_REQUEST);
         CompetitionDoExample competitionDoExample = new CompetitionDoExample();

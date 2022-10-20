@@ -1,6 +1,6 @@
 package com.IcpcInformationSystemBackend.controller;
 
-import com.IcpcInformationSystemBackend.model.request.CompetitionInfo;
+import com.IcpcInformationSystemBackend.model.request.RegisterCompetitionInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.service.CompetitionService;
 import io.swagger.annotations.Api;
@@ -23,14 +23,14 @@ public class CompetitionChairmanController {
 
     @PostMapping("/buildCompetition")
     @ApiOperation(value = "比赛负责人创建比赛")
-    public Result buildCompetition(@ApiParam(name = "创建比赛需提供的信息", required = true) @Validated @RequestBody CompetitionInfo competitionInfo) {
-        return competitionService.buildCompetition(competitionInfo);
+    public Result buildCompetition(@ApiParam(name = "创建比赛需提供的信息", required = true) @Validated @RequestBody RegisterCompetitionInfo registerCompetitionInfo) {
+        return competitionService.buildCompetition(registerCompetitionInfo);
     }
 
     @PostMapping("/rebuildCompetition")
     @ApiOperation(value = "比赛被驳回后，比赛负责人重新申请创建比赛")
-    public Result rebuildCompetition(@ApiParam(name = "创建比赛需提供的信息", required = true) @Validated @RequestBody CompetitionInfo competitionInfo) {
-        return competitionService.rebuildCompetition(competitionInfo, 3);
+    public Result rebuildCompetition(@ApiParam(name = "创建比赛需提供的信息", required = true) @Validated @RequestBody RegisterCompetitionInfo registerCompetitionInfo) {
+        return competitionService.rebuildCompetition(registerCompetitionInfo, 3);
     }
 
     @GetMapping("/getOwnCompetitionInfo")
@@ -41,7 +41,7 @@ public class CompetitionChairmanController {
 
     @PostMapping("/modifyCompetition")
     @ApiOperation(value = "比赛负责人可以申请修改已经被批准成功的比赛信息")
-    public Result modifyCompetition(@ApiParam(name = "修改比赛需提供的信息", required = true) @Validated @RequestBody CompetitionInfo competitionInfo) {
-        return competitionService.rebuildCompetition(competitionInfo, 2);
+    public Result modifyCompetition(@ApiParam(name = "修改比赛需提供的信息", required = true) @Validated @RequestBody RegisterCompetitionInfo registerCompetitionInfo) {
+        return competitionService.rebuildCompetition(registerCompetitionInfo, 2);
     }
 }
