@@ -28,6 +28,9 @@ public class CommonTool {
     @Resource
     private UserCompetitionDoMapper userCompetitionDoMapper;
 
+    @Resource
+    private PositionDoMapper positionDoMapper;
+
     public String getSchoolIdByUserEmail(String userEmail) {
         if (Objects.equals(userEmail, ""))
             return "";
@@ -74,6 +77,21 @@ public class CommonTool {
         TeamDoExample teamDoExample = new TeamDoExample();
         teamDoExample.createCriteria().andCompetitionIdEqualTo(competitionId);
         return teamDoMapper.selectByExample(teamDoExample);
+    }
+
+    public PositionDo getPositionByPositionId(String positionId) {
+        PositionDoExample positionDoExample = new PositionDoExample();
+        positionDoExample.createCriteria().andPositionIdEqualTo(positionId);
+        List<PositionDo> positionDos = positionDoMapper.selectByExample(positionDoExample);
+        if (positionDos.isEmpty())
+            return null;
+        return positionDos.get(0);
+    }
+
+    public List<PositionDo> getPositionsByCompetitionId(String competitionId) {
+        PositionDoExample positionDoExample = new PositionDoExample();
+        positionDoExample.createCriteria().andCompetitionIdEqualTo(competitionId);
+        return positionDoMapper.selectByExample(positionDoExample);
     }
 
     public boolean judgeUserEmailIfExists(String userEmail) {
@@ -152,5 +170,12 @@ public class CommonTool {
         if (now.after(endTime))
             return 2;
         return 0;
+    }
+
+    public boolean judgePositionIfExists(String positionId) {
+        PositionDoExample positionDoExample = new PositionDoExample();
+        positionDoExample.createCriteria().andPositionIdEqualTo(positionId);
+        List<PositionDo> positionDos = positionDoMapper.selectByExample(positionDoExample);
+        return !positionDos.isEmpty();
     }
 }

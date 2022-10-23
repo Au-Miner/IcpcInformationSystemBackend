@@ -7,5 +7,11 @@ public interface PositionService {
 
     Result addPosition(PositionInfo positionInfo);
 
+    Result modifyPosition(PositionInfo positionInfo);
+
+    Result getPositionInfoByCompetitionId(String competitionId);
+
+    Result deletePosition(String positionId);
+
     String generatePositionId();
 }

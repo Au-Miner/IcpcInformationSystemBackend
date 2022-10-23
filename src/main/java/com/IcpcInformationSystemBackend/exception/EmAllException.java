@@ -45,6 +45,9 @@ public enum EmAllException implements CommonError{
     USER_HAS_SIGN_UP_4_COMPETITION(403, "选手已经报名该比赛"),
     USER_NOT_SIGN_UP_4_COMPETITION(403, "选手没有报名该比赛"),
 
+    //场地相关
+    NO_SUCH_POSITION(403, "查无此场"),
+
     //其他
     DATABASE_ERR(405,"数据库错误"),
     UNKNOWN_ERROR(500,"未知错误"),

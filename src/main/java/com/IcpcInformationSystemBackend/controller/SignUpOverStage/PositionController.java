@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 @CrossOrigin
 @RestController
 @RequestMapping("/signUpOver/position")
-@Api(tags = "比赛负责人接口类")
+@Api(tags = "场地接口类")
 public class PositionController {
     @Resource
     private PositionService positionService;
@@ -29,5 +29,23 @@ public class PositionController {
     @ApiOperation(value = "比赛负责人添加比赛场地（包含每个比赛场地能容纳人数）")
     public Result addPosition(@ApiParam(name = "添加比赛场地时需要提供的信息", required = true) @Validated @RequestBody PositionInfo positionInfo) {
         return positionService.addPosition(positionInfo);
+    }
+
+    @GetMapping("/getPositionInfoByCompetitionId")
+    @ApiOperation(value = "比赛负责人根据比赛id获取所有场地信息")
+    public Result getPositionInfoByCompetitionId(String competitionId) {
+        return positionService.getPositionInfoByCompetitionId(competitionId);
+    }
+
+    @PostMapping("/modifyPosition")
+    @ApiOperation(value = "比赛负责人修改比赛场地信息")
+    public Result modifyPosition(@ApiParam(name = "添加比赛场地时需要提供的信息", required = true) @Validated @RequestBody PositionInfo positionInfo) {
+        return positionService.modifyPosition(positionInfo);
+    }
+
+    @GetMapping("/deletePosition")
+    @ApiOperation(value = "比赛负责人根据场地id删除场地信息")
+    public Result deletePosition(String positionId) {
+        return positionService.deletePosition(positionId);
     }
 }

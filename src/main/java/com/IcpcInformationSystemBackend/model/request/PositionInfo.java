@@ -8,8 +8,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
-@ApiModel(value = "新增比赛场地需要提供的信息PositionInfo")
+@ApiModel(value = "新增或修改比赛场地需要提供的信息PositionInfo")
 public class PositionInfo {
+    @ApiModelProperty(value = "比赛id，为空表示创建，非空表示修改", example = "xxxxx")
+    private String positionId;
+
     @NotBlank(message="比赛id不能为空")
     @ApiModelProperty(value = "比赛id，非空", example = "xxxxx")
     private String competitionId;
