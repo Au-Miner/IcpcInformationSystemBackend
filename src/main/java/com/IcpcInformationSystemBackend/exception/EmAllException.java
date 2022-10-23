@@ -20,6 +20,7 @@ public enum EmAllException implements CommonError{
     SCHOOL_HAVE_REGISTERED(403, "学校已注册"),
     SCHOOL_NOT_REGISTERED(405,"学校未注册"),
     SCHOOL_DONT_NEED_APPROVE(405,"学校无需审批"),
+    SCHOOL_DONT_APPROVE_SUCCESS(403, "学校未审批通过"),
 
     //人相关
     NO_SUCH_USER(403, "查无此人"),
@@ -32,7 +33,10 @@ public enum EmAllException implements CommonError{
     //比赛相关
     NO_SUCH_COMPETITION(403,"查无此赛"),
     COMPETITION_DONT_NEED_APPROVE(403,"比赛无需审批"),
-    COMPETITION_STATE_ERROR(403, "比赛状态错误"),
+    COMPETITION_DONT_APPROVE_SUCCESS(403, "比赛未审批通过"),
+    COMPETITION_STATE_ERROR(403, "比赛状态有误"),
+    COMPETITION_NOT_START(403, "比赛报名还未开始"),
+    COMPETITION_HAS_END(403, "比赛报名已经结束"),
 
     //队伍相关
     NO_SUCH_TEAM(403, "查无此队"),

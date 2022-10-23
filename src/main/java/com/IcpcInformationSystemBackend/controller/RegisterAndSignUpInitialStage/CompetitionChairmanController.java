@@ -1,8 +1,12 @@
-package com.IcpcInformationSystemBackend.controller;
+package com.IcpcInformationSystemBackend.controller.RegisterAndSignUpInitialStage;
 
+import com.IcpcInformationSystemBackend.model.request.ApproveTeamInfo;
+import com.IcpcInformationSystemBackend.model.request.PositionInfo;
 import com.IcpcInformationSystemBackend.model.request.RegisterCompetitionInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;
+import com.IcpcInformationSystemBackend.service.ApproveService;
 import com.IcpcInformationSystemBackend.service.CompetitionService;
+import com.IcpcInformationSystemBackend.service.PositionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -20,6 +24,12 @@ import javax.annotation.Resource;
 public class CompetitionChairmanController {
     @Resource
     private CompetitionService competitionService;
+
+    @Resource
+    private ApproveService approveService;
+
+    @Resource
+    private PositionService positionService;
 
     @PostMapping("/buildCompetition")
     @ApiOperation(value = "比赛负责人创建比赛")
@@ -43,5 +53,23 @@ public class CompetitionChairmanController {
     @ApiOperation(value = "比赛负责人可以申请修改已经被批准成功的比赛信息")
     public Result modifyCompetition(@ApiParam(name = "修改比赛需提供的信息", required = true) @Validated @RequestBody RegisterCompetitionInfo registerCompetitionInfo) {
         return competitionService.rebuildCompetition(registerCompetitionInfo, 2);
+    }
+
+    @GetMapping("/getTeamInfoByCompetitionId")
+    @ApiOperation(value = "比赛负责人根据比赛id获取所有队伍信息")
+    public Result getTeamInfoByCompetitionId(String competitionId) {
+        return approveService.competitionChairmanGetTeamInfoByCompetitionId(competitionId);
+    }
+
+    @PostMapping("/approveTeamInfoByTeamKey")
+    @ApiOperation(value = "比赛负责人审核队伍报名信息")
+    public Result approveTeamInfoByTeamKey(@ApiParam(name = "审核队伍时需要提供的信息", required = true) @Validated @RequestBody ApproveTeamInfo approveTeamInfo) {
+        return approveService.competitionChairmanApproveTeamInfoByTeamKey(approveTeamInfo);
+    }
+
+    @PostMapping("/addPosition")
+    @ApiOperation(value = "比赛负责人添加比赛场地（包含每个比赛场地能容纳人数）")
+    public Result addPosition(@ApiParam(name = "添加比赛场地时需要提供的信息", required = true) @Validated @RequestBody PositionInfo positionInfo) {
+        return positionService.addPosition(positionInfo);
     }
 }

@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 
 
 @Data
-@ApiModel(value = "注册用户需要提供的信息")
+@ApiModel(value = "注册用户需要提供的信息ReigsterUserInfo")
 public class ReigsterUserInfo {
 
     @Email(message = "用户邮箱错误")

@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
-@ApiModel(value = "发送邮件时需要提供的信息")
+@ApiModel(value = "发送邮件时需要提供的信息EmailMessageInfo")
 public class EmailMessageInfo {
     @NotBlank(message="邮箱地址不能为空")
     @ApiModelProperty(value = "用户邮箱，非空", example = "xxxxx")

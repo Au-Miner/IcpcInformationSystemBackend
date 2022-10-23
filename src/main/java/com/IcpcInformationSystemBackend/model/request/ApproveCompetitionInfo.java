@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 
 @Data
-@ApiModel(value = "审批比赛和比赛负责人需提供的信息")
+@ApiModel(value = "审批比赛和比赛负责人需提供的信息ApproveCompetitionInfo")
 public class ApproveCompetitionInfo {
     @NotBlank(message = "比赛id错误")
     @ApiModelProperty(value = "比赛id，非空", example = "xxxxx")

@@ -5,7 +5,9 @@ import com.IcpcInformationSystemBackend.model.request.RegisterTeamInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;
 
 public interface TeamService {
-    Result signUp4Competition(RegisterTeamInfo registerTeamInfo, boolean ifFirstCreateTeam);
+    Result studentSignUp4Competition(RegisterTeamInfo registerTeamInfo, boolean ifFirstCreateTeam);
+
+    Result coachSignUp4Competition(RegisterTeamInfo registerTeamInfo, boolean ifFirstCreateTeam);
 
     Result getOwnTeamInfo(String competitionId);
 

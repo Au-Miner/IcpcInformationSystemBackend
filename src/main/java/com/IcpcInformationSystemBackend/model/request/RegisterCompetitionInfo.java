@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Data
-@ApiModel(value = "创建比赛时需要提供的信息")
+@ApiModel(value = "创建比赛时需要提供的信息RegisterCompetitionInfo")
 public class RegisterCompetitionInfo {
     @ApiModelProperty(value = "比赛id号，如果为空表示创建比赛，如果非空表示重新创建比赛/比赛信息修改", example = "xxxxx")
     private String competitionId;

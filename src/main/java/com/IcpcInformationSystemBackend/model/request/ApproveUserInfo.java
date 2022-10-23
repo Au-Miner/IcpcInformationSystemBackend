@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 
 @Data
-@ApiModel(value = "审批选手或教练需提供的信息")
+@ApiModel(value = "审批选手或教练需提供的信息ApproveUserInfo")
 public class ApproveUserInfo {
     @Email(message = "选手或教练邮箱错误")
     @ApiModelProperty(value = "选手或教练邮箱，非空", example = "12345678@qq.com")

@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
-@ApiModel(value = "创建小组时需要提供的信息")
+@ApiModel(value = "创建小组时需要提供的信息RegisterTeamInfo")
 public class RegisterTeamInfo {
     @ApiModelProperty(value = "队伍id号，如果为空表示申请创建队伍，如果非空表示重新申请创建队伍", example = "xxxxx")
     private String teamId;

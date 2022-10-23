@@ -9,7 +9,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @Data
-@ApiModel(value = "注册学校需要提供的信息")
+@ApiModel(value = "注册学校需要提供的信息RegisterSchoolInfo")
 public class RegisterSchoolInfo {
 
     @NotBlank(message="学校代码不能为空")

@@ -13,7 +13,9 @@ public interface ApproveService {
 
     Result getStudentRegitsterInfo();
 
-    Result getTeamInfoByCompetitionId(String competitionId);
+    Result coachGetTeamInfoByCompetitionId(String competitionId);
+
+    Result competitionChairmanGetTeamInfoByCompetitionId(String competitionId);
 
     Result approveSchoolRegister(ApproveSchoolInfo approveSchoolInfo);
 
@@ -23,5 +25,7 @@ public interface ApproveService {
 
     Result approveCompetitionRegister(ApproveCompetitionInfo approveCompetitionInfo);
 
-    Result approveTeamInfoByTeamId(ApproveTeamInfo approveTeamInfo);
+    Result coachApproveTeamInfoByTeamKey(ApproveTeamInfo approveTeamInfo);
+
+    Result competitionChairmanApproveTeamInfoByTeamKey(ApproveTeamInfo approveTeamInfo);
 }

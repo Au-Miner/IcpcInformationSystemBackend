@@ -1,4 +1,4 @@
-package com.IcpcInformationSystemBackend.controller;
+package com.IcpcInformationSystemBackend.controller.RegisterAndSignUpInitialStage;
 
 import com.IcpcInformationSystemBackend.model.request.LoginUserInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;

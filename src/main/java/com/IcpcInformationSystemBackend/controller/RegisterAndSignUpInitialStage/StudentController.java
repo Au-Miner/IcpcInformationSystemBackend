@@ -1,4 +1,4 @@
-package com.IcpcInformationSystemBackend.controller;
+package com.IcpcInformationSystemBackend.controller.RegisterAndSignUpInitialStage;
 
 import com.IcpcInformationSystemBackend.model.request.RegisterTeamInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;
@@ -39,7 +39,7 @@ public class StudentController {
     @PostMapping("/signUp4Competition")
     @ApiOperation(value = "选手通过提交队伍信息来报名比赛")
     public Result signUp4Competition(@ApiParam(name = "报名比赛创建队伍需要提供的信息", required = true) @Validated @RequestBody RegisterTeamInfo registerTeamInfo) {
-        return teamService.signUp4Competition(registerTeamInfo, true);
+        return teamService.studentSignUp4Competition(registerTeamInfo, true);
     }
 
     @GetMapping("/getOwnTeamInfo")
@@ -49,12 +49,12 @@ public class StudentController {
     }
 
     @PostMapping("/reSignUp4Competition")
-    @ApiOperation(value = "选手通过提交队伍信息来重新报名比赛")
+    @ApiOperation(value = "选手通过提交队伍信息来重新报名比赛（选手修改队伍信息并重新提交审核）")
     public Result reSignUp4Competition(@ApiParam(name = "重新报名比赛创建队伍需要提供的信息", required = true) @Validated @RequestBody RegisterTeamInfo registerTeamInfo) {
         Result result = teamService.deleteTeamInfo(registerTeamInfo.getCompetitionId(), registerTeamInfo.getTeamId());
         if (result.getCode() != 200)
             return result;
-        return teamService.signUp4Competition(registerTeamInfo, false);
+        return teamService.studentSignUp4Competition(registerTeamInfo, false);
     }
 
     @GetMapping("/deleteTeamInfo")

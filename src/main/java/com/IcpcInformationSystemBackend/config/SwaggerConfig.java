@@ -33,18 +33,47 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .enable(true)
-                .groupName("学校")
-
-
+                .groupName("注册和比赛报名初期阶段")
 
                 .securitySchemes(securitySchemes())
                 .securityContexts(securityContexts())
                 .forCodeGeneration(true)
-                .select().apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
+                // .select().apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
+                .select().apis(RequestHandlerSelectors.basePackage("com.IcpcInformationSystemBackend.controller.RegisterAndSignUpInitialStage"))
                 .apis(RequestHandlerSelectors.any())
                 .paths(regex("^.*(?<!error)$"))
                 .build();
 
+    }
+
+    @Bean
+    public Docket docket2() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
+                .enable(true)
+                .groupName("比赛报名截止阶段")
+                .securitySchemes(securitySchemes())
+                .securityContexts(securityContexts())
+                .forCodeGeneration(true)
+                .select().apis(RequestHandlerSelectors.basePackage("com.IcpcInformationSystemBackend.controller.SignUpOverStage"))
+                .apis(RequestHandlerSelectors.any())
+                .paths(regex("^.*(?<!error)$"))
+                .build();
+    }
+
+    @Bean
+    public Docket docket3() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
+                .enable(true)
+                .groupName("比赛结束阶段")
+                .securitySchemes(securitySchemes())
+                .securityContexts(securityContexts())
+                .forCodeGeneration(true)
+                .select().apis(RequestHandlerSelectors.basePackage("com.IcpcInformationSystemBackend.controller.CompetitionOverStage"))
+                .apis(RequestHandlerSelectors.any())
+                .paths(regex("^.*(?<!error)$"))
+                .build();
     }
 
     //配置文档信息

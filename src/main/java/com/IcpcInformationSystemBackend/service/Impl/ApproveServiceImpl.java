@@ -223,7 +223,7 @@ public class ApproveServiceImpl implements ApproveService {
     }
 
     @Override
-    public Result getTeamInfoByCompetitionId(String competitionId) {
+    public Result coachGetTeamInfoByCompetitionId(String competitionId) {
         if (!commonTool.judgeCompetitionIdIfExists(competitionId))
             return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);
         TeamDoExample teamDoExample = new TeamDoExample();
@@ -248,21 +248,58 @@ public class ApproveServiceImpl implements ApproveService {
     }
 
     @Override
-    public Result approveTeamInfoByTeamId(ApproveTeamInfo approveTeamInfo) {
-        TeamDoExample teamDoExample = new TeamDoExample();
-        teamDoExample.createCriteria().andTeamIdEqualTo(approveTeamInfo.getTeamId()).andCompetitionIdEqualTo(approveTeamInfo.getCompetitionId());
-        List<TeamDo> teamDos = teamDoMapper.selectByExample(teamDoExample);
-        if (teamDos.isEmpty())
+    public Result coachApproveTeamInfoByTeamKey(ApproveTeamInfo approveTeamInfo) {
+        TeamDo teamDo = commonTool.getTeamByCompetitionIdAndTeamId(approveTeamInfo.getCompetitionId(), approveTeamInfo.getTeamId());
+        if (teamDo == null)
             return ResultTool.error(EmAllException.NO_SUCH_TEAM);
-        if (!Objects.equals(teamDos.get(0).getCoach1Email(), authTool.getUserId()) && !Objects.equals(teamDos.get(0).getCoach2Email(), authTool.getUserId()))
+        if (!Objects.equals(teamDo.getCoach1Email(), authTool.getUserId()) && !Objects.equals(teamDo.getCoach2Email(), authTool.getUserId()))
             return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
         if (approveTeamInfo.getApproveResult() != 2 && approveTeamInfo.getApproveResult() != 3)
             return ResultTool.error(EmAllException.BAD_REQUEST);
-        // if (teamDos.get(0).getTeamState() != 1)
-        //     return ResultTool.error(EmAllException.TEAM_DONT_NEED_APPROVE);
-        teamDos.get(0).setReason(approveTeamInfo.getApproveReason());
-        teamDos.get(0).setTeamState(approveTeamInfo.getApproveResult());
-        if (teamDoMapper.updateByPrimaryKeySelective(teamDos.get(0)) == 0)
+        if (teamDo.getTeamState() != 1 && teamDo.getTeamState() != 2 && teamDo.getTeamState() != 3)
+            return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
+        teamDo.setReason(approveTeamInfo.getApproveReason());
+        teamDo.setTeamState(approveTeamInfo.getApproveResult());
+        if (teamDoMapper.updateByPrimaryKeySelective(teamDo) == 0)
+            return ResultTool.error(EmAllException.DATABASE_ERR);
+        return ResultTool.success();
+    }
+
+    @Override
+    public Result competitionChairmanGetTeamInfoByCompetitionId(String competitionId) {
+        if (!commonTool.judgeCompetitionIdIfExists(competitionId))
+            return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);
+        if (!commonTool.judgeCompetitionChairmanIdentityIfRight(competitionId, authTool.getUserId()))
+            return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
+        List<TeamDo> teamDos = commonTool.getTeamsByCompetitionId(competitionId);
+        ArrayList<TeamInfoResponse> res = new ArrayList<>();
+        for (TeamDo teamDo : teamDos) {
+            TeamInfoResponse teamInfoResponse = new TeamInfoResponse();
+            BeanUtils.copyProperties(teamDo, teamInfoResponse);
+            teamInfoResponse.setMember1chiName(commonTool.getChiNameByUserEmail(teamDo.getMember1Email()));
+            teamInfoResponse.setMember2chiName(commonTool.getChiNameByUserEmail(teamDo.getMember2Email()));
+            teamInfoResponse.setMember3chiName(commonTool.getChiNameByUserEmail(teamDo.getMember3Email()));
+            teamInfoResponse.setCoach1chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach1Email()));
+            teamInfoResponse.setCoach2chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach2Email()));
+            res.add(teamInfoResponse);
+        }
+        return ResultTool.success(res);
+    }
+
+    @Override
+    public Result competitionChairmanApproveTeamInfoByTeamKey(ApproveTeamInfo approveTeamInfo) {
+        if (!commonTool.judgeCompetitionChairmanIdentityIfRight(approveTeamInfo.getCompetitionId(), authTool.getUserId()))
+            return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
+        TeamDo teamDo = commonTool.getTeamByCompetitionIdAndTeamId(approveTeamInfo.getCompetitionId(), approveTeamInfo.getTeamId());
+        if (teamDo == null)
+            return ResultTool.error(EmAllException.NO_SUCH_TEAM);
+        if (approveTeamInfo.getApproveResult() != 4 && approveTeamInfo.getApproveResult() != 5)
+            return ResultTool.error(EmAllException.BAD_REQUEST);
+        if (teamDo.getTeamState() != 2 && teamDo.getTeamState() != 4 && teamDo.getTeamState() != 5)
+            return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
+        teamDo.setReason(approveTeamInfo.getApproveReason());
+        teamDo.setTeamState(approveTeamInfo.getApproveResult());
+        if (teamDoMapper.updateByPrimaryKeySelective(teamDo) == 0)
             return ResultTool.error(EmAllException.DATABASE_ERR);
         return ResultTool.success();
     }

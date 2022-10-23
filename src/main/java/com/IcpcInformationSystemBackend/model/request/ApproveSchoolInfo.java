@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
-@ApiModel(value = "审批学校及学校负责人需提供的信息")
+@ApiModel(value = "审批学校及学校负责人需提供的信息ApproveSchoolInfo")
 public class ApproveSchoolInfo {
     @NotBlank(message="学校代码不能为空")
     @ApiModelProperty(value = "学校代码，非空", example = "xxxxx")

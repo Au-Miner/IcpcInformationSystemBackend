@@ -1,7 +1,8 @@
-package com.IcpcInformationSystemBackend.controller;
+package com.IcpcInformationSystemBackend.controller.RegisterAndSignUpInitialStage;
 
 import com.IcpcInformationSystemBackend.model.request.ApproveTeamInfo;
 import com.IcpcInformationSystemBackend.model.request.ApproveUserInfo;
+import com.IcpcInformationSystemBackend.model.request.RegisterTeamInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.service.ApproveService;
 import com.IcpcInformationSystemBackend.service.CompetitionService;
@@ -36,6 +37,7 @@ public class CoachController {
     @Resource
     private TeamService teamService;
 
+    /*注册阶段*/
     @GetMapping("/getStudentRegitsterInfo")
     @ApiOperation(value = "教练在审核学生时在此接口获取选手所有相关信息")
     public Result getStudentRegitsterInfo() {
@@ -43,7 +45,7 @@ public class CoachController {
     }
 
     @PostMapping("/approveStudentRegister")
-    @ApiOperation(value = "学校负责人审批选手注册账号")
+    @ApiOperation(value = "教练审批选手注册账号")
     public Result approveStudentRegister(@ApiParam(name = "审批选手时需要提供的信息", required = true) @Validated @RequestBody ApproveUserInfo approveUserInfo) {
         Result res1 = approveService.approveStudentRegister(approveUserInfo);
         if (res1.getCode() != 200)
@@ -54,6 +56,7 @@ public class CoachController {
         return ResultTool.success();
     }
 
+    /*比赛报名阶段*/
     @GetMapping("/getAcceptCompetitionInfo")
     @ApiOperation(value = "教练获取所有已批准通过比赛信息")
     public Result getAcceptCompetitionInfo() {
@@ -61,14 +64,35 @@ public class CoachController {
     }
 
     @GetMapping("/getTeamInfoByCompetitionId")
-    @ApiOperation(value = "教练根据比赛id获取当前学校所有小队信息")
+    @ApiOperation(value = "教练根据比赛id获取当前学校所有自己带队队伍信息（方便后续进行审批）")
     public Result getTeamInfoByCompetitionId(String competitionId) {
-        return approveService.getTeamInfoByCompetitionId(competitionId);
+        return approveService.coachGetTeamInfoByCompetitionId(competitionId);
     }
 
-    @PostMapping("/approveTeamInfoByTeamId")
-    @ApiOperation(value = "教练根据比赛id获取当前学校所有小队信息")
-    public Result approveTeamInfoByTeamId(@ApiParam(name = "审批选手时需要提供的信息", required = true) @Validated @RequestBody ApproveTeamInfo approveTeamInfo) {
-        return approveService.approveTeamInfoByTeamId(approveTeamInfo);
+    @PostMapping("/approveTeamInfoByTeamKey")
+    @ApiOperation(value = "教练审核队伍报名信息")
+    public Result approveTeamInfoByTeamKey(@ApiParam(name = "审核队伍时需要提供的信息", required = true) @Validated @RequestBody ApproveTeamInfo approveTeamInfo) {
+        return approveService.coachApproveTeamInfoByTeamKey(approveTeamInfo);
+    }
+
+    @GetMapping("/deleteTeamInfo")
+    @ApiOperation(value = "教练删除自己带队队伍信息")
+    public Result deleteTeamInfo(String competitionId, String teamId) {
+        return teamService.deleteTeamInfo(competitionId, teamId);
+    }
+
+    @PostMapping("/signUp4Competition")
+    @ApiOperation(value = "教练通过提交队伍信息来报名比赛")
+    public Result signUp4Competition(@ApiParam(name = "报名比赛创建队伍需要提供的信息", required = true) @Validated @RequestBody RegisterTeamInfo registerTeamInfo) {
+        return teamService.coachSignUp4Competition(registerTeamInfo, true);
+    }
+
+    @PostMapping("/reSignUp4Competition")
+    @ApiOperation(value = "教练通过提交队伍信息来重新报名比赛（教练修改队伍信息并重新提交审核）")
+    public Result reSignUp4Competition(@ApiParam(name = "重新报名比赛创建队伍需要提供的信息", required = true) @Validated @RequestBody RegisterTeamInfo registerTeamInfo) {
+        Result result = teamService.deleteTeamInfo(registerTeamInfo.getCompetitionId(), registerTeamInfo.getTeamId());
+        if (result.getCode() != 200)
+            return result;
+        return teamService.coachSignUp4Competition(registerTeamInfo, false);
     }
 }

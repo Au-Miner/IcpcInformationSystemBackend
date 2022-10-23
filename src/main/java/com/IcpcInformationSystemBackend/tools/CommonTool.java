@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,7 +50,7 @@ public class CommonTool {
         return userDos.get(0).getChiName();
     }
 
-    public String getTeamIdByUserEmailAndCompetitionId(String userEmail, String competitionId) {
+    public String getTeamIdByCompetitionIdAndUserEmail(String competitionId, String userEmail) {
         if (Objects.equals(userEmail, "") || Objects.equals(competitionId, ""))
             return "";
         UserCompetitionDoExample userCompetitionDoExample = new UserCompetitionDoExample();
@@ -67,6 +68,12 @@ public class CommonTool {
         if (teamDos.isEmpty())
             return null;
         return teamDos.get(0);
+    }
+
+    public List<TeamDo> getTeamsByCompetitionId(String competitionId) {
+        TeamDoExample teamDoExample = new TeamDoExample();
+        teamDoExample.createCriteria().andCompetitionIdEqualTo(competitionId);
+        return teamDoMapper.selectByExample(teamDoExample);
     }
 
     public boolean judgeUserEmailIfExists(String userEmail) {
@@ -111,5 +118,39 @@ public class CommonTool {
         if (competitionDos.isEmpty())
             return false;
         return competitionDos.get(0).getCompetitionState() == 2;
+    }
+
+    public boolean judgeCompetitionChairmanIdentityIfRight(String competitionId, String userEmail) {
+        CompetitionDoExample competitionDoExample = new CompetitionDoExample();
+        competitionDoExample.createCriteria().andCompetitionIdEqualTo(competitionId);
+        List<CompetitionDo> competitionDos = competitionDoMapper.selectByExample(competitionDoExample);
+        if (competitionDos.isEmpty())
+            return false;
+        return Objects.equals(competitionDos.get(0).getBuilderEmail(), userEmail);
+    }
+
+    public boolean judgeSchoolStateIfPass(String schoolId) {
+        SchoolDoExample schoolDoExample = new SchoolDoExample();
+        schoolDoExample.createCriteria().andSchoolIdEqualTo(schoolId);
+        List<SchoolDo> schoolDos = schoolDoMapper.selectByExample(schoolDoExample);
+        if (schoolDos.isEmpty())
+            return false;
+        return schoolDos.get(0).getSchoolState() == 2;
+    }
+
+    public int judgeTeamRegisterIfRightAboutCompetitionTime(String competitionId) {
+        CompetitionDoExample competitionDoExample = new CompetitionDoExample();
+        competitionDoExample.createCriteria().andCompetitionIdEqualTo(competitionId);
+        List<CompetitionDo> competitionDos = competitionDoMapper.selectByExample(competitionDoExample);
+        if (competitionDos.isEmpty())
+            return -1;
+        Date startTime = competitionDos.get(0).getRegistrationStartTime();
+        Date endTime = competitionDos.get(0).getRegistrationEndTime();
+        Date now = new Date();
+        if (now.before(startTime))
+            return 1;
+        if (now.after(endTime))
+            return 2;
+        return 0;
     }
 }

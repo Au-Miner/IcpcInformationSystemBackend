@@ -1,15 +1,12 @@
-package com.IcpcInformationSystemBackend.controller;
+package com.IcpcInformationSystemBackend.controller.RegisterAndSignUpInitialStage;
 
 import com.IcpcInformationSystemBackend.exception.AllException;
 import com.IcpcInformationSystemBackend.model.response.Result;
-import com.IcpcInformationSystemBackend.tools.AuthTool;
 import com.IcpcInformationSystemBackend.tools.FileTool;
 import com.IcpcInformationSystemBackend.tools.ResultTool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
