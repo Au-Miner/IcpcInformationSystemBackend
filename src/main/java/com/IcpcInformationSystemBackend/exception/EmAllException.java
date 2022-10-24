@@ -44,9 +44,12 @@ public enum EmAllException implements CommonError{
     TEAM_DONT_NEED_APPROVE(403, "队伍无需审批"),
     USER_HAS_SIGN_UP_4_COMPETITION(403, "选手已经报名该比赛"),
     USER_NOT_SIGN_UP_4_COMPETITION(403, "选手没有报名该比赛"),
+    TEAM_DONT_APPROVE_SUCCESS(403, "队伍未审批通过"),
 
     //场地相关
     NO_SUCH_POSITION(403, "查无此场"),
+    POSITION_CAPACITY_NOT_ENOUGH(403, "场地容量不足"),
+    TEAM_DONT_ASSIGN_POSITION(403, "队伍比赛场地暂未分配"),
 
     //其他
     DATABASE_ERR(405,"数据库错误"),

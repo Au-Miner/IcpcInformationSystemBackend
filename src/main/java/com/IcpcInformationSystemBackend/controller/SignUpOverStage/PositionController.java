@@ -48,4 +48,16 @@ public class PositionController {
     public Result deletePosition(String positionId) {
         return positionService.deletePosition(positionId);
     }
+
+    @GetMapping("/assignPositions")
+    @ApiOperation(value = "比赛管理员随机分配所有队伍的比赛位置")
+    public Result assignPositions(String competitionId) {
+        return positionService.assignPositions(competitionId);
+    }
+
+    @GetMapping("/exchangePositions")
+    @ApiOperation(value = "比赛管理员交换两个队伍的比赛位置")
+    public Result exchangePositions(String competitionId, String teamId1, String teamId2) {
+        return positionService.exchangePositions(competitionId, teamId1, teamId2);
+    }
 }

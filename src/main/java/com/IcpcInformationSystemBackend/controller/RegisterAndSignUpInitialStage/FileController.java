@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Arrays;
 
 @Slf4j
 @RestController
@@ -30,4 +34,15 @@ public class FileController {
             return ResultTool.error(e.getErrCode(), e.getMsg());
         }
     }
+
+    // @GetMapping("preview")
+    // @ApiOperation(value="预览文件", notes = "pdf预览接口")
+    // public void preview(HttpServletRequest request, HttpServletResponse response,
+    //                     @RequestParam(value = "fileAddress") String fileAddress){
+    //     try{
+    //         fileTool.previewFile(request, response, fileAddress);
+    //     }catch(IOException | AllException e){
+    //         log.error(Arrays.toString(e.getStackTrace()));
+    //     }
+    // }
 }

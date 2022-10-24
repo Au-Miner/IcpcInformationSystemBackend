@@ -101,6 +101,15 @@ public class CommonTool {
         return !userDos.isEmpty();
     }
 
+    public boolean judgeUserStateIfRight(String userEmail) {
+        UserDoExample userDoExample = new UserDoExample();
+        userDoExample.createCriteria().andUserEmailEqualTo(userEmail);
+        List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
+        if (userDos.isEmpty())
+            return false;
+        return userDos.get(0).getUserState() == 2;
+    }
+
     public boolean judgeSchoolIdIfExists(String schoolId) {
         SchoolDoExample schoolDoExample = new SchoolDoExample();
         schoolDoExample.createCriteria().andSchoolIdEqualTo(schoolId);
@@ -170,6 +179,21 @@ public class CommonTool {
         if (now.after(endTime))
             return 2;
         return 0;
+    }
+
+    public boolean judgeTeamIfExists(String competitionId, String teamId) {
+        TeamDoExample teamDoExample = new TeamDoExample();
+        teamDoExample.createCriteria().andTeamIdEqualTo(teamId).andCompetitionIdEqualTo(competitionId);
+        List<TeamDo> teamDos = teamDoMapper.selectByExample(teamDoExample);
+        return !teamDos.isEmpty();
+    }
+    public boolean judgeTeamStateIfRight(String competitionId, String teamId) {
+        TeamDoExample teamDoExample = new TeamDoExample();
+        teamDoExample.createCriteria().andTeamIdEqualTo(teamId).andCompetitionIdEqualTo(competitionId);
+        List<TeamDo> teamDos = teamDoMapper.selectByExample(teamDoExample);
+        if (teamDos.isEmpty())
+            return false;
+        return teamDos.get(0).getTeamState() == 4;
     }
 
     public boolean judgePositionIfExists(String positionId) {

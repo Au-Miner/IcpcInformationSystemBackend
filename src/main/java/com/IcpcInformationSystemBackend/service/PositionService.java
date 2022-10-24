@@ -14,4 +14,8 @@ public interface PositionService {
     Result deletePosition(String positionId);
 
     String generatePositionId();
+
+    Result assignPositions(String competitionId);
+
+    Result exchangePositions(String competitionId, String teamId1, String teamId2);
 }

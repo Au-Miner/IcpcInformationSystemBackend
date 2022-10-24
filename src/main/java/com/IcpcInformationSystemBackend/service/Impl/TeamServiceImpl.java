@@ -87,6 +87,15 @@ public class TeamServiceImpl implements TeamService {
             return ResultTool.error(EmAllException.NO_SUCH_USER);
         if (!commonTool.judgeUserEmailIfExists(registerTeamInfo.getCoach1Email()))
             return ResultTool.error(EmAllException.NO_SUCH_USER);
+        if (!commonTool.judgeUserStateIfRight(registerTeamInfo.getMember1Email()))
+            return ResultTool.error(EmAllException.USER_DONT_APPROVE_SUCCESS);
+        if (!commonTool.judgeUserStateIfRight(registerTeamInfo.getMember2Email()))
+            return ResultTool.error(EmAllException.USER_DONT_APPROVE_SUCCESS);
+        if (!commonTool.judgeUserStateIfRight(registerTeamInfo.getMember3Email()))
+            return ResultTool.error(EmAllException.USER_DONT_APPROVE_SUCCESS);
+        if (!commonTool.judgeUserStateIfRight(registerTeamInfo.getCoach1Email()))
+            return ResultTool.error(EmAllException.USER_DONT_APPROVE_SUCCESS);
+
         if (commonTool.judgeUserIfHasSignUp4Competition(registerTeamInfo.getMember1Email(), registerTeamInfo.getCompetitionId()))
             return ResultTool.error(EmAllException.USER_HAS_SIGN_UP_4_COMPETITION);
         if (commonTool.judgeUserIfHasSignUp4Competition(registerTeamInfo.getMember2Email(), registerTeamInfo.getCompetitionId()))
@@ -98,6 +107,8 @@ public class TeamServiceImpl implements TeamService {
                 return ResultTool.error(EmAllException.EMAIL_FORMAT_ERROR);
             if (!commonTool.judgeUserEmailIfExists(registerTeamInfo.getCoach2Email()))
                 return ResultTool.error(EmAllException.NO_SUCH_USER);
+            if (!commonTool.judgeUserStateIfRight(registerTeamInfo.getCoach2Email()))
+                return ResultTool.error(EmAllException.USER_DONT_APPROVE_SUCCESS);
         }
         String schoolId1 = commonTool.getSchoolIdByUserEmail(registerTeamInfo.getMember1Email());
         String schoolId2 = commonTool.getSchoolIdByUserEmail(registerTeamInfo.getMember2Email());
@@ -230,6 +241,7 @@ public class TeamServiceImpl implements TeamService {
             default:
                 break;
         }
+
         if (!commonTool.judgeUserEmailIfExists(registerTeamInfo.getMember1Email()))
             return ResultTool.error(EmAllException.NO_SUCH_USER);
         if (!commonTool.judgeUserEmailIfExists(registerTeamInfo.getMember2Email()))
@@ -238,6 +250,15 @@ public class TeamServiceImpl implements TeamService {
             return ResultTool.error(EmAllException.NO_SUCH_USER);
         if (!commonTool.judgeUserEmailIfExists(registerTeamInfo.getCoach1Email()))
             return ResultTool.error(EmAllException.NO_SUCH_USER);
+        if (!commonTool.judgeUserStateIfRight(registerTeamInfo.getMember1Email()))
+            return ResultTool.error(EmAllException.USER_DONT_APPROVE_SUCCESS);
+        if (!commonTool.judgeUserStateIfRight(registerTeamInfo.getMember2Email()))
+            return ResultTool.error(EmAllException.USER_DONT_APPROVE_SUCCESS);
+        if (!commonTool.judgeUserStateIfRight(registerTeamInfo.getMember3Email()))
+            return ResultTool.error(EmAllException.USER_DONT_APPROVE_SUCCESS);
+        if (!commonTool.judgeUserStateIfRight(registerTeamInfo.getCoach1Email()))
+            return ResultTool.error(EmAllException.USER_DONT_APPROVE_SUCCESS);
+
         if (commonTool.judgeUserIfHasSignUp4Competition(registerTeamInfo.getMember1Email(), registerTeamInfo.getCompetitionId()))
             return ResultTool.error(EmAllException.USER_HAS_SIGN_UP_4_COMPETITION);
         if (commonTool.judgeUserIfHasSignUp4Competition(registerTeamInfo.getMember2Email(), registerTeamInfo.getCompetitionId()))
@@ -249,6 +270,8 @@ public class TeamServiceImpl implements TeamService {
                 return ResultTool.error(EmAllException.EMAIL_FORMAT_ERROR);
             if (!commonTool.judgeUserEmailIfExists(registerTeamInfo.getCoach2Email()))
                 return ResultTool.error(EmAllException.NO_SUCH_USER);
+            if (!commonTool.judgeUserStateIfRight(registerTeamInfo.getCoach2Email()))
+                return ResultTool.error(EmAllException.USER_DONT_APPROVE_SUCCESS);
         }
         String schoolId1 = commonTool.getSchoolIdByUserEmail(registerTeamInfo.getMember1Email());
         String schoolId2 = commonTool.getSchoolIdByUserEmail(registerTeamInfo.getMember2Email());

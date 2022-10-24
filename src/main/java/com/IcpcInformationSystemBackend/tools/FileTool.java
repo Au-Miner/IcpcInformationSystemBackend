@@ -8,10 +8,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -54,4 +53,23 @@ public class FileTool {
         }
         return absolutePath;
     }
+
+    // public void previewFile(HttpServletRequest request,
+    //                         HttpServletResponse response,
+    //                         String fileAddress) throws IOException, AllException{
+    //     File file = new File(fileAddress);
+    //     if (file.exists()) {
+    //         byte[] data = null;
+    //         FileInputStream input = null;
+    //         input = new FileInputStream(file);
+    //         data = new byte[input.available()];
+    //         input.read(data);
+    //         response.getOutputStream().write(data);
+    //         if(input != null) {
+    //             input.close();
+    //         }
+    //     } else {
+    //         throw new AllException(EmAllException.BAD_REQUEST, "请求文件不存在");
+    //     }
+    // }
 }
