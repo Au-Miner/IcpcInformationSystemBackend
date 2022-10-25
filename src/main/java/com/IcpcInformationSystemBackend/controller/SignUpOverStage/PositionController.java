@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 @CrossOrigin
 @RestController
 @RequestMapping("/signUpOver/position")
-@Api(tags = "场地接口类")
+@Api(tags = "场地接口类（比赛负责人可使用）")
 public class PositionController {
     @Resource
     private PositionService positionService;

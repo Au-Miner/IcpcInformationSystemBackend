@@ -216,7 +216,7 @@ public class PositionServiceImpl implements PositionService {
         if (!commonTool.judgeCompetitionChairmanIdentityIfRight(competitionId, authTool.getUserId()))
             return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
         if (!commonTool.judgeCompetitionStateIfPass(competitionId))
-            return ResultTool.error(EmAllException.COMPETITION_DONT_APPROVE_SUCCESS);
+            return ResultTool.error(EmAllException.COMPETITION_STATE_ERROR);
         TeamDo teamDo1 = commonTool.getTeamByCompetitionIdAndTeamId(competitionId, teamId1);
         TeamDo teamDo2 = commonTool.getTeamByCompetitionIdAndTeamId(competitionId, teamId2);
         if (teamDo1 == null || teamDo2 == null)

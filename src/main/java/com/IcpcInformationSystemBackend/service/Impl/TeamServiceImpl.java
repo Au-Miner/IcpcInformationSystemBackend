@@ -68,7 +68,7 @@ public class TeamServiceImpl implements TeamService {
         if (!commonTool.judgeCompetitionIdIfExists(registerTeamInfo.getCompetitionId()))
             return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);
         if (!commonTool.judgeCompetitionStateIfPass(registerTeamInfo.getCompetitionId()))
-            return ResultTool.error(EmAllException.COMPETITION_DONT_APPROVE_SUCCESS);
+            return ResultTool.error(EmAllException.COMPETITION_STATE_ERROR);
         switch (commonTool.judgeTeamRegisterIfRightAboutCompetitionTime(registerTeamInfo.getCompetitionId())) {
             case -1:
                 return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);
@@ -230,7 +230,7 @@ public class TeamServiceImpl implements TeamService {
         if (!commonTool.judgeCompetitionIdIfExists(registerTeamInfo.getCompetitionId()))
             return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);
         if (!commonTool.judgeCompetitionStateIfPass(registerTeamInfo.getCompetitionId()))
-            return ResultTool.error(EmAllException.COMPETITION_DONT_APPROVE_SUCCESS);
+            return ResultTool.error(EmAllException.COMPETITION_STATE_ERROR);
         switch (commonTool.judgeTeamRegisterIfRightAboutCompetitionTime(registerTeamInfo.getCompetitionId())) {
             case -1:
                 return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);

@@ -35,7 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**","/file/preview/**").permitAll()
                 .antMatchers("/register/**").permitAll()
                 .antMatchers("/login/**").permitAll()
-                .antMatchers("/file/**").permitAll()
+                .antMatchers("/file1/**").permitAll()
                 .antMatchers("/email/sendEmailCode").permitAll()
                 .antMatchers("/email/sendEmailMessage").authenticated()//authenticated()
                 .antMatchers("/administrator/**").hasRole("ADMINISTRATOR")//hasRole("ADMINISTRATOR")
@@ -44,6 +44,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/student/**").hasRole("STUDENT")//hasRole("STUDENT")
                 .antMatchers("/competitionChairman/**").hasAnyRole("ADMINISTRATOR", "CHAIRMAN", "COACH")//hasAnyRole
                 .antMatchers("/signUpOver/position/**").hasAnyRole("ADMINISTRATOR", "CHAIRMAN", "COACH")//hasAnyRole
+                .antMatchers("/signUpOver/file2/**").authenticated()//authenticated()
+                // .antMatchers("/competitionOver/teamScore/**").hasAnyRole("ADMINISTRATOR", "CHAIRMAN", "COACH")//hasAnyRole
+                // .antMatchers("/competitionOver/file3/**").hasAnyRole("ADMINISTRATOR", "CHAIRMAN", "COACH")//hasAnyRole
                 ;
 
 

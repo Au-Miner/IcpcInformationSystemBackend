@@ -4,12 +4,12 @@ package com.IcpcInformationSystemBackend.model;
  * @Description:
  */
 public class ConstantRepository {
-    public final static int TOKEN_TIMEOUT_DAY = 5;
-    public final static int TOKEN_VERIFICATION_EXCEPTION = -3;
-    public final static int TOKEN_EXPIRED_EXCEPTION = -2;
-    public final static int TOKEN_FAKE_EXCEPTION = -1;
-    public final static int TOKEN_VALID = 1;
-    public final static String TOKEN_HEADER = "Bearer ";
+    public static final int TOKEN_TIMEOUT_DAY = 5;
+    public static final int TOKEN_VERIFICATION_EXCEPTION = -3;
+    public static final int TOKEN_EXPIRED_EXCEPTION = -2;
+    public static final int TOKEN_FAKE_EXCEPTION = -1;
+    public static final int TOKEN_VALID = 1;
+    public static final String TOKEN_HEADER = "Bearer ";
     public static final String TOKEN_NAME = "Authorization";
 
 
@@ -21,4 +21,6 @@ public class ConstantRepository {
             "ROLE_ADMINISTRATOR",
             "ROLE_CHAIRMAN",
     };
+
+    public static final String TEAM_SCORES_SHEET_NAME = "teamScores";
 }

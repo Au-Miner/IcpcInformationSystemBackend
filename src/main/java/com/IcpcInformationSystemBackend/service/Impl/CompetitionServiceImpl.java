@@ -1,16 +1,24 @@
 package com.IcpcInformationSystemBackend.service.Impl;
 
 import com.IcpcInformationSystemBackend.dao.CompetitionDoMapper;
+import com.IcpcInformationSystemBackend.dao.TeamScoreDoMapper;
 import com.IcpcInformationSystemBackend.dao.UserDoMapper;
 import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.entity.*;
 import com.IcpcInformationSystemBackend.model.request.RegisterCompetitionInfo;
+import com.IcpcInformationSystemBackend.model.request.UpdateTeamScoresInfo;
+import com.IcpcInformationSystemBackend.model.response.CompetitionEntryListResponse;
 import com.IcpcInformationSystemBackend.model.response.CompetitionInfoResponse;
 import com.IcpcInformationSystemBackend.model.response.Result;
+import com.IcpcInformationSystemBackend.model.response.TeamInfoResponse;
 import com.IcpcInformationSystemBackend.service.CompetitionService;
 import com.IcpcInformationSystemBackend.tools.AuthTool;
+import com.IcpcInformationSystemBackend.tools.CommonTool;
+import com.IcpcInformationSystemBackend.tools.FileTool;
 import com.IcpcInformationSystemBackend.tools.ResultTool;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +28,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
+
+import static com.IcpcInformationSystemBackend.model.ConstantRepository.TEAM_SCORES_SHEET_NAME;
 
 @Slf4j
 @Service
@@ -32,6 +42,15 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Resource
     private AuthTool authTool;
+
+    @Resource
+    private CommonTool commonTool;
+
+    @Resource
+    private FileTool fileTool;
+
+    @Resource
+    private TeamScoreDoMapper teamScoreDoMapper;
 
     @Override
     public Result buildCompetition(RegisterCompetitionInfo registerCompetitionInfo) {
@@ -171,5 +190,126 @@ public class CompetitionServiceImpl implements CompetitionService {
             res.add(competitionInfoResponse);
         }
         return ResultTool.success(res);
+    }
+
+    @Override
+    public Result getCompetitionEntryList(String competitionId) {
+        if (!commonTool.judgeCompetitionIdIfExists(competitionId))
+            return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);
+        if (!commonTool.judgeCompetitionStateIfPass(competitionId))
+            return ResultTool.error(EmAllException.COMPETITION_STATE_ERROR);
+        List<TeamDo> teamDos = commonTool.getTeamsByCompetitionId(competitionId);
+        ArrayList<CompetitionEntryListResponse> res = new ArrayList<>();
+        for (TeamDo teamDo : teamDos) {
+            CompetitionEntryListResponse tmp = new CompetitionEntryListResponse();
+            BeanUtils.copyProperties(teamDo, tmp);
+            tmp.setMember1chiName(commonTool.getChiNameByUserEmail(teamDo.getMember1Email()));
+            tmp.setMember2chiName(commonTool.getChiNameByUserEmail(teamDo.getMember2Email()));
+            tmp.setMember3chiName(commonTool.getChiNameByUserEmail(teamDo.getMember3Email()));
+            tmp.setCoach1chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach1Email()));
+            tmp.setCoach2chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach2Email()));
+            res.add(tmp);
+        }
+        return ResultTool.success(res);
+    }
+
+    @Override
+    public Result getCompetitionAdmissionTicket(String competitionId, String teamId) {
+        TeamDo teamDo = commonTool.getTeamByCompetitionIdAndTeamId(competitionId, teamId);
+        if (teamDo == null)
+            return ResultTool.error(EmAllException.NO_SUCH_TEAM);
+        if (teamDo.getTeamState() != 4)
+            return ResultTool.error(EmAllException.TEAM_DONT_APPROVE_SUCCESS);
+        if (Objects.equals(teamDo.getCompetitionPosition(), ""))
+            return ResultTool.error(EmAllException.TEAM_DONT_ASSIGN_POSITION);
+        if (!Objects.equals(teamDo.getMember1Email(), authTool.getUserId()) && !Objects.equals(teamDo.getMember2Email(), authTool.getUserId()) && !Objects.equals(teamDo.getMember3Email(), authTool.getUserId()))
+            return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
+        TeamInfoResponse tmp = new TeamInfoResponse();
+        ArrayList<TeamInfoResponse> res = new ArrayList<>();
+        BeanUtils.copyProperties(teamDo, tmp);
+        tmp.setMember1chiName(commonTool.getChiNameByUserEmail(teamDo.getMember1Email()));
+        tmp.setMember2chiName(commonTool.getChiNameByUserEmail(teamDo.getMember2Email()));
+        tmp.setMember3chiName(commonTool.getChiNameByUserEmail(teamDo.getMember3Email()));
+        tmp.setCoach1chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach1Email()));
+        tmp.setCoach2chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach2Email()));
+        res.add(tmp);
+        return ResultTool.success(res);
+    }
+
+    @Override
+    public Result updateTeamScores(UpdateTeamScoresInfo updateTeamScoresInfo) {
+        if (!commonTool.judgeCompetitionIdIfExists(updateTeamScoresInfo.getCompetitionId()))
+            return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);
+        if (!commonTool.judgeCompetitionStateIfPass(updateTeamScoresInfo.getCompetitionId()))
+            return ResultTool.error(EmAllException.COMPETITION_STATE_ERROR);
+        if (!commonTool.judgeCompetitionChairmanIdentityIfRight(updateTeamScoresInfo.getCompetitionId(), authTool.getUserId()))
+            return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
+        XSSFSheet sheet = fileTool.getExcelSheet(updateTeamScoresInfo.getTeamScoresAddress(), TEAM_SCORES_SHEET_NAME);
+        if (sheet == null)
+            return ResultTool.error(EmAllException.NO_SUCH_FILE);
+        switch (judgeTeamScoresFormatIfRight(sheet, updateTeamScoresInfo.getCompetitionId())) {
+            case 0:
+                return ResultTool.error(EmAllException.FILE_FORMAT_ERROR);
+            case 1:
+                return ResultTool.error(EmAllException.NO_SUCH_TEAM);
+            default:
+                break;
+        }
+        int rows = sheet.getPhysicalNumberOfRows();
+        for(int i = 1; i < rows; i++) {
+            XSSFRow row = sheet.getRow(i);
+            String ss = row.getCell(0).toString();
+            int pos = ss.length() - 1;
+            for (int j = 0; j < ss.length(); j++) {
+                if (ss.charAt(j) == '.') {
+                    pos = j;
+                    break;
+                }
+            }
+            ss = ss.substring(0, pos);
+            int rnk = Integer.parseInt(ss);
+            String teamId = row.getCell(1).toString();
+            TeamScoreDo teamScoreDo = new TeamScoreDo();
+            teamScoreDo.setTeamId(teamId);
+            teamScoreDo.setRnk(rnk);
+            teamScoreDo.setCompetitionId(updateTeamScoresInfo.getCompetitionId());
+            TeamScoreDoExample teamScoreDoExample = new TeamScoreDoExample();
+            teamScoreDoExample.createCriteria().andCompetitionIdEqualTo(updateTeamScoresInfo.getCompetitionId()).andTeamIdEqualTo(teamId);
+            if (teamScoreDoMapper.countByExample(teamScoreDoExample) == 0) {
+                if (teamScoreDoMapper.insertSelective(teamScoreDo) == 0)
+                    return ResultTool.error(EmAllException.DATABASE_ERR);
+            }
+            else if (teamScoreDoMapper.updateByPrimaryKeySelective(teamScoreDo) == 0)
+                return ResultTool.error(EmAllException.DATABASE_ERR);
+        }
+        return ResultTool.success();
+    }
+
+    public int judgeTeamScoresFormatIfRight(XSSFSheet sheet, String competitionId) {
+        int rows = sheet.getPhysicalNumberOfRows();
+        if (rows <= 1)
+            return 0;
+        for(int i = 1; i < rows; i++) {
+            XSSFRow row = sheet.getRow(i);
+            int columns = row.getPhysicalNumberOfCells();
+            if (columns != 2)
+                return 0;
+            String cell1 = row.getCell(0).toString();
+            String cell2 = row.getCell(1).toString();
+            int mark = 0;
+            for (int j = 0; j < cell1.length(); j++) {
+                if (mark == 0) {
+                    if (cell1.charAt(j) == '.')
+                        mark = 1;
+                    else if (cell1.charAt(j) < '0' || cell1.charAt(j) > '9')
+                        return 0;
+                }
+                else if (cell1.charAt(j) != '0')
+                    return 0;
+            }
+            if (!commonTool.judgeTeamIfExists(competitionId, cell2))
+                return 1;
+        }
+        return 2;
     }
 }

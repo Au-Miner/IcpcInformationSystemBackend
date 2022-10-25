@@ -14,6 +14,8 @@ public enum EmAllException implements CommonError{
     //文件相关
     BAD_FILE_TYPE(403, "文件上传类型错误"),
     FILE_EMPTY(403, "上传文件为空"),
+    NO_SUCH_FILE(403, "找不到该文件"),
+    FILE_FORMAT_ERROR(403, "文件格式错误"),
 
     //学校相关
     NO_SUCH_SCHOOL(403, "查无此校"),
@@ -33,7 +35,6 @@ public enum EmAllException implements CommonError{
     //比赛相关
     NO_SUCH_COMPETITION(403,"查无此赛"),
     COMPETITION_DONT_NEED_APPROVE(403,"比赛无需审批"),
-    COMPETITION_DONT_APPROVE_SUCCESS(403, "比赛未审批通过"),
     COMPETITION_STATE_ERROR(403, "比赛状态有误"),
     COMPETITION_NOT_START(403, "比赛报名还未开始"),
     COMPETITION_HAS_END(403, "比赛报名已经结束"),

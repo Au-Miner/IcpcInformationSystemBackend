@@ -1,31 +1,26 @@
 package com.icpcinformationsystembackend;
 
+import com.IcpcInformationSystemBackend.tools.FileTool;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.junit.jupiter.api.Test;
 
-import javafx.util.Pair;
-import redis.clients.jedis.Jedis;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.*;
-
-// @SpringBootTest
+@SpringBootTest
 class IcpcInformationSystemBackendApplicationTests {
     @Test
     void contextLoads() {
-        ArrayList<String> sss = new ArrayList<>();
-        sss.add("111");
-        sss.add("222");
-        sss.add("333");
-        sss.remove(sss.size() - 1);
-        show(sss);
-    }
-    void show(ArrayList<String> ss) {
-        for (String tmp : ss) {
-            System.out.println(tmp);
+        String sss = "132.000";
+        int pos = sss.length() - 1;
+        for (int i = 0; i < sss.length(); i++) {
+            if (sss.charAt(i) == '.') {
+                pos = i;
+                break;
+            }
         }
-    }
-    void swap(ArrayList<String> ss, int l, int r) {
-        String tmp = ss.get(l);
-        ss.set(l, ss.get(r));
-        ss.set(r, tmp);
+        sss = sss.substring(0, pos);
+        System.out.println(sss);
+        // System.out.println(Integer.parseInt(sss));
     }
 }

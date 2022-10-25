@@ -1,6 +1,7 @@
 package com.IcpcInformationSystemBackend.service;
 
 import com.IcpcInformationSystemBackend.model.request.RegisterCompetitionInfo;
+import com.IcpcInformationSystemBackend.model.request.UpdateTeamScoresInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;
 
 public interface CompetitionService {
@@ -15,4 +16,10 @@ public interface CompetitionService {
     Result getAllAcceptCompetitionInfo();
 
     String generateCompetitionId();
+
+    Result getCompetitionEntryList(String competitionId);
+
+    Result getCompetitionAdmissionTicket(String competitionId, String teamId);
+
+    Result updateTeamScores(UpdateTeamScoresInfo updateTeamScoresInfo);
 }

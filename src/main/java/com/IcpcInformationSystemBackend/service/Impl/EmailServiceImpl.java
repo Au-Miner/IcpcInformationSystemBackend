@@ -3,7 +3,6 @@ package com.IcpcInformationSystemBackend.service.Impl;
 import com.IcpcInformationSystemBackend.dao.EmailCodeDoMapper;
 import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.entity.EmailCodeDo;
-import com.IcpcInformationSystemBackend.model.request.EmailMessageInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.service.EmailService;
 import com.IcpcInformationSystemBackend.tools.ResultTool;
