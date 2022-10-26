@@ -1,7 +1,9 @@
 package com.IcpcInformationSystemBackend.controller.RegisterAndSignUpInitialStage;
 
 import com.IcpcInformationSystemBackend.exception.AllException;
+import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.response.Result;
+import com.IcpcInformationSystemBackend.service.FileService;
 import com.IcpcInformationSystemBackend.tools.FileTool;
 import com.IcpcInformationSystemBackend.tools.ResultTool;
 import io.swagger.annotations.Api;
@@ -24,29 +26,17 @@ import java.util.Arrays;
 @Api(tags = "文件接口类")
 public class FileController1 {
     @Resource
-    private FileTool fileTool;
-
-    @Value("${upload.schoolImgPath}")
-    private String directoryNeed;
+    private FileService fileService;
 
     @PostMapping("uploadSchoolImg")
     @ApiOperation(value = "上传学校校徽", notes = "仅能上传jpg/png格式图片，并返回图片地址")
     public Result uploadSchoolImg(@RequestBody MultipartFile file) {
-        try {
-            return ResultTool.success(fileTool.uploadImg(file, directoryNeed));
-        } catch (AllException e) {
-            return ResultTool.error(e.getErrCode(), e.getMsg());
-        }
+        return fileService.uploadSchoolImg(file);
     }
 
-    // @GetMapping("preview")
-    // @ApiOperation(value="预览文件", notes = "pdf预览接口")
-    // public void preview(HttpServletRequest request, HttpServletResponse response,
-    //                     @RequestParam(value = "fileAddress") String fileAddress){
-    //     try{
-    //         fileTool.previewFile(request, response, fileAddress);
-    //     }catch(IOException | AllException e){
-    //         log.error(Arrays.toString(e.getStackTrace()));
-    //     }
-    // }
+    @GetMapping("downloadFile")
+    @ApiOperation(value = "下载文件，仅供测试使用")
+    public void downloadFile(HttpServletRequest request, HttpServletResponse response, String filePath) {
+        fileService.downloadFile(request, response, filePath);
+    }
 }

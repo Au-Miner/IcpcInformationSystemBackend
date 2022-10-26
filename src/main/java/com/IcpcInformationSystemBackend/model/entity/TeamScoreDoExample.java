@@ -443,6 +443,146 @@ public class TeamScoreDoExample {
             addCriterion("photos not between", value1, value2, "photos");
             return (Criteria) this;
         }
+
+        public Criteria andChiMedalIsNull() {
+            addCriterion("chi_medal is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andChiMedalIsNotNull() {
+            addCriterion("chi_medal is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andChiMedalEqualTo(String value) {
+            addCriterion("chi_medal =", value, "chiMedal");
+            return (Criteria) this;
+        }
+
+        public Criteria andChiMedalNotEqualTo(String value) {
+            addCriterion("chi_medal <>", value, "chiMedal");
+            return (Criteria) this;
+        }
+
+        public Criteria andChiMedalGreaterThan(String value) {
+            addCriterion("chi_medal >", value, "chiMedal");
+            return (Criteria) this;
+        }
+
+        public Criteria andChiMedalGreaterThanOrEqualTo(String value) {
+            addCriterion("chi_medal >=", value, "chiMedal");
+            return (Criteria) this;
+        }
+
+        public Criteria andChiMedalLessThan(String value) {
+            addCriterion("chi_medal <", value, "chiMedal");
+            return (Criteria) this;
+        }
+
+        public Criteria andChiMedalLessThanOrEqualTo(String value) {
+            addCriterion("chi_medal <=", value, "chiMedal");
+            return (Criteria) this;
+        }
+
+        public Criteria andChiMedalLike(String value) {
+            addCriterion("chi_medal like", value, "chiMedal");
+            return (Criteria) this;
+        }
+
+        public Criteria andChiMedalNotLike(String value) {
+            addCriterion("chi_medal not like", value, "chiMedal");
+            return (Criteria) this;
+        }
+
+        public Criteria andChiMedalIn(List<String> values) {
+            addCriterion("chi_medal in", values, "chiMedal");
+            return (Criteria) this;
+        }
+
+        public Criteria andChiMedalNotIn(List<String> values) {
+            addCriterion("chi_medal not in", values, "chiMedal");
+            return (Criteria) this;
+        }
+
+        public Criteria andChiMedalBetween(String value1, String value2) {
+            addCriterion("chi_medal between", value1, value2, "chiMedal");
+            return (Criteria) this;
+        }
+
+        public Criteria andChiMedalNotBetween(String value1, String value2) {
+            addCriterion("chi_medal not between", value1, value2, "chiMedal");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngMedalIsNull() {
+            addCriterion("eng_medal is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngMedalIsNotNull() {
+            addCriterion("eng_medal is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngMedalEqualTo(String value) {
+            addCriterion("eng_medal =", value, "engMedal");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngMedalNotEqualTo(String value) {
+            addCriterion("eng_medal <>", value, "engMedal");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngMedalGreaterThan(String value) {
+            addCriterion("eng_medal >", value, "engMedal");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngMedalGreaterThanOrEqualTo(String value) {
+            addCriterion("eng_medal >=", value, "engMedal");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngMedalLessThan(String value) {
+            addCriterion("eng_medal <", value, "engMedal");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngMedalLessThanOrEqualTo(String value) {
+            addCriterion("eng_medal <=", value, "engMedal");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngMedalLike(String value) {
+            addCriterion("eng_medal like", value, "engMedal");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngMedalNotLike(String value) {
+            addCriterion("eng_medal not like", value, "engMedal");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngMedalIn(List<String> values) {
+            addCriterion("eng_medal in", values, "engMedal");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngMedalNotIn(List<String> values) {
+            addCriterion("eng_medal not in", values, "engMedal");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngMedalBetween(String value1, String value2) {
+            addCriterion("eng_medal between", value1, value2, "engMedal");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngMedalNotBetween(String value1, String value2) {
+            addCriterion("eng_medal not between", value1, value2, "engMedal");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

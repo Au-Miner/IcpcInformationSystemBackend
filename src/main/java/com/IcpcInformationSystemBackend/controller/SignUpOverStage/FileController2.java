@@ -2,6 +2,7 @@ package com.IcpcInformationSystemBackend.controller.SignUpOverStage;
 
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.service.CompetitionService;
+import com.IcpcInformationSystemBackend.service.TeamService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,8 @@ public class FileController2 {
     @Resource
     private CompetitionService competitionService;
 
+    @Resource
+    private TeamService teamService;
 
     @GetMapping("/getCompetitionEntryList")
     @ApiOperation(value = "登录用户可以获取当前比赛的总参赛名单（因为是前端负责生成pdf/excel，所以无需后端返回pdf/excel了）")
@@ -31,6 +34,6 @@ public class FileController2 {
     @GetMapping("/getCompetitionAdmissionTicket")
     @ApiOperation(value = "参赛选手可以查看当前队伍的准考证（因为是前端负责生成pdf/excel，所以无需后端返回pdf/excel了）")
     public Result getCompetitionAdmissionTicket(String competitionId, String teamId) {
-        return competitionService.getCompetitionAdmissionTicket(competitionId, teamId);
+        return teamService.getCompetitionAdmissionTicket(competitionId, teamId);
     }
 }

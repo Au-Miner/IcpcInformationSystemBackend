@@ -37,16 +37,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login/**").permitAll()
                 .antMatchers("/file1/**").permitAll()
                 .antMatchers("/email/sendEmailCode").permitAll()
-                .antMatchers("/email/sendEmailMessage").authenticated()//authenticated()
-                .antMatchers("/administrator/**").hasRole("ADMINISTRATOR")//hasRole("ADMINISTRATOR")
-                .antMatchers("/chairman/**").hasRole("CHAIRMAN")//hasRole("CHAIRMAN")
-                .antMatchers("/coach/**").hasRole("COACH")//hasRole("COACH")
-                .antMatchers("/student/**").hasRole("STUDENT")//hasRole("STUDENT")
-                .antMatchers("/competitionChairman/**").hasAnyRole("ADMINISTRATOR", "CHAIRMAN", "COACH")//hasAnyRole
-                .antMatchers("/signUpOver/position/**").hasAnyRole("ADMINISTRATOR", "CHAIRMAN", "COACH")//hasAnyRole
-                .antMatchers("/signUpOver/file2/**").authenticated()//authenticated()
-                // .antMatchers("/competitionOver/teamScore/**").hasAnyRole("ADMINISTRATOR", "CHAIRMAN", "COACH")//hasAnyRole
-                // .antMatchers("/competitionOver/file3/**").hasAnyRole("ADMINISTRATOR", "CHAIRMAN", "COACH")//hasAnyRole
+                .antMatchers("/email/sendEmailMessage").authenticated()
+                .antMatchers("/administrator/**").hasRole("ADMINISTRATOR")
+                .antMatchers("/chairman/**").hasRole("CHAIRMAN")
+                .antMatchers("/coach/**").hasRole("COACH")
+                .antMatchers("/student/**").hasRole("STUDENT")
+                .antMatchers("/competitionChairman/**").hasAnyRole("ADMINISTRATOR", "CHAIRMAN", "COACH")
+                // 二阶段
+                .antMatchers("/signUpOver/position/**").hasAnyRole("ADMINISTRATOR", "CHAIRMAN", "COACH")
+                .antMatchers("/signUpOver/file2/**").authenticated()
+                // 三阶段
+                .antMatchers("/competitionOver/teamScoreEnroll/**").hasAnyRole("ADMINISTRATOR", "CHAIRMAN", "COACH")
+                .antMatchers("/competitionOver/competitionCertificateSearch/**").permitAll()
+                .antMatchers("/competitionOver/competitionCertificate/**").authenticated()
                 ;
 
 

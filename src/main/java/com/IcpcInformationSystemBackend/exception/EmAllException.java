@@ -38,6 +38,7 @@ public enum EmAllException implements CommonError{
     COMPETITION_STATE_ERROR(403, "比赛状态有误"),
     COMPETITION_NOT_START(403, "比赛报名还未开始"),
     COMPETITION_HAS_END(403, "比赛报名已经结束"),
+    COMPETITION_CERTIFICATE_FAKE(403, "比赛证书有误"),
 
     //队伍相关
     NO_SUCH_TEAM(403, "查无此队"),
@@ -46,6 +47,7 @@ public enum EmAllException implements CommonError{
     USER_HAS_SIGN_UP_4_COMPETITION(403, "选手已经报名该比赛"),
     USER_NOT_SIGN_UP_4_COMPETITION(403, "选手没有报名该比赛"),
     TEAM_DONT_APPROVE_SUCCESS(403, "队伍未审批通过"),
+    TEAM_SCORE_DONT_RELEASE(403, "比赛结果还未发布"),
 
     //场地相关
     NO_SUCH_POSITION(403, "查无此场"),

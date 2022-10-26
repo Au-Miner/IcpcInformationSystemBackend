@@ -7,6 +7,10 @@ public class TeamScoreDo extends TeamScoreDoKey {
 
     private String photos;
 
+    private String chiMedal;
+
+    private String engMedal;
+
     public String getTeamCertificate() {
         return teamCertificate;
     }
@@ -29,5 +33,21 @@ public class TeamScoreDo extends TeamScoreDoKey {
 
     public void setPhotos(String photos) {
         this.photos = photos == null ? null : photos.trim();
+    }
+
+    public String getChiMedal() {
+        return chiMedal;
+    }
+
+    public void setChiMedal(String chiMedal) {
+        this.chiMedal = chiMedal == null ? null : chiMedal.trim();
+    }
+
+    public String getEngMedal() {
+        return engMedal;
+    }
+
+    public void setEngMedal(String engMedal) {
+        this.engMedal = engMedal == null ? null : engMedal.trim();
     }
 }

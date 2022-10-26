@@ -31,6 +31,18 @@ public class CommonTool {
     @Resource
     private PositionDoMapper positionDoMapper;
 
+    @Resource
+    private TeamScoreDoMapper teamScoreDoMapper;
+
+    public SchoolDo getSchoolDoBySchoolId(String schoolId) {
+        SchoolDoExample schoolDoExample = new SchoolDoExample();
+        schoolDoExample.createCriteria().andSchoolIdEqualTo(schoolId);
+        List<SchoolDo> schoolDos = schoolDoMapper.selectByExample(schoolDoExample);
+        if (schoolDos.isEmpty())
+            return null;
+        return schoolDos.get(0);
+    }
+
     public String getSchoolIdByUserEmail(String userEmail) {
         if (Objects.equals(userEmail, ""))
             return "";
@@ -51,6 +63,26 @@ public class CommonTool {
         if (userDos.isEmpty())
             return "";
         return userDos.get(0).getChiName();
+    }
+
+    public String getEngNameByUserEmail(String userEmail) {
+        if (Objects.equals(userEmail, ""))
+            return "";
+        UserDoExample userDoExample = new UserDoExample();
+        userDoExample.createCriteria().andUserEmailEqualTo(userEmail);
+        List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
+        if (userDos.isEmpty())
+            return "";
+        return userDos.get(0).getEngName();
+    }
+
+    public CompetitionDo getCompetitionDoByCompetitionId(String competitionId) {
+        CompetitionDoExample competitionDoExample = new CompetitionDoExample();
+        competitionDoExample.createCriteria().andCompetitionIdEqualTo(competitionId);
+        List<CompetitionDo> competitionDos = competitionDoMapper.selectByExample(competitionDoExample);
+        if (competitionDos.isEmpty())
+            return null;
+        return competitionDos.get(0);
     }
 
     public String getTeamIdByCompetitionIdAndUserEmail(String competitionId, String userEmail) {
@@ -201,5 +233,14 @@ public class CommonTool {
         positionDoExample.createCriteria().andPositionIdEqualTo(positionId);
         List<PositionDo> positionDos = positionDoMapper.selectByExample(positionDoExample);
         return !positionDos.isEmpty();
+    }
+
+    public TeamScoreDo getTeamScoreByCompetitionIdAndTeamId(String competitionId, String teamId) {
+        TeamScoreDoExample teamScoreDoExample = new TeamScoreDoExample();
+        teamScoreDoExample.createCriteria().andCompetitionIdEqualTo(competitionId).andTeamIdEqualTo(teamId);
+        List<TeamScoreDo> teamScoreDos = teamScoreDoMapper.selectByExample(teamScoreDoExample);
+        if (teamScoreDos.isEmpty())
+            return null;
+        return teamScoreDos.get(0);
     }
 }

@@ -19,7 +19,5 @@ public interface CompetitionService {
 
     Result getCompetitionEntryList(String competitionId);
 
-    Result getCompetitionAdmissionTicket(String competitionId, String teamId);
-
     Result updateTeamScores(UpdateTeamScoresInfo updateTeamScoresInfo);
 }

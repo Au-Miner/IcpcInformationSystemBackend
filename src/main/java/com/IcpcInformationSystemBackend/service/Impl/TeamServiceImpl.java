@@ -3,27 +3,33 @@ package com.IcpcInformationSystemBackend.service.Impl;
 import com.IcpcInformationSystemBackend.dao.CompetitionDoMapper;
 import com.IcpcInformationSystemBackend.dao.TeamDoMapper;
 import com.IcpcInformationSystemBackend.dao.UserCompetitionDoMapper;
-import com.IcpcInformationSystemBackend.exception.AllException;
 import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.entity.*;
-import com.IcpcInformationSystemBackend.model.request.ApproveTeamInfo;
 import com.IcpcInformationSystemBackend.model.request.RegisterTeamInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.model.response.TeamInfoResponse;
-import com.IcpcInformationSystemBackend.service.CompetitionService;
+import com.IcpcInformationSystemBackend.model.response.TeamScoreInfoResponse;
 import com.IcpcInformationSystemBackend.service.TeamService;
 import com.IcpcInformationSystemBackend.tools.AuthTool;
 import com.IcpcInformationSystemBackend.tools.EmailTool;
 import com.IcpcInformationSystemBackend.tools.ResultTool;
 import com.IcpcInformationSystemBackend.tools.CommonTool;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.AcroFields;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfStamper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
+import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -36,9 +42,6 @@ public class TeamServiceImpl implements TeamService {
 
     @Resource
     private UserCompetitionDoMapper userCompetitionDoMapper;
-
-    @Resource
-    private CompetitionDoMapper competitionDoMapper;
 
     @Resource
     private AuthTool authTool;
@@ -311,4 +314,111 @@ public class TeamServiceImpl implements TeamService {
             return ResultTool.error(EmAllException.DATABASE_ERR);
         return ResultTool.success();
     }
+
+    @Override
+    public Result getCompetitionAdmissionTicket(String competitionId, String teamId) {
+        TeamDo teamDo = commonTool.getTeamByCompetitionIdAndTeamId(competitionId, teamId);
+        if (teamDo == null)
+            return ResultTool.error(EmAllException.NO_SUCH_TEAM);
+        if (teamDo.getTeamState() != 4)
+            return ResultTool.error(EmAllException.TEAM_DONT_APPROVE_SUCCESS);
+        if (Objects.equals(teamDo.getCompetitionPosition(), ""))
+            return ResultTool.error(EmAllException.TEAM_DONT_ASSIGN_POSITION);
+        if (!Objects.equals(teamDo.getMember1Email(), authTool.getUserId()) && !Objects.equals(teamDo.getMember2Email(), authTool.getUserId()) && !Objects.equals(teamDo.getMember3Email(), authTool.getUserId()))
+            return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
+        TeamInfoResponse tmp = new TeamInfoResponse();
+        BeanUtils.copyProperties(teamDo, tmp);
+        tmp.setMember1chiName(commonTool.getChiNameByUserEmail(teamDo.getMember1Email()));
+        tmp.setMember2chiName(commonTool.getChiNameByUserEmail(teamDo.getMember2Email()));
+        tmp.setMember3chiName(commonTool.getChiNameByUserEmail(teamDo.getMember3Email()));
+        tmp.setCoach1chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach1Email()));
+        tmp.setCoach2chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach2Email()));
+        return ResultTool.success(tmp);
+    }
+
+    @Override
+    public Result getCompetitionCertificateInfo(String competitionId, String teamId) {
+        TeamDo teamDo = commonTool.getTeamByCompetitionIdAndTeamId(competitionId, teamId);
+        TeamScoreDo teamScoreDo = commonTool.getTeamScoreByCompetitionIdAndTeamId(competitionId, teamId);
+        if (teamDo == null)
+            return ResultTool.error(EmAllException.NO_SUCH_TEAM);
+        if (teamDo.getTeamState() != 4)
+            return ResultTool.error(EmAllException.TEAM_DONT_APPROVE_SUCCESS);
+        if (teamScoreDo == null || teamScoreDo.getRnk() == null)
+            return ResultTool.error(EmAllException.TEAM_SCORE_DONT_RELEASE);
+        // if (!Objects.equals(teamDo.getMember1Email(), authTool.getUserId())
+        //         && !Objects.equals(teamDo.getMember2Email(), authTool.getUserId())
+        //         && !Objects.equals(teamDo.getMember3Email(), authTool.getUserId())
+        //         && !Objects.equals(teamDo.getCoach1Email(), authTool.getUserId())
+        //         && (!Objects.equals(teamDo.getCoach2Email(), "") && !Objects.equals(teamDo.getCoach2Email(), authTool.getUserId()))
+        // )
+        //     return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
+        TeamScoreInfoResponse res = new TeamScoreInfoResponse();
+        BeanUtils.copyProperties(teamDo, res);
+        res.setMember1chiName(commonTool.getChiNameByUserEmail(teamDo.getMember1Email()));
+        res.setMember2chiName(commonTool.getChiNameByUserEmail(teamDo.getMember2Email()));
+        res.setMember3chiName(commonTool.getChiNameByUserEmail(teamDo.getMember3Email()));
+        res.setCoach1chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach1Email()));
+        res.setCoach2chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach2Email()));
+        res.setMember1engName(commonTool.getEngNameByUserEmail(teamDo.getMember1Email()));
+        res.setMember2engName(commonTool.getEngNameByUserEmail(teamDo.getMember2Email()));
+        res.setMember3engName(commonTool.getEngNameByUserEmail(teamDo.getMember3Email()));
+        res.setCoach1engName(commonTool.getEngNameByUserEmail(teamDo.getCoach1Email()));
+        res.setCoach2engName(commonTool.getEngNameByUserEmail(teamDo.getCoach2Email()));
+        CompetitionDo competitionDo = commonTool.getCompetitionDoByCompetitionId(competitionId);
+        res.setCompetitionChiName(competitionDo.getCompetitionChiName());
+        res.setCompetitionEngName(competitionDo.getCompetitionEngName());
+        Calendar ca = Calendar.getInstance();
+        ca.setTime(competitionDo.getCompetitionStartTime());
+        String CompetitionChiTime = ca.get(Calendar.YEAR) + "年" + ca.get(Calendar.MONTH) + "月" + ca.get(Calendar.DAY_OF_MONTH) + "日";
+        String CompetitionEngTime = monNumberToEnglish[ca.get(Calendar.MONTH) - 1] + " " + ca.get(Calendar.DAY_OF_MONTH) + "，" + ca.get(Calendar.YEAR);
+        res.setCompetitionChiTime(CompetitionChiTime);
+        res.setCompetitionEngTime(CompetitionEngTime);
+        SchoolDo schoolDo = commonTool.getSchoolDoBySchoolId(teamDo.getSchoolId());
+        res.setSchoolImg(schoolDo.getSchoolImg());
+        res.setChiSchoolName(schoolDo.getChiSchoolName());
+        res.setEngSchoolName(schoolDo.getEngSchoolName());
+        BeanUtils.copyProperties(teamScoreDo, res);
+        return ResultTool.success(res);
+    }
+
+    public TeamScoreInfoResponse getCompetitionCertificateInfo2(String competitionId, String teamId) {
+        TeamDo teamDo = commonTool.getTeamByCompetitionIdAndTeamId(competitionId, teamId);
+        TeamScoreDo teamScoreDo = commonTool.getTeamScoreByCompetitionIdAndTeamId(competitionId, teamId);
+        if (teamDo == null)
+            return null;
+        if (teamDo.getTeamState() != 4)
+            return null;
+        if (teamScoreDo == null || teamScoreDo.getRnk() == null)
+            return null;
+        TeamScoreInfoResponse res = new TeamScoreInfoResponse();
+        BeanUtils.copyProperties(teamDo, res);
+        res.setMember1chiName(commonTool.getChiNameByUserEmail(teamDo.getMember1Email()));
+        res.setMember2chiName(commonTool.getChiNameByUserEmail(teamDo.getMember2Email()));
+        res.setMember3chiName(commonTool.getChiNameByUserEmail(teamDo.getMember3Email()));
+        res.setCoach1chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach1Email()));
+        res.setCoach2chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach2Email()));
+        res.setMember1engName(commonTool.getEngNameByUserEmail(teamDo.getMember1Email()));
+        res.setMember2engName(commonTool.getEngNameByUserEmail(teamDo.getMember2Email()));
+        res.setMember3engName(commonTool.getEngNameByUserEmail(teamDo.getMember3Email()));
+        res.setCoach1engName(commonTool.getEngNameByUserEmail(teamDo.getCoach1Email()));
+        res.setCoach2engName(commonTool.getEngNameByUserEmail(teamDo.getCoach2Email()));
+        CompetitionDo competitionDo = commonTool.getCompetitionDoByCompetitionId(competitionId);
+        res.setCompetitionChiName(competitionDo.getCompetitionChiName());
+        res.setCompetitionEngName(competitionDo.getCompetitionEngName());
+        Calendar ca = Calendar.getInstance();
+        ca.setTime(competitionDo.getCompetitionStartTime());
+        String CompetitionChiTime = ca.get(Calendar.YEAR) + "年" + ca.get(Calendar.MONTH) + "月" + ca.get(Calendar.DAY_OF_MONTH) + "日";
+        String CompetitionEngTime = monNumberToEnglish[ca.get(Calendar.MONTH) - 1] + " " + ca.get(Calendar.DAY_OF_MONTH) + "，" + ca.get(Calendar.YEAR);
+        res.setCompetitionChiTime(CompetitionChiTime);
+        res.setCompetitionEngTime(CompetitionEngTime);
+        SchoolDo schoolDo = commonTool.getSchoolDoBySchoolId(teamDo.getSchoolId());
+        res.setSchoolImg(schoolDo.getSchoolImg());
+        res.setChiSchoolName(schoolDo.getChiSchoolName());
+        res.setEngSchoolName(schoolDo.getEngSchoolName());
+        BeanUtils.copyProperties(teamScoreDo, res);
+        return res;
+    }
+
+    private final String[] monNumberToEnglish = {"January", "february", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 }

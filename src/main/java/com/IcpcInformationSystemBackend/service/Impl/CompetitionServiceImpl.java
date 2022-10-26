@@ -214,29 +214,6 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public Result getCompetitionAdmissionTicket(String competitionId, String teamId) {
-        TeamDo teamDo = commonTool.getTeamByCompetitionIdAndTeamId(competitionId, teamId);
-        if (teamDo == null)
-            return ResultTool.error(EmAllException.NO_SUCH_TEAM);
-        if (teamDo.getTeamState() != 4)
-            return ResultTool.error(EmAllException.TEAM_DONT_APPROVE_SUCCESS);
-        if (Objects.equals(teamDo.getCompetitionPosition(), ""))
-            return ResultTool.error(EmAllException.TEAM_DONT_ASSIGN_POSITION);
-        if (!Objects.equals(teamDo.getMember1Email(), authTool.getUserId()) && !Objects.equals(teamDo.getMember2Email(), authTool.getUserId()) && !Objects.equals(teamDo.getMember3Email(), authTool.getUserId()))
-            return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
-        TeamInfoResponse tmp = new TeamInfoResponse();
-        ArrayList<TeamInfoResponse> res = new ArrayList<>();
-        BeanUtils.copyProperties(teamDo, tmp);
-        tmp.setMember1chiName(commonTool.getChiNameByUserEmail(teamDo.getMember1Email()));
-        tmp.setMember2chiName(commonTool.getChiNameByUserEmail(teamDo.getMember2Email()));
-        tmp.setMember3chiName(commonTool.getChiNameByUserEmail(teamDo.getMember3Email()));
-        tmp.setCoach1chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach1Email()));
-        tmp.setCoach2chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach2Email()));
-        res.add(tmp);
-        return ResultTool.success(res);
-    }
-
-    @Override
     public Result updateTeamScores(UpdateTeamScoresInfo updateTeamScoresInfo) {
         if (!commonTool.judgeCompetitionIdIfExists(updateTeamScoresInfo.getCompetitionId()))
             return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);
@@ -269,9 +246,13 @@ public class CompetitionServiceImpl implements CompetitionService {
             ss = ss.substring(0, pos);
             int rnk = Integer.parseInt(ss);
             String teamId = row.getCell(1).toString();
+            String chiMedal = row.getCell(2).toString();
+            String engMedal = row.getCell(3).toString();
             TeamScoreDo teamScoreDo = new TeamScoreDo();
             teamScoreDo.setTeamId(teamId);
             teamScoreDo.setRnk(rnk);
+            teamScoreDo.setChiMedal(chiMedal);
+            teamScoreDo.setEngMedal(engMedal);
             teamScoreDo.setCompetitionId(updateTeamScoresInfo.getCompetitionId());
             TeamScoreDoExample teamScoreDoExample = new TeamScoreDoExample();
             teamScoreDoExample.createCriteria().andCompetitionIdEqualTo(updateTeamScoresInfo.getCompetitionId()).andTeamIdEqualTo(teamId);
@@ -292,7 +273,7 @@ public class CompetitionServiceImpl implements CompetitionService {
         for(int i = 1; i < rows; i++) {
             XSSFRow row = sheet.getRow(i);
             int columns = row.getPhysicalNumberOfCells();
-            if (columns != 2)
+            if (columns != 4)
                 return 0;
             String cell1 = row.getCell(0).toString();
             String cell2 = row.getCell(1).toString();

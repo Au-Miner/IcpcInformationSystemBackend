@@ -3,14 +3,25 @@ package com.IcpcInformationSystemBackend.tools;
 import com.IcpcInformationSystemBackend.exception.AllException;
 import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.response.Result;
+import com.IcpcInformationSystemBackend.model.response.TeamScoreInfoResponse;
 import com.IcpcInformationSystemBackend.security.FileTypeChecker;
+import com.IcpcInformationSystemBackend.service.CompetitionService;
+import com.IcpcInformationSystemBackend.service.FileService;
+import com.IcpcInformationSystemBackend.service.TeamService;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -24,6 +35,17 @@ import java.util.UUID;
 @Slf4j
 @Component
 public class FileTool {
+    @Resource
+    private TeamService teamService;
+
+    @Value("${files.competitionCertificateDemo}")
+    private String templatePath;
+
+    @Value("${files.temporaryBin}")
+    private String temporaryBin;
+
+    @Resource
+    private FileService fileService;
 
 
     public String uploadImg(MultipartFile file, String directoryNeed) throws AllException {
@@ -139,5 +161,68 @@ public class FileTool {
         } catch (IOException e) {
             throw new AllException(EmAllException.NO_SUCH_FILE);
         }
+    }
+
+    public String generateCompetitionCertificate(String competitionId, String teamId) throws IOException, DocumentException {
+        TeamScoreInfoResponse teamScoreInfoResponse = teamService.getCompetitionCertificateInfo2(competitionId, teamId);
+        if (teamScoreInfoResponse == null)
+            return "";
+        String fileId = UUID.randomUUID().toString();
+        String absolutePath = ChangeCharset.toUtf8(temporaryBin + File.separator + fileId + "---" + "competitionCertificate.pdf");
+
+        FileOutputStream out = new FileOutputStream(absolutePath);// 输出流
+        PdfReader reader = new PdfReader(templatePath);// 读取pdf模板
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        // ByteArrayOutputStream: 对byte类型数据进行写入的类 相当于一个中间缓冲层，将类写入到文件等其他outputStream。它是对字节进行操作，属于内存操作流
+        PdfStamper stamper = new PdfStamper(reader, bos);
+        // PdfStamper: pdf编辑器类
+        AcroFields form = stamper.getAcroFields();
+        form.setField("certificateId", "编号/No." + teamScoreInfoResponse.getCompetitionId() + teamScoreInfoResponse.getTeamId());
+        form.setField("schoolName", teamScoreInfoResponse.getChiSchoolName() + " / " + teamScoreInfoResponse.getEngSchoolName());
+        form.setField("membersName",
+                teamScoreInfoResponse.getMember1chiName() + " / " + teamScoreInfoResponse.getMember1engName() + "，" +
+                        teamScoreInfoResponse.getMember2chiName() + " / " + teamScoreInfoResponse.getMember2engName() + "，" +
+                        teamScoreInfoResponse.getMember3chiName() + " / " + teamScoreInfoResponse.getMember3engName()
+        );
+        String coachName = teamScoreInfoResponse.getCoach1chiName() + " / " + teamScoreInfoResponse.getCoach1engName();
+        if (!Objects.equals(teamScoreInfoResponse.getCoach2chiName(), ""))
+            coachName += "，" + teamScoreInfoResponse.getCoach2chiName() + " / " + teamScoreInfoResponse.getCoach2engName();
+        form.setField("coachName", coachName);
+        form.setField("medal", teamScoreInfoResponse.getChiMedal() + " / " + teamScoreInfoResponse.getEngMedal());
+        form.setField("competitionChiName", teamScoreInfoResponse.getCompetitionChiName());
+        form.setField("competitionEngName", teamScoreInfoResponse.getCompetitionEngName());
+        form.setField("heldSchoolChiNameAndCompetitionChiTime", teamScoreInfoResponse.getChiSchoolName() + "，" + teamScoreInfoResponse.getCompetitionChiTime());
+        form.setField("heldSchoolEngNameAndCompetitionEngTime", teamScoreInfoResponse.getEngSchoolName() + "，" + teamScoreInfoResponse.getCompetitionEngTime());
+
+        String QRCode = fileService.generateQRCodeToFile(String.valueOf(teamScoreInfoResponse));
+        //后面需要根据前端的选择改变QRCode~~~
+        //后面需要根据前端的选择改变QRCode~~~
+        //后面需要根据前端的选择改变QRCode~~~
+        int pageNo = form.getFieldPositions("QRCode").get(0).page;
+        Rectangle signRect = form.getFieldPositions("QRCode").get(0).position;
+        float x = signRect.getLeft();
+        float y = signRect.getBottom();
+        // 读图片
+        Image image = Image.getInstance(QRCode);
+        // 获取操作的页面
+        PdfContentByte under = stamper.getOverContent(pageNo);
+        // 根据域的大小缩放图片
+        image.scaleToFit(signRect.getWidth(), signRect.getHeight());
+        // 添加图片
+        image.setAbsolutePosition(x, y);
+        under.addImage(image);
+
+        stamper.setFormFlattening(true);// 如果为false那么生成的PDF文件还能编辑，一定要设为true
+        stamper.close();
+
+        Document doc = new Document();
+        PdfCopy copy = new PdfCopy(doc, out);
+        doc.open();
+        PdfImportedPage importPage = copy.getImportedPage(new PdfReader(bos.toByteArray()), 1);
+        copy.addPage(importPage);
+        doc.close();
+        out.close();
+
+        return absolutePath;
     }
 }

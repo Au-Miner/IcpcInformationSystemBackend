@@ -5,6 +5,7 @@ import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.request.UpdateTeamScoresInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.service.CompetitionService;
+import com.IcpcInformationSystemBackend.service.FileService;
 import com.IcpcInformationSystemBackend.tools.FileTool;
 import com.IcpcInformationSystemBackend.tools.ResultTool;
 import io.swagger.annotations.Api;
@@ -24,41 +25,28 @@ import java.io.IOException;
 @Slf4j
 @CrossOrigin
 @RestController
-@RequestMapping("/competitionOver/teamScore")
-@Api(tags = "比赛结束阶段文件接口（仅比赛负责人可使用）")
-public class TeamScoreController {
-    @Value("${upload.teamScoresDemo}")
+@RequestMapping("/competitionOver/teamScoreEnroll")
+@Api(tags = "比赛成绩登记接口（仅比赛负责人可使用）")
+public class TeamScoreEnrollController {
+    @Value("${files.teamScoresDemo}")
     private String teamScoresDemoAddress;
 
     @Resource
-    private FileTool fileTool;
-
-    @Value("${upload.teamScoresPath}")
-    private String directoryNeed;
+    private FileService fileService;
 
     @Resource
     private CompetitionService competitionService;
 
     @GetMapping("downloadTeamScoresDemo")
     @ApiOperation(value = "下载队伍成绩表模板")
-    public Result downloadTeamScoresDemo(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            fileTool.downloadFile(request, response, teamScoresDemoAddress);
-        } catch (IOException | AllException e) {
-            return ResultTool.error(EmAllException.DATABASE_ERR);
-        }
-        return ResultTool.success();
+    public void downloadTeamScoresDemo(HttpServletRequest request, HttpServletResponse response) {
+        fileService.downloadFile(request, response, teamScoresDemoAddress);
     }
-
 
     @PostMapping("uploadTeamScores")
     @ApiOperation(value = "上传比赛所有队伍成绩表，以excel形式上传，并返回文件地址", notes = "仅能上传.xls和.xlsx形式文件，并返回文件地址")
     public Result uploadTeamScores(@RequestBody MultipartFile file) {
-        try {
-            return ResultTool.success(fileTool.uploadExcel(file, directoryNeed));
-        } catch (AllException e) {
-            return ResultTool.error(e.getErrCode(), e.getMsg());
-        }
+        return fileService.uploadExcel(file);
     }
 
     @PostMapping("updateTeamScores")
@@ -67,11 +55,6 @@ public class TeamScoreController {
         Result result = competitionService.updateTeamScores(updateTeamScoresInfo);
         if (result.getCode() != 200)
             return result;
-        try {
-            fileTool.deleteFile(updateTeamScoresInfo.getTeamScoresAddress());
-        } catch (AllException e) {
-            return ResultTool.error(e.getErrCode(), e.getMsg());
-        }
-        return ResultTool.success();
+        return fileService.deleteFile(updateTeamScoresInfo.getTeamScoresAddress());
     }
 }
