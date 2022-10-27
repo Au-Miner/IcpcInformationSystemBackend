@@ -58,7 +58,7 @@ public class FileController2 {
     }
 
     @GetMapping("/getCompetitionAdmissionTicket")
-    @ApiOperation(value = "参赛选手可以查看当前队伍的准考证（必须是本队参赛选手）（因为是前端负责生成pdf/excel，所以无需后端返回pdf/excel了）")
+    @ApiOperation(value = "（该接口暂时用不到了）参赛选手可以查看当前队伍的准考证（必须是本队参赛选手）")
     public Result getCompetitionAdmissionTicket(String competitionId, String teamId) {
         return teamService.getCompetitionAdmissionTicket(competitionId, teamId);
     }
