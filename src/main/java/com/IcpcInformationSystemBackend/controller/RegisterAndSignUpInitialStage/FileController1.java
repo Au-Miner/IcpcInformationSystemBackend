@@ -1,14 +1,10 @@
 package com.IcpcInformationSystemBackend.controller.RegisterAndSignUpInitialStage;
 
-import com.IcpcInformationSystemBackend.exception.AllException;
-import com.IcpcInformationSystemBackend.exception.EmAllException;
+
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.service.FileService;
-import com.IcpcInformationSystemBackend.tools.FileTool;
-import com.IcpcInformationSystemBackend.tools.ResultTool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,8 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Arrays;
+
 
 @Slf4j
 @RestController

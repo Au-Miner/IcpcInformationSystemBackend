@@ -18,6 +18,7 @@ public class CompetitionInfoResponse {
     private @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8") Date payStartTime;
     private @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8") Date payEndTime;
     private @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8") Date competitionStartTime;
+    private @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8") Date competitionEndTime;
     private String duration;
     private String competitionIntroduction;
     private Integer competitionState;

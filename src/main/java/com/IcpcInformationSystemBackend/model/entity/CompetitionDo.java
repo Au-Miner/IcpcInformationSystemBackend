@@ -25,6 +25,8 @@ public class CompetitionDo {
 
     private Date competitionStartTime;
 
+    private Date competitionEndTime;
+
     private String duration;
 
     private String competitionIntroduction;
@@ -119,6 +121,14 @@ public class CompetitionDo {
 
     public void setCompetitionStartTime(Date competitionStartTime) {
         this.competitionStartTime = competitionStartTime;
+    }
+
+    public Date getCompetitionEndTime() {
+        return competitionEndTime;
+    }
+
+    public void setCompetitionEndTime(Date competitionEndTime) {
+        this.competitionEndTime = competitionEndTime;
     }
 
     public String getDuration() {

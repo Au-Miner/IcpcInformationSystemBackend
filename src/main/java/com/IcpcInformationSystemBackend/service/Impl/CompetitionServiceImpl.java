@@ -207,9 +207,42 @@ public class CompetitionServiceImpl implements CompetitionService {
             tmp.setMember3chiName(commonTool.getChiNameByUserEmail(teamDo.getMember3Email()));
             tmp.setCoach1chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach1Email()));
             tmp.setCoach2chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach2Email()));
+            String type = "正式队伍";
+            if (teamDo.getType() == 2)
+                type = "打星队伍";
+            else if (teamDo.getType() == 1)
+                type = "外卡队伍";
+            tmp.setType(type);
             res.add(tmp);
         }
         return ResultTool.success(res);
+    }
+
+    @Override
+    public ArrayList<CompetitionEntryListResponse> getCompetitionEntryList2(String competitionId) {
+        if (!commonTool.judgeCompetitionIdIfExists(competitionId))
+            return null;
+        if (!commonTool.judgeCompetitionStateIfPass(competitionId))
+            return null;
+        List<TeamDo> teamDos = commonTool.getTeamsByCompetitionId(competitionId);
+        ArrayList<CompetitionEntryListResponse> res = new ArrayList<>();
+        for (TeamDo teamDo : teamDos) {
+            CompetitionEntryListResponse tmp = new CompetitionEntryListResponse();
+            BeanUtils.copyProperties(teamDo, tmp);
+            tmp.setMember1chiName(commonTool.getChiNameByUserEmail(teamDo.getMember1Email()));
+            tmp.setMember2chiName(commonTool.getChiNameByUserEmail(teamDo.getMember2Email()));
+            tmp.setMember3chiName(commonTool.getChiNameByUserEmail(teamDo.getMember3Email()));
+            tmp.setCoach1chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach1Email()));
+            tmp.setCoach2chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach2Email()));
+            String type = "正式队伍";
+            if (teamDo.getType() == 2)
+                type = "打星队伍";
+            else if (teamDo.getType() == 1)
+                type = "外卡队伍";
+            tmp.setType(type);
+            res.add(tmp);
+        }
+        return res;
     }
 
     @Override

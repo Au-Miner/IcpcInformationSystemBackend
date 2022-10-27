@@ -825,6 +825,66 @@ public class CompetitionDoExample {
             return (Criteria) this;
         }
 
+        public Criteria andCompetitionEndTimeIsNull() {
+            addCriterion("competition_end_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompetitionEndTimeIsNotNull() {
+            addCriterion("competition_end_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompetitionEndTimeEqualTo(Date value) {
+            addCriterion("competition_end_time =", value, "competitionEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompetitionEndTimeNotEqualTo(Date value) {
+            addCriterion("competition_end_time <>", value, "competitionEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompetitionEndTimeGreaterThan(Date value) {
+            addCriterion("competition_end_time >", value, "competitionEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompetitionEndTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("competition_end_time >=", value, "competitionEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompetitionEndTimeLessThan(Date value) {
+            addCriterion("competition_end_time <", value, "competitionEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompetitionEndTimeLessThanOrEqualTo(Date value) {
+            addCriterion("competition_end_time <=", value, "competitionEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompetitionEndTimeIn(List<Date> values) {
+            addCriterion("competition_end_time in", values, "competitionEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompetitionEndTimeNotIn(List<Date> values) {
+            addCriterion("competition_end_time not in", values, "competitionEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompetitionEndTimeBetween(Date value1, Date value2) {
+            addCriterion("competition_end_time between", value1, value2, "competitionEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompetitionEndTimeNotBetween(Date value1, Date value2) {
+            addCriterion("competition_end_time not between", value1, value2, "competitionEndTime");
+            return (Criteria) this;
+        }
+
         public Criteria andDurationIsNull() {
             addCriterion("duration is null");
             return (Criteria) this;

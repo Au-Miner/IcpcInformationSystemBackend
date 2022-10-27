@@ -13,6 +13,7 @@
     <result column="pay_start_time" property="payStartTime" jdbcType="TIMESTAMP" />
     <result column="pay_end_time" property="payEndTime" jdbcType="TIMESTAMP" />
     <result column="competition_start_time" property="competitionStartTime" jdbcType="TIMESTAMP" />
+    <result column="competition_end_time" property="competitionEndTime" jdbcType="TIMESTAMP" />
     <result column="duration" property="duration" jdbcType="VARCHAR" />
     <result column="competition_introduction" property="competitionIntroduction" jdbcType="VARCHAR" />
     <result column="competition_state" property="competitionState" jdbcType="INTEGER" />
@@ -79,7 +80,8 @@
   <sql id="Base_Column_List" >
     competition_id, competition_chi_name, competition_eng_name, school_id, builder_email, 
     held_position, registration_start_time, registration_end_time, pay_start_time, pay_end_time, 
-    competition_start_time, duration, competition_introduction, competition_state, approve_reason
+    competition_start_time, competition_end_time, duration, competition_introduction, 
+    competition_state, approve_reason
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.IcpcInformationSystemBackend.model.entity.CompetitionDoExample" >
     select
@@ -117,15 +119,15 @@
       competition_eng_name, school_id, builder_email, 
       held_position, registration_start_time, 
       registration_end_time, pay_start_time, 
-      pay_end_time, competition_start_time, duration, 
-      competition_introduction, competition_state, 
+      pay_end_time, competition_start_time, competition_end_time, 
+      duration, competition_introduction, competition_state, 
       approve_reason)
     values (#{competitionId,jdbcType=VARCHAR}, #{competitionChiName,jdbcType=VARCHAR}, 
       #{competitionEngName,jdbcType=VARCHAR}, #{schoolId,jdbcType=VARCHAR}, #{builderEmail,jdbcType=VARCHAR}, 
       #{heldPosition,jdbcType=VARCHAR}, #{registrationStartTime,jdbcType=TIMESTAMP}, 
       #{registrationEndTime,jdbcType=TIMESTAMP}, #{payStartTime,jdbcType=TIMESTAMP}, 
-      #{payEndTime,jdbcType=TIMESTAMP}, #{competitionStartTime,jdbcType=TIMESTAMP}, #{duration,jdbcType=VARCHAR}, 
-      #{competitionIntroduction,jdbcType=VARCHAR}, #{competitionState,jdbcType=INTEGER}, 
+      #{payEndTime,jdbcType=TIMESTAMP}, #{competitionStartTime,jdbcType=TIMESTAMP}, #{competitionEndTime,jdbcType=TIMESTAMP}, 
+      #{duration,jdbcType=VARCHAR}, #{competitionIntroduction,jdbcType=VARCHAR}, #{competitionState,jdbcType=INTEGER}, 
       #{approveReason,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.IcpcInformationSystemBackend.model.entity.CompetitionDo" >
@@ -163,6 +165,9 @@
       </if>
       <if test="competitionStartTime != null" >
         competition_start_time,
+      </if>
+      <if test="competitionEndTime != null" >
+        competition_end_time,
       </if>
       <if test="duration != null" >
         duration,
@@ -210,6 +215,9 @@
       </if>
       <if test="competitionStartTime != null" >
         #{competitionStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="competitionEndTime != null" >
+        #{competitionEndTime,jdbcType=TIMESTAMP},
       </if>
       <if test="duration != null" >
         #{duration,jdbcType=VARCHAR},
@@ -267,6 +275,9 @@
       <if test="record.competitionStartTime != null" >
         competition_start_time = #{record.competitionStartTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.competitionEndTime != null" >
+        competition_end_time = #{record.competitionEndTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="record.duration != null" >
         duration = #{record.duration,jdbcType=VARCHAR},
       </if>
@@ -297,6 +308,7 @@
       pay_start_time = #{record.payStartTime,jdbcType=TIMESTAMP},
       pay_end_time = #{record.payEndTime,jdbcType=TIMESTAMP},
       competition_start_time = #{record.competitionStartTime,jdbcType=TIMESTAMP},
+      competition_end_time = #{record.competitionEndTime,jdbcType=TIMESTAMP},
       duration = #{record.duration,jdbcType=VARCHAR},
       competition_introduction = #{record.competitionIntroduction,jdbcType=VARCHAR},
       competition_state = #{record.competitionState,jdbcType=INTEGER},
@@ -338,6 +350,9 @@
       <if test="competitionStartTime != null" >
         competition_start_time = #{competitionStartTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="competitionEndTime != null" >
+        competition_end_time = #{competitionEndTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="duration != null" >
         duration = #{duration,jdbcType=VARCHAR},
       </if>
@@ -365,6 +380,7 @@
       pay_start_time = #{payStartTime,jdbcType=TIMESTAMP},
       pay_end_time = #{payEndTime,jdbcType=TIMESTAMP},
       competition_start_time = #{competitionStartTime,jdbcType=TIMESTAMP},
+      competition_end_time = #{competitionEndTime,jdbcType=TIMESTAMP},
       duration = #{duration,jdbcType=VARCHAR},
       competition_introduction = #{competitionIntroduction,jdbcType=VARCHAR},
       competition_state = #{competitionState,jdbcType=INTEGER},

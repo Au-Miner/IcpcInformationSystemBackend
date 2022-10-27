@@ -2,6 +2,7 @@ package com.IcpcInformationSystemBackend.tools;
 
 import com.IcpcInformationSystemBackend.exception.AllException;
 import com.IcpcInformationSystemBackend.exception.EmAllException;
+import com.IcpcInformationSystemBackend.model.response.CompetitionAdmissionTicketResponse;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.model.response.TeamScoreInfoResponse;
 import com.IcpcInformationSystemBackend.security.FileTypeChecker;
@@ -40,6 +41,9 @@ public class FileTool {
 
     @Value("${static.competitionCertificateDemo}")
     private String competititonCertificatePath;
+
+    @Value("${static.competitionAdmissionTicketDemo}")
+    private String competitionAdmissionTicketPath;
 
     @Value("${files.temporaryBin}")
     private String temporaryBin;
@@ -253,6 +257,58 @@ public class FileTool {
         doc.close();
         out.close();
 
+        return absolutePath;
+    }
+
+    public String generateCompetitionAdmissionTicket(CompetitionAdmissionTicketResponse competitionAdmissionTicketResponse) throws IOException, DocumentException {
+        if (competitionAdmissionTicketResponse == null)
+            return "";
+        String fileId = UUID.randomUUID().toString();
+        String absolutePath = ChangeCharset.toUtf8(temporaryBin + File.separator + fileId + "---" + "competitionAdmissionTicket.pdf");
+        File destDirectory = new File(temporaryBin);
+        if (!destDirectory.exists()) {
+            destDirectory.mkdirs();
+        }
+
+        // PdfReader reader = new PdfReader(competititonCertificatePath);// 读取pdf模板（因静态文件 故不用）
+        InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(competitionAdmissionTicketPath);
+        if (resourceAsStream == null) {
+            log.info("文件为空！！！！！！！！！！！！！！！！！！！！！！！！！！！！！");
+            return "";
+        }
+        PdfReader reader = new PdfReader(resourceAsStream);
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        // ByteArrayOutputStream: 对byte类型数据进行写入的类 相当于一个中间缓冲层，将类写入到文件等其他outputStream。它是对字节进行操作，属于内存操作流
+        PdfStamper stamper = new PdfStamper(reader, bos);
+        // PdfStamper: pdf编辑器类
+        AcroFields form = stamper.getAcroFields();
+        form.setField("competitionId", competitionAdmissionTicketResponse.getCompetitionId());
+        form.setField("teamId", competitionAdmissionTicketResponse.getTeamId());
+        form.setField("schoolName", competitionAdmissionTicketResponse.getSchoolName());
+        form.setField("competitionName", competitionAdmissionTicketResponse.getCompetitionName());
+        form.setField("chiTeamName", competitionAdmissionTicketResponse.getChiTeamName());
+        form.setField("engTeamName", competitionAdmissionTicketResponse.getEngTeamName());
+        form.setField("member1chiName", competitionAdmissionTicketResponse.getMember1chiName());
+        form.setField("member2chiName", competitionAdmissionTicketResponse.getMember2chiName());
+        form.setField("member3chiName", competitionAdmissionTicketResponse.getMember3chiName());
+        form.setField("coach1chiName", competitionAdmissionTicketResponse.getCoach1chiName());
+        form.setField("competitionTime", competitionAdmissionTicketResponse.getCompetitionTime());
+        form.setField("durationTime", competitionAdmissionTicketResponse.getDurationTime());
+        form.setField("type", competitionAdmissionTicketResponse.getType());
+        form.setField("competitionPosition", competitionAdmissionTicketResponse.getCompetitionPosition());
+
+        stamper.setFormFlattening(true);// 如果为false那么生成的PDF文件还能编辑，一定要设为true
+        stamper.close();
+
+        FileOutputStream out = new FileOutputStream(absolutePath);// 输出流
+        Document doc = new Document();
+        PdfCopy copy = new PdfCopy(doc, out);
+        doc.open();
+        PdfImportedPage importPage = copy.getImportedPage(new PdfReader(bos.toByteArray()), 1);
+        copy.addPage(importPage);
+        doc.close();
+        out.close();
         return absolutePath;
     }
 }

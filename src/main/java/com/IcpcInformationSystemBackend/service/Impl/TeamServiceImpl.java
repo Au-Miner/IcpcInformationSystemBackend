@@ -6,6 +6,7 @@ import com.IcpcInformationSystemBackend.dao.UserCompetitionDoMapper;
 import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.entity.*;
 import com.IcpcInformationSystemBackend.model.request.RegisterTeamInfo;
+import com.IcpcInformationSystemBackend.model.response.CompetitionAdmissionTicketResponse;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.model.response.TeamInfoResponse;
 import com.IcpcInformationSystemBackend.model.response.TeamScoreInfoResponse;
@@ -24,6 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -219,8 +221,7 @@ public class TeamServiceImpl implements TeamService {
         if (ifFirstCreateTeam) {
             if (!Objects.equals(registerTeamInfo.getTeamId(), ""))
                 return ResultTool.error(EmAllException.BAD_REQUEST);
-        }
-        else {
+        } else {
             if (Objects.equals(registerTeamInfo.getTeamId(), ""))
                 return ResultTool.error(EmAllException.BAD_REQUEST);
         }
@@ -316,27 +317,6 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public Result getCompetitionAdmissionTicket(String competitionId, String teamId) {
-        TeamDo teamDo = commonTool.getTeamByCompetitionIdAndTeamId(competitionId, teamId);
-        if (teamDo == null)
-            return ResultTool.error(EmAllException.NO_SUCH_TEAM);
-        if (teamDo.getTeamState() != 4)
-            return ResultTool.error(EmAllException.TEAM_DONT_APPROVE_SUCCESS);
-        if (Objects.equals(teamDo.getCompetitionPosition(), ""))
-            return ResultTool.error(EmAllException.TEAM_DONT_ASSIGN_POSITION);
-        if (!Objects.equals(teamDo.getMember1Email(), authTool.getUserId()) && !Objects.equals(teamDo.getMember2Email(), authTool.getUserId()) && !Objects.equals(teamDo.getMember3Email(), authTool.getUserId()))
-            return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
-        TeamInfoResponse tmp = new TeamInfoResponse();
-        BeanUtils.copyProperties(teamDo, tmp);
-        tmp.setMember1chiName(commonTool.getChiNameByUserEmail(teamDo.getMember1Email()));
-        tmp.setMember2chiName(commonTool.getChiNameByUserEmail(teamDo.getMember2Email()));
-        tmp.setMember3chiName(commonTool.getChiNameByUserEmail(teamDo.getMember3Email()));
-        tmp.setCoach1chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach1Email()));
-        tmp.setCoach2chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach2Email()));
-        return ResultTool.success(tmp);
-    }
-
-    @Override
     public Result getCompetitionCertificateInfo(String competitionId, String teamId) {
         TeamDo teamDo = commonTool.getTeamByCompetitionIdAndTeamId(competitionId, teamId);
         TeamScoreDo teamScoreDo = commonTool.getTeamScoreByCompetitionIdAndTeamId(competitionId, teamId);
@@ -421,4 +401,130 @@ public class TeamServiceImpl implements TeamService {
     }
 
     private final String[] monNumberToEnglish = {"January", "february", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+
+    @Override
+    public Result getCompetitionAdmissionTicket(String competitionId, String teamId) {
+        TeamDo teamDo = commonTool.getTeamByCompetitionIdAndTeamId(competitionId, teamId);
+        if (teamDo == null)
+            return ResultTool.error(EmAllException.NO_SUCH_TEAM);
+        if (teamDo.getTeamState() != 4)
+            return ResultTool.error(EmAllException.TEAM_DONT_APPROVE_SUCCESS);
+        if (Objects.equals(teamDo.getCompetitionPosition(), ""))
+            return ResultTool.error(EmAllException.TEAM_DONT_ASSIGN_POSITION);
+        if (!Objects.equals(teamDo.getMember1Email(), authTool.getUserId()) && !Objects.equals(teamDo.getMember2Email(), authTool.getUserId()) && !Objects.equals(teamDo.getMember3Email(), authTool.getUserId()))
+            return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
+        CompetitionDo competitionDo = commonTool.getCompetitionDoByCompetitionId(competitionId);
+        SchoolDo schoolDo = commonTool.getSchoolDoBySchoolId(teamDo.getSchoolId());
+        CompetitionAdmissionTicketResponse tmp = new CompetitionAdmissionTicketResponse();
+        BeanUtils.copyProperties(teamDo, tmp);
+        tmp.setMember1chiName(commonTool.getChiNameByUserEmail(teamDo.getMember1Email()));
+        tmp.setMember2chiName(commonTool.getChiNameByUserEmail(teamDo.getMember2Email()));
+        tmp.setMember3chiName(commonTool.getChiNameByUserEmail(teamDo.getMember3Email()));
+        tmp.setCoach1chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach1Email()));
+        tmp.setCompetitionName(competitionDo.getCompetitionChiName());
+        tmp.setSchoolName(schoolDo.getChiSchoolName());
+
+        String competitionTime = "";
+        Calendar ca = Calendar.getInstance();
+        ca.setTime(competitionDo.getCompetitionStartTime());
+        competitionTime += ca.get(Calendar.YEAR);
+        competitionTime += '-';
+        competitionTime += ca.get(Calendar.MONTH);
+        competitionTime += '-';
+        competitionTime += ca.get(Calendar.DAY_OF_MONTH);
+        competitionTime += ' ';
+        competitionTime += ca.get(Calendar.HOUR_OF_DAY);
+        competitionTime += '-';
+        competitionTime += ca.get(Calendar.MINUTE);
+        competitionTime += " - ";
+        ca.setTime(competitionDo.getCompetitionEndTime());
+        competitionTime += ca.get(Calendar.YEAR);
+        competitionTime += '-';
+        competitionTime += ca.get(Calendar.MONTH);
+        competitionTime += '-';
+        competitionTime += ca.get(Calendar.DAY_OF_MONTH);
+        competitionTime += ' ';
+        competitionTime += ca.get(Calendar.HOUR_OF_DAY);
+        competitionTime += '-';
+        competitionTime += ca.get(Calendar.MINUTE);
+        tmp.setCompetitionTime(competitionTime);
+
+        String durationTime = "";
+        durationTime += Integer.parseInt(competitionDo.getDuration().substring(0, 2));
+        durationTime += "小时";
+        int minute = Integer.parseInt(competitionDo.getDuration().substring(3, 5));
+        if (minute != 0)
+            durationTime += minute + "分钟";
+        tmp.setDurationTime(durationTime);
+        String type = "正式队伍";
+        if (teamDo.getType() == 2)
+            type = "打星队伍";
+        else if (teamDo.getType() == 1)
+            type = "外卡队伍";
+        tmp.setType(type);
+        return ResultTool.success(tmp);
+    }
+
+    @Override
+    public CompetitionAdmissionTicketResponse getCompetitionAdmissionTicket2(String competitionId, String teamId) {
+        TeamDo teamDo = commonTool.getTeamByCompetitionIdAndTeamId(competitionId, teamId);
+        if (teamDo == null)
+            return null;
+        if (teamDo.getTeamState() != 4)
+            return null;
+        if (Objects.equals(teamDo.getCompetitionPosition(), ""))
+            return null;
+        if (!Objects.equals(teamDo.getMember1Email(), authTool.getUserId()) && !Objects.equals(teamDo.getMember2Email(), authTool.getUserId()) && !Objects.equals(teamDo.getMember3Email(), authTool.getUserId()))
+            return null;
+        CompetitionDo competitionDo = commonTool.getCompetitionDoByCompetitionId(competitionId);
+        SchoolDo schoolDo = commonTool.getSchoolDoBySchoolId(teamDo.getSchoolId());
+        CompetitionAdmissionTicketResponse tmp = new CompetitionAdmissionTicketResponse();
+        BeanUtils.copyProperties(teamDo, tmp);
+        tmp.setMember1chiName(commonTool.getChiNameByUserEmail(teamDo.getMember1Email()));
+        tmp.setMember2chiName(commonTool.getChiNameByUserEmail(teamDo.getMember2Email()));
+        tmp.setMember3chiName(commonTool.getChiNameByUserEmail(teamDo.getMember3Email()));
+        tmp.setCoach1chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach1Email()));
+        tmp.setCompetitionName(competitionDo.getCompetitionChiName());
+        tmp.setSchoolName(schoolDo.getChiSchoolName());
+
+        String competitionTime = "";
+        Calendar ca = Calendar.getInstance();
+        ca.setTime(competitionDo.getCompetitionStartTime());
+        competitionTime += ca.get(Calendar.YEAR);
+        competitionTime += '-';
+        competitionTime += ca.get(Calendar.MONTH);
+        competitionTime += '-';
+        competitionTime += ca.get(Calendar.DAY_OF_MONTH);
+        competitionTime += ' ';
+        competitionTime += ca.get(Calendar.HOUR_OF_DAY);
+        competitionTime += '-';
+        competitionTime += ca.get(Calendar.MINUTE);
+        competitionTime += " - ";
+        ca.setTime(competitionDo.getCompetitionEndTime());
+        competitionTime += ca.get(Calendar.YEAR);
+        competitionTime += '-';
+        competitionTime += ca.get(Calendar.MONTH);
+        competitionTime += '-';
+        competitionTime += ca.get(Calendar.DAY_OF_MONTH);
+        competitionTime += ' ';
+        competitionTime += ca.get(Calendar.HOUR_OF_DAY);
+        competitionTime += '-';
+        competitionTime += ca.get(Calendar.MINUTE);
+        tmp.setCompetitionTime(competitionTime);
+
+        String durationTime = "";
+        durationTime += Integer.parseInt(competitionDo.getDuration().substring(0, 2));
+        durationTime += "小时";
+        int minute = Integer.parseInt(competitionDo.getDuration().substring(3, 5));
+        if (minute != 0)
+            durationTime += minute + "分钟";
+        tmp.setDurationTime(durationTime);
+        String type = "正式队伍";
+        if (teamDo.getType() == 2)
+            type = "打星队伍";
+        else if (teamDo.getType() == 1)
+            type = "外卡队伍";
+        tmp.setType(type);
+        return tmp;
+    }
 }
