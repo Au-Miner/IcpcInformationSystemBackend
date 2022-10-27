@@ -62,16 +62,33 @@ public class FileServiceImpl implements FileService {
         try {
             qrcTool.createCodeToResponse(servletResponse, content);
         }catch (Exception e){
-            log.info(String.valueOf(e));
+            log.info(e.getMessage());
         }
     }
 
     @Override
     public void downloadFile(HttpServletRequest request, HttpServletResponse response, String fileAddress) {
         try {
-            fileTool.downloadFile(request, response, fileAddress);
-        } catch (IOException | AllException e) {
-            log.info(String.valueOf(e));
+            try {
+                fileTool.downloadFile(request, response, fileAddress);
+            } catch (IOException e) {
+                log.info(e.getMessage());
+            }
+        } catch (AllException e) {
+            log.info(e.getMsg());
+        }
+    }
+
+    @Override
+    public void downloadStaticFile(HttpServletRequest request, HttpServletResponse response, String fileAddress, String fileName) {
+        try {
+            try {
+                fileTool.downloadStaticFile(request, response, fileAddress, fileName);
+            } catch (IOException e) {
+                log.info(e.getMessage());
+            }
+        } catch (AllException e) {
+            log.info(e.getMsg());
         }
     }
 
@@ -109,17 +126,20 @@ public class FileServiceImpl implements FileService {
         try {
             competitionCertificatePath = fileTool.generateCompetitionCertificate(competitionId, teamId);
         }catch (IOException | DocumentException e) {
-            log.info(String.valueOf(e));
+            log.info(e.getMessage());
         }
         try {
             fileTool.downloadFile(request, response, competitionCertificatePath);
-        } catch (IOException | AllException e) {
-            log.info(String.valueOf(e));
+        } catch (IOException e) {
+            log.info(e.getMessage());
+        } catch (AllException e) {
+            log.info(e.getMsg());
         }
+        // log.info("competitionCertificatePath:" + competitionCertificatePath);
         try {
             fileTool.deleteFile(competitionCertificatePath);
         } catch (AllException e) {
-            log.info(String.valueOf(e));
+            log.info(e.getMsg());
         }
     }
 }

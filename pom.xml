@@ -213,6 +213,32 @@
                 </configuration>
             </plugin>
         </plugins>
+
+        <!--打包resources下的静态资源-->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <!-- <excludes>
+                    <exclude>**/*.properties</exclude>
+                    <exclude>**/*.xml</exclude>
+                </excludes> -->
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.pdf</include>
+                    <include>**/*.xlsx</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.yml</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
     </build>
 
 </project>

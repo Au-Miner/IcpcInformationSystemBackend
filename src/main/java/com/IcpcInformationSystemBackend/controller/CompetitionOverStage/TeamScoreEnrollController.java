@@ -28,7 +28,7 @@ import java.io.IOException;
 @RequestMapping("/competitionOver/teamScoreEnroll")
 @Api(tags = "比赛成绩登记接口（仅比赛负责人可使用）")
 public class TeamScoreEnrollController {
-    @Value("${files.teamScoresDemo}")
+    @Value("${static.teamScoresDemo}")
     private String teamScoresDemoAddress;
 
     @Resource
@@ -40,7 +40,7 @@ public class TeamScoreEnrollController {
     @GetMapping("downloadTeamScoresDemo")
     @ApiOperation(value = "下载队伍成绩表模板")
     public void downloadTeamScoresDemo(HttpServletRequest request, HttpServletResponse response) {
-        fileService.downloadFile(request, response, teamScoresDemoAddress);
+        fileService.downloadStaticFile(request, response, teamScoresDemoAddress, "teamScoresDemo.xlsx");
     }
 
     @PostMapping("uploadTeamScores")

@@ -10,7 +10,6 @@ import com.IcpcInformationSystemBackend.model.request.UpdateTeamScoresInfo;
 import com.IcpcInformationSystemBackend.model.response.CompetitionEntryListResponse;
 import com.IcpcInformationSystemBackend.model.response.CompetitionInfoResponse;
 import com.IcpcInformationSystemBackend.model.response.Result;
-import com.IcpcInformationSystemBackend.model.response.TeamInfoResponse;
 import com.IcpcInformationSystemBackend.service.CompetitionService;
 import com.IcpcInformationSystemBackend.tools.AuthTool;
 import com.IcpcInformationSystemBackend.tools.CommonTool;
@@ -236,7 +235,7 @@ public class CompetitionServiceImpl implements CompetitionService {
         for(int i = 1; i < rows; i++) {
             XSSFRow row = sheet.getRow(i);
             String ss = row.getCell(0).toString();
-            int pos = ss.length() - 1;
+            int pos = ss.length();
             for (int j = 0; j < ss.length(); j++) {
                 if (ss.charAt(j) == '.') {
                     pos = j;

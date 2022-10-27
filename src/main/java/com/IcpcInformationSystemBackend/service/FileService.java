@@ -16,6 +16,8 @@ public interface FileService {
 
     void downloadFile(HttpServletRequest request, HttpServletResponse response, String fileAddress);
 
+    void downloadStaticFile(HttpServletRequest request, HttpServletResponse response, String fileAddress, String fileName);
+
     Result uploadExcel(MultipartFile file);
 
     Result deleteFile(String filePath);

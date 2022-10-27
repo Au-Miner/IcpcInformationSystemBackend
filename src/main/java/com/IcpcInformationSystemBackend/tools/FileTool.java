@@ -38,8 +38,8 @@ public class FileTool {
     @Resource
     private TeamService teamService;
 
-    @Value("${files.competitionCertificateDemo}")
-    private String templatePath;
+    @Value("${static.competitionCertificateDemo}")
+    private String competititonCertificatePath;
 
     @Value("${files.temporaryBin}")
     private String temporaryBin;
@@ -78,29 +78,6 @@ public class FileTool {
             throw new AllException(EmAllException.FILE_EMPTY, "上传文件为空");
         }
         return absolutePath;
-    }
-
-    public void downloadFile(HttpServletRequest request,
-                             HttpServletResponse response, String fileAddress) throws IOException, AllException {
-
-        File downloadFile = new File(fileAddress);
-        if (downloadFile.exists()) {
-            response.setContentType("application/octet-stream");
-            String headerKey = "Content-Disposition";
-            String fileName = downloadFile.getName().substring(downloadFile.getName().indexOf("---") + 3);
-            String headerValue = "attachment; filename=" + new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
-            response.setHeader(headerKey, headerValue);
-            response.setContentLength((int) downloadFile.length());
-
-            InputStream myStream = new FileInputStream(fileAddress);
-            OutputStream toClient = response.getOutputStream();
-            IOUtils.copy(myStream, toClient);
-            response.flushBuffer();
-            myStream.close();
-            toClient.close();
-        } else {
-            throw new AllException(EmAllException.BAD_REQUEST, "请求文件不存在");
-        }
     }
 
     public String uploadExcel(MultipartFile file, String directoryNeed) throws AllException {
@@ -163,15 +140,67 @@ public class FileTool {
         }
     }
 
+    public void downloadFile(HttpServletRequest request,
+                             HttpServletResponse response, String fileAddress) throws IOException, AllException {
+
+        File downloadFile = new File(fileAddress);
+        if (downloadFile.exists()) {
+            response.setContentType("application/octet-stream");
+            String headerKey = "Content-Disposition";
+            String fileName = downloadFile.getName().substring(downloadFile.getName().indexOf("---") + 3);
+            String headerValue = "attachment; filename=" + new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
+            response.setHeader(headerKey, headerValue);
+            response.setContentLength((int) downloadFile.length());
+
+            InputStream myStream = new FileInputStream(fileAddress);
+            OutputStream toClient = response.getOutputStream();
+            IOUtils.copy(myStream, toClient);
+            response.flushBuffer();
+            myStream.close();
+            toClient.close();
+        } else {
+            throw new AllException(EmAllException.BAD_REQUEST, "请求文件不存在");
+        }
+    }
+
+    public void downloadStaticFile(HttpServletRequest request,
+                                   HttpServletResponse response, String fileAddress, String fileName) throws IOException, AllException {
+        response.setContentType("application/octet-stream");
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=" + fileName;
+        response.setHeader(headerKey, headerValue);
+
+        InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(fileAddress);
+        if (resourceAsStream == null) {
+            log.info("文件为空！！！");
+            return;
+        }
+        OutputStream toClient = response.getOutputStream();
+        IOUtils.copy(resourceAsStream, toClient);
+        response.flushBuffer();
+        resourceAsStream.close();
+        toClient.close();
+    }
+
     public String generateCompetitionCertificate(String competitionId, String teamId) throws IOException, DocumentException {
         TeamScoreInfoResponse teamScoreInfoResponse = teamService.getCompetitionCertificateInfo2(competitionId, teamId);
         if (teamScoreInfoResponse == null)
             return "";
         String fileId = UUID.randomUUID().toString();
         String absolutePath = ChangeCharset.toUtf8(temporaryBin + File.separator + fileId + "---" + "competitionCertificate.pdf");
+        File destDirectory = new File(temporaryBin);
+        if (!destDirectory.exists()) {
+            destDirectory.mkdirs();
+        }
 
-        FileOutputStream out = new FileOutputStream(absolutePath);// 输出流
-        PdfReader reader = new PdfReader(templatePath);// 读取pdf模板
+        // PdfReader reader = new PdfReader(competititonCertificatePath);// 读取pdf模板（因静态文件 故不用）
+        InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(competititonCertificatePath);
+        if (resourceAsStream == null) {
+            log.info("文件为空！！！！！！！！！！！！！！！！！！！！！！！！！！！！！");
+            return "";
+        }
+        PdfReader reader = new PdfReader(resourceAsStream);
+
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         // ByteArrayOutputStream: 对byte类型数据进行写入的类 相当于一个中间缓冲层，将类写入到文件等其他outputStream。它是对字节进行操作，属于内存操作流
         PdfStamper stamper = new PdfStamper(reader, bos);
@@ -215,6 +244,7 @@ public class FileTool {
         stamper.setFormFlattening(true);// 如果为false那么生成的PDF文件还能编辑，一定要设为true
         stamper.close();
 
+        FileOutputStream out = new FileOutputStream(absolutePath);// 输出流
         Document doc = new Document();
         PdfCopy copy = new PdfCopy(doc, out);
         doc.open();
