@@ -66,10 +66,4 @@ public class CompetitionChairmanController {
     public Result approveTeamInfoByTeamKey(@ApiParam(name = "审核队伍时需要提供的信息", required = true) @Validated @RequestBody ApproveTeamInfo approveTeamInfo) {
         return approveService.competitionChairmanApproveTeamInfoByTeamKey(approveTeamInfo);
     }
-
-    @PostMapping("/addPosition")
-    @ApiOperation(value = "比赛负责人添加比赛场地（包含每个比赛场地能容纳人数）")
-    public Result addPosition(@ApiParam(name = "添加比赛场地时需要提供的信息", required = true) @Validated @RequestBody PositionInfo positionInfo) {
-        return positionService.addPosition(positionInfo);
-    }
 }
