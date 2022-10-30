@@ -55,7 +55,7 @@ public class RegisterCompetitionInfo {
     @NotNull(message="比赛结束时间不能为空")
     @ApiModelProperty(value = "比赛结束时间，非空", example = "2022-10-12 09:01:16")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private Date competitionEngTime;
+    private Date competitionEndTime;
 
     @NotBlank(message="比赛持续时间不能为空")
     @ApiModelProperty(value = "比赛持续时间，非空", example = "05:00")

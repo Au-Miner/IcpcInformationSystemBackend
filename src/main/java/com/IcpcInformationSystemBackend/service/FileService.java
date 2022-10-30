@@ -32,4 +32,6 @@ public interface FileService {
     void downloadCompetitionEntryList(HttpServletResponse response, ArrayList<String> colHead, ArrayList<CompetitionEntryListResponse> competitionEntryList2);
 
     void downCompetitionAdmissionTicket(HttpServletRequest request, HttpServletResponse response, CompetitionAdmissionTicketResponse competitionAdmissionTicketResponse);
+
+    Result uploadTeamPhoto(MultipartFile file, String competitionId, String teamId);
 }

@@ -2,9 +2,13 @@ package com.IcpcInformationSystemBackend.controller.CompetitionOverStage;
 
 
 import com.IcpcInformationSystemBackend.exception.AllException;
+import com.IcpcInformationSystemBackend.exception.EmAllException;
+import com.IcpcInformationSystemBackend.model.entity.TeamDo;
+import com.IcpcInformationSystemBackend.model.entity.TeamScoreDo;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.service.FileService;
 import com.IcpcInformationSystemBackend.service.TeamService;
+import com.IcpcInformationSystemBackend.tools.CommonTool;
 import com.IcpcInformationSystemBackend.tools.FileTool;
 import com.IcpcInformationSystemBackend.tools.ResultTool;
 import com.itextpdf.text.DocumentException;
@@ -20,6 +24,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
 
 @Slf4j
 @CrossOrigin
@@ -34,6 +39,9 @@ public class CompetitionCertificateController {
     @Resource
     private FileService fileService;
 
+    @Resource
+    private CommonTool commonTool;
+
     @GetMapping("/getCompetitionCertificateInfo")
     @ApiOperation(value = "（该接口暂时用不到了）队伍成员或教练获取当前队伍的获奖证书信息")
     public Result getCompetitionCertificateInfo(String competitionId, String teamId) {
@@ -44,5 +52,18 @@ public class CompetitionCertificateController {
     @ApiOperation(value = "队伍成员或教练获取当前队伍的获奖证书pdf")
     public void downloadCompetitionCertificate(HttpServletRequest request, HttpServletResponse response, String competitionId, String teamId) {
         fileService.downloadCompetitionCertificate(request, response, competitionId, teamId);
+    }
+
+    @GetMapping("downloadTeamPhotos")
+    @ApiOperation(value = "下载参赛照片")
+    public void downloadTeamPhotos(HttpServletRequest request, HttpServletResponse response, String competitionId, String teamId) {
+        TeamDo teamDo = commonTool.getTeamByCompetitionIdAndTeamId(competitionId, teamId);
+        if (teamDo == null || teamDo.getTeamState() != 4)
+            return;
+        TeamScoreDo teamScoreDo = commonTool.getTeamScoreByCompetitionIdAndTeamId(competitionId, teamId);
+        if (teamScoreDo == null || Objects.equals(teamScoreDo.getPhotos(), ""))
+            return;
+        String filePath = teamScoreDo.getPhotos();
+        fileService.downloadFile(request, response, filePath);
     }
 }

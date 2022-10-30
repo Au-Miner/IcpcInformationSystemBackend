@@ -1,13 +1,9 @@
 package com.IcpcInformationSystemBackend.controller.CompetitionOverStage;
 
-import com.IcpcInformationSystemBackend.exception.AllException;
-import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.request.UpdateTeamScoresInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.service.CompetitionService;
 import com.IcpcInformationSystemBackend.service.FileService;
-import com.IcpcInformationSystemBackend.tools.FileTool;
-import com.IcpcInformationSystemBackend.tools.ResultTool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -20,14 +16,13 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Slf4j
 @CrossOrigin
 @RestController
-@RequestMapping("/competitionOver/teamScoreEnroll")
-@Api(tags = "比赛成绩登记接口（仅比赛负责人可使用）")
-public class TeamScoreEnrollController {
+@RequestMapping("/competitionOver/teamResultEnroll")
+@Api(tags = "比赛结果登记接口（仅比赛负责人可使用）")
+public class TeamResultEnrollController {
     @Value("${static.teamScoresDemo}")
     private String teamScoresDemoAddress;
 
@@ -56,5 +51,11 @@ public class TeamScoreEnrollController {
         if (result.getCode() != 200)
             return result;
         return fileService.deleteFile(updateTeamScoresInfo.getTeamScoresAddress());
+    }
+
+    @PostMapping("uploadTeamPhoto")
+    @ApiOperation(value = "上传参赛人员合影", notes = "仅能上传jpg/png格式图片，并返回图片地址")
+    public Result uploadTeamPhoto(@RequestBody MultipartFile file, String competitionId, String teamId) {
+        return fileService.uploadTeamPhoto(file, competitionId, teamId);
     }
 }

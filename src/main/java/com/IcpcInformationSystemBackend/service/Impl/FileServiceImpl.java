@@ -1,13 +1,15 @@
 package com.IcpcInformationSystemBackend.service.Impl;
 
+import com.IcpcInformationSystemBackend.dao.TeamScoreDoMapper;
 import com.IcpcInformationSystemBackend.exception.AllException;
+import com.IcpcInformationSystemBackend.exception.EmAllException;
+import com.IcpcInformationSystemBackend.model.entity.TeamScoreDo;
+import com.IcpcInformationSystemBackend.model.entity.TeamScoreDoExample;
 import com.IcpcInformationSystemBackend.model.response.CompetitionAdmissionTicketResponse;
 import com.IcpcInformationSystemBackend.model.response.CompetitionEntryListResponse;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.service.FileService;
-import com.IcpcInformationSystemBackend.tools.FileTool;
-import com.IcpcInformationSystemBackend.tools.QRCTool;
-import com.IcpcInformationSystemBackend.tools.ResultTool;
+import com.IcpcInformationSystemBackend.tools.*;
 import com.itextpdf.text.DocumentException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -46,8 +48,20 @@ public class FileServiceImpl implements FileService {
     @Value("${files.teamScoresPath}")
     private String teamScoresDirectory;
 
+    @Value("${files.teamPhotosPath}")
+    private String teamPhotosDirectory;
+
     @Resource
     private FileTool fileTool;
+
+    @Resource
+    private CommonTool commonTool;
+
+    @Resource
+    private AuthTool authTool;
+
+    @Resource
+    private TeamScoreDoMapper teamScoreDoMapper;
 
     private static final String ImgFormat=".png";
 
@@ -210,6 +224,27 @@ public class FileServiceImpl implements FileService {
             fileTool.deleteFile(competitionAdmissionTicketPath);
         } catch (AllException e) {
             log.info(e.getMsg());
+        }
+    }
+
+    @Override
+    public Result uploadTeamPhoto(MultipartFile file, String competitionId, String teamId) {
+        if (!commonTool.judgeTeamIfExists(competitionId, teamId))
+            return ResultTool.error(EmAllException.NO_SUCH_TEAM);
+        if (!commonTool.judgeCompetitionChairmanIdentityIfRight(competitionId, authTool.getUserId()))
+            return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
+        String fileDirectory = teamPhotosDirectory + File.separator + competitionId + File.separator + teamId;
+        try {
+            String filePath = fileTool.uploadImg(file, fileDirectory);
+            TeamScoreDo teamScoreDo = new TeamScoreDo();
+            teamScoreDo.setTeamId(teamId);
+            teamScoreDo.setCompetitionId(competitionId);
+            teamScoreDo.setPhotos(filePath);
+            if (teamScoreDoMapper.updateByPrimaryKeySelective(teamScoreDo) == 0)
+                return ResultTool.error(EmAllException.DATABASE_ERR);
+            return ResultTool.success();
+        } catch (AllException e) {
+            return ResultTool.error(e.getErrCode(), e.getMsg());
         }
     }
 }

@@ -30,7 +30,7 @@ public class FileController1 {
     }
 
     @GetMapping("downloadFile")
-    @ApiOperation(value = "下载文件，仅供测试使用")
+    @ApiOperation(value = "（仅供测试使用）下载文件")
     public void downloadFile(HttpServletRequest request, HttpServletResponse response, String filePath) {
         fileService.downloadFile(request, response, filePath);
     }
