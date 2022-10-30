@@ -57,12 +57,6 @@ public class CoachController {
     }
 
     /*比赛报名阶段*/
-    @GetMapping("/getAcceptCompetitionInfo")
-    @ApiOperation(value = "教练获取所有已批准通过比赛信息")
-    public Result getAcceptCompetitionInfo() {
-        return competitionService.getAllAcceptCompetitionInfo();
-    }
-
     @GetMapping("/getTeamInfoByCompetitionId")
     @ApiOperation(value = "教练根据比赛id获取当前学校所有自己带队队伍信息（方便后续进行审批）")
     public Result getTeamInfoByCompetitionId(String competitionId) {
