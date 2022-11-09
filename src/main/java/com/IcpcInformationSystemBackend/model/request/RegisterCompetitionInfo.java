@@ -64,4 +64,11 @@ public class RegisterCompetitionInfo {
     @NotBlank(message="比赛介绍不能为空")
     @ApiModelProperty(value = "比赛介绍，非空", example = "此次比赛由上海大学举办，是一场重大赛事")
     private String competitionIntroduction;
+
+    @NotNull(message="是否为icpc区域赛不能为空")
+    @ApiModelProperty(value = "是否为icpc区域赛，非空", example = "1或者0")
+    private Integer ifIcpcRegionalCompetition;
+
+    @ApiModelProperty(value = "所属icpc区域赛年份", example = "2022或者为空")
+    private String icpcRegionalCompetitionYear;
 }

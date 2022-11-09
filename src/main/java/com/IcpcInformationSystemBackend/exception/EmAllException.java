@@ -31,6 +31,8 @@ public enum EmAllException implements CommonError{
     USER_DONT_NEED_APPROVE(403, "用户无需审批"),
     USER_DONT_APPROVE_SUCCESS(403, "用户未审批通过"),
     AUTHORIZATION_ERROR(403, "权限错误"),
+    ID_CARD_FORMAT_ERROR(403, "身份证格式错误"),
+    ID_CARD_HAS_REGISTERED(403, "身份证已注册"),
 
     //比赛相关
     NO_SUCH_COMPETITION(403,"查无此赛"),
@@ -39,6 +41,7 @@ public enum EmAllException implements CommonError{
     COMPETITION_NOT_START(403, "比赛报名还未开始"),
     COMPETITION_HAS_END(403, "比赛报名已经结束"),
     COMPETITION_CERTIFICATE_FAKE(403, "比赛证书有误"),
+    USER_HAS_PARTICIPATED_IN_2_REGIONAL_COMPETITIONS_THIS_YEAR(403, "选手已经参加两届icpc区域赛了"),
 
     //队伍相关
     NO_SUCH_TEAM(403, "查无此队"),
@@ -59,6 +62,7 @@ public enum EmAllException implements CommonError{
     UNKNOWN_ERROR(500,"未知错误"),
     BAD_REQUEST(400, "请求参数格式有误"),
     TOKEN_ERROR(403,"TOKEN错误"),
+    VERIFICATION_CODE_ERROR(403,"验证码错误"),
     ;
 
     // 错误码

@@ -1,9 +1,13 @@
 package com.IcpcInformationSystemBackend.controller.RegisterAndSignUpInitialStage;
 
+import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.request.LoginUserInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.service.CompetitionService;
 import com.IcpcInformationSystemBackend.service.LoginService;
+import com.IcpcInformationSystemBackend.tools.ResultTool;
+import com.ramostear.captcha.HappyCaptcha;
+import com.ramostear.captcha.support.CaptchaType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -12,6 +16,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
 @CrossOrigin
@@ -38,8 +44,24 @@ public class LoginController {
     }
 
     @GetMapping("/getAcceptCompetitionInfo")
-    @ApiOperation(value = "获取所有已批准通过比赛信息")
+    @ApiOperation(value = "获取所有已批准通过比赛信息（放这里是因为这里不需要权限）")
     public Result getAcceptCompetitionInfo() {
         return competitionService.getAllAcceptCompetitionInfo();
+    }
+
+    @GetMapping("/generateVerificationCode")
+    @ApiOperation(value = "生成验证码接口")
+    public void generateVerificationCode(HttpServletRequest request, HttpServletResponse response) {
+        HappyCaptcha.require(request,response).type(CaptchaType.NUMBER).build().finish();
+    }
+
+    @PostMapping("/verifyVerificationCode")
+    @ApiOperation(value = "验证验证码接口")
+    public Result verifyVerificationCode(String code, HttpServletRequest request){
+        if (HappyCaptcha.verification(request, code, true)) {
+            HappyCaptcha.remove(request);
+            return ResultTool.success();
+        }
+        return ResultTool.error(EmAllException.VERIFICATION_CODE_ERROR);
     }
 }

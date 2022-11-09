@@ -12,6 +12,7 @@ import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.model.response.SchoolIdResponse;
 import com.IcpcInformationSystemBackend.service.RegisterService;
 import com.IcpcInformationSystemBackend.tools.EmailTool;
+import com.IcpcInformationSystemBackend.tools.IdCardTool;
 import com.IcpcInformationSystemBackend.tools.ResultTool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -36,6 +37,9 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Resource
     private EmailTool emailTool;
+
+    @Resource
+    private IdCardTool idCardTool;
 
     @Override
     public Result registerSchool(RegisterSchoolInfo registerSchoolInfo) {
@@ -79,6 +83,11 @@ public class RegisterServiceImpl implements RegisterService {
                 break;
         }
 
+        if (!idCardTool.judgeIdCardFormatIfRight(registerSchoolInfo.getIdCard()))
+            return ResultTool.error(EmAllException.ID_CARD_FORMAT_ERROR);
+        if (idCardTool.judgeIdCardIfHasRegistered(registerSchoolInfo.getIdCard()))
+            return ResultTool.error(EmAllException.ID_CARD_HAS_REGISTERED);
+
         if (schoolDoMapper.insertSelective(schoolDo) == 0)
             return ResultTool.error(EmAllException.DATABASE_ERR);
         if (userDoMapper.insertSelective(userDo) == 0)
@@ -117,6 +126,11 @@ public class RegisterServiceImpl implements RegisterService {
             default:
                 break;
         }
+
+        if (!idCardTool.judgeIdCardFormatIfRight(reigsterUserInfo.getIdCard()))
+            return ResultTool.error(EmAllException.ID_CARD_FORMAT_ERROR);
+        if (idCardTool.judgeIdCardIfHasRegistered(reigsterUserInfo.getIdCard()))
+            return ResultTool.error(EmAllException.ID_CARD_HAS_REGISTERED);
 
         UserDo userDo = new UserDo();
         BeanUtils.copyProperties(reigsterUserInfo, userDo);

@@ -1,17 +1,12 @@
 package com.IcpcInformationSystemBackend.controller.CompetitionOverStage;
 
 
-import com.IcpcInformationSystemBackend.exception.AllException;
-import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.entity.TeamDo;
 import com.IcpcInformationSystemBackend.model.entity.TeamScoreDo;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.service.FileService;
 import com.IcpcInformationSystemBackend.service.TeamService;
 import com.IcpcInformationSystemBackend.tools.CommonTool;
-import com.IcpcInformationSystemBackend.tools.FileTool;
-import com.IcpcInformationSystemBackend.tools.ResultTool;
-import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Objects;
 
 @Slf4j

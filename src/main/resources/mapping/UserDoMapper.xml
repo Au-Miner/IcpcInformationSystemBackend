@@ -3,6 +3,7 @@
 <mapper namespace="com.IcpcInformationSystemBackend.dao.UserDoMapper" >
   <resultMap id="BaseResultMap" type="com.IcpcInformationSystemBackend.model.entity.UserDo" >
     <id column="user_email" property="userEmail" jdbcType="VARCHAR" />
+    <result column="id_card" property="idCard" jdbcType="VARCHAR" />
     <result column="identity" property="identity" jdbcType="INTEGER" />
     <result column="chi_name" property="chiName" jdbcType="VARCHAR" />
     <result column="eng_name" property="engName" jdbcType="VARCHAR" />
@@ -71,7 +72,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    user_email, identity, chi_name, eng_name, telephone, user_state, admission_date, 
+    user_email, id_card, identity, chi_name, eng_name, telephone, user_state, admission_date, 
     school_id, cloth_size
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.IcpcInformationSystemBackend.model.entity.UserDoExample" >
@@ -106,20 +107,23 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.IcpcInformationSystemBackend.model.entity.UserDo" >
-    insert into user (user_email, identity, chi_name, 
-      eng_name, telephone, user_state, 
-      admission_date, school_id, cloth_size
-      )
-    values (#{userEmail,jdbcType=VARCHAR}, #{identity,jdbcType=INTEGER}, #{chiName,jdbcType=VARCHAR}, 
-      #{engName,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, #{userState,jdbcType=INTEGER}, 
-      #{admissionDate,jdbcType=VARCHAR}, #{schoolId,jdbcType=VARCHAR}, #{clothSize,jdbcType=VARCHAR}
-      )
+    insert into user (user_email, id_card, identity, 
+      chi_name, eng_name, telephone, 
+      user_state, admission_date, school_id, 
+      cloth_size)
+    values (#{userEmail,jdbcType=VARCHAR}, #{idCard,jdbcType=VARCHAR}, #{identity,jdbcType=INTEGER}, 
+      #{chiName,jdbcType=VARCHAR}, #{engName,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, 
+      #{userState,jdbcType=INTEGER}, #{admissionDate,jdbcType=VARCHAR}, #{schoolId,jdbcType=VARCHAR}, 
+      #{clothSize,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.IcpcInformationSystemBackend.model.entity.UserDo" >
     insert into user
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="userEmail != null" >
         user_email,
+      </if>
+      <if test="idCard != null" >
+        id_card,
       </if>
       <if test="identity != null" >
         identity,
@@ -149,6 +153,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="userEmail != null" >
         #{userEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null" >
+        #{idCard,jdbcType=VARCHAR},
       </if>
       <if test="identity != null" >
         #{identity,jdbcType=INTEGER},
@@ -188,6 +195,9 @@
       <if test="record.userEmail != null" >
         user_email = #{record.userEmail,jdbcType=VARCHAR},
       </if>
+      <if test="record.idCard != null" >
+        id_card = #{record.idCard,jdbcType=VARCHAR},
+      </if>
       <if test="record.identity != null" >
         identity = #{record.identity,jdbcType=INTEGER},
       </if>
@@ -220,6 +230,7 @@
   <update id="updateByExample" parameterType="map" >
     update user
     set user_email = #{record.userEmail,jdbcType=VARCHAR},
+      id_card = #{record.idCard,jdbcType=VARCHAR},
       identity = #{record.identity,jdbcType=INTEGER},
       chi_name = #{record.chiName,jdbcType=VARCHAR},
       eng_name = #{record.engName,jdbcType=VARCHAR},
@@ -235,6 +246,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.IcpcInformationSystemBackend.model.entity.UserDo" >
     update user
     <set >
+      <if test="idCard != null" >
+        id_card = #{idCard,jdbcType=VARCHAR},
+      </if>
       <if test="identity != null" >
         identity = #{identity,jdbcType=INTEGER},
       </if>
@@ -264,7 +278,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.IcpcInformationSystemBackend.model.entity.UserDo" >
     update user
-    set identity = #{identity,jdbcType=INTEGER},
+    set id_card = #{idCard,jdbcType=VARCHAR},
+      identity = #{identity,jdbcType=INTEGER},
       chi_name = #{chiName,jdbcType=VARCHAR},
       eng_name = #{engName,jdbcType=VARCHAR},
       telephone = #{telephone,jdbcType=VARCHAR},

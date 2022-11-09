@@ -153,7 +153,12 @@
             <artifactId>itext-asian</artifactId>
             <version>5.2.0</version>
         </dependency>
-
+        <!--验证码-->
+        <dependency>
+            <groupId>com.ramostear</groupId>
+            <artifactId>Happy-Captcha</artifactId>
+            <version>1.0.1</version>
+        </dependency>
 
 
     </dependencies>

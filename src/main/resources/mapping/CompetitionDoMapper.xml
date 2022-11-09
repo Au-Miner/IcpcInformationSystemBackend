@@ -18,6 +18,8 @@
     <result column="competition_introduction" property="competitionIntroduction" jdbcType="VARCHAR" />
     <result column="competition_state" property="competitionState" jdbcType="INTEGER" />
     <result column="approve_reason" property="approveReason" jdbcType="VARCHAR" />
+    <result column="if_icpc_regional_competition" property="ifIcpcRegionalCompetition" jdbcType="INTEGER" />
+    <result column="icpc_regional_competition_year" property="icpcRegionalCompetitionYear" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -81,7 +83,7 @@
     competition_id, competition_chi_name, competition_eng_name, school_id, builder_email, 
     held_position, registration_start_time, registration_end_time, pay_start_time, pay_end_time, 
     competition_start_time, competition_end_time, duration, competition_introduction, 
-    competition_state, approve_reason
+    competition_state, approve_reason, if_icpc_regional_competition, icpc_regional_competition_year
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.IcpcInformationSystemBackend.model.entity.CompetitionDoExample" >
     select
@@ -121,14 +123,16 @@
       registration_end_time, pay_start_time, 
       pay_end_time, competition_start_time, competition_end_time, 
       duration, competition_introduction, competition_state, 
-      approve_reason)
+      approve_reason, if_icpc_regional_competition, 
+      icpc_regional_competition_year)
     values (#{competitionId,jdbcType=VARCHAR}, #{competitionChiName,jdbcType=VARCHAR}, 
       #{competitionEngName,jdbcType=VARCHAR}, #{schoolId,jdbcType=VARCHAR}, #{builderEmail,jdbcType=VARCHAR}, 
       #{heldPosition,jdbcType=VARCHAR}, #{registrationStartTime,jdbcType=TIMESTAMP}, 
       #{registrationEndTime,jdbcType=TIMESTAMP}, #{payStartTime,jdbcType=TIMESTAMP}, 
       #{payEndTime,jdbcType=TIMESTAMP}, #{competitionStartTime,jdbcType=TIMESTAMP}, #{competitionEndTime,jdbcType=TIMESTAMP}, 
       #{duration,jdbcType=VARCHAR}, #{competitionIntroduction,jdbcType=VARCHAR}, #{competitionState,jdbcType=INTEGER}, 
-      #{approveReason,jdbcType=VARCHAR})
+      #{approveReason,jdbcType=VARCHAR}, #{ifIcpcRegionalCompetition,jdbcType=INTEGER}, 
+      #{icpcRegionalCompetitionYear,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.IcpcInformationSystemBackend.model.entity.CompetitionDo" >
     insert into competition
@@ -181,6 +185,12 @@
       <if test="approveReason != null" >
         approve_reason,
       </if>
+      <if test="ifIcpcRegionalCompetition != null" >
+        if_icpc_regional_competition,
+      </if>
+      <if test="icpcRegionalCompetitionYear != null" >
+        icpc_regional_competition_year,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="competitionId != null" >
@@ -230,6 +240,12 @@
       </if>
       <if test="approveReason != null" >
         #{approveReason,jdbcType=VARCHAR},
+      </if>
+      <if test="ifIcpcRegionalCompetition != null" >
+        #{ifIcpcRegionalCompetition,jdbcType=INTEGER},
+      </if>
+      <if test="icpcRegionalCompetitionYear != null" >
+        #{icpcRegionalCompetitionYear,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -290,6 +306,12 @@
       <if test="record.approveReason != null" >
         approve_reason = #{record.approveReason,jdbcType=VARCHAR},
       </if>
+      <if test="record.ifIcpcRegionalCompetition != null" >
+        if_icpc_regional_competition = #{record.ifIcpcRegionalCompetition,jdbcType=INTEGER},
+      </if>
+      <if test="record.icpcRegionalCompetitionYear != null" >
+        icpc_regional_competition_year = #{record.icpcRegionalCompetitionYear,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -312,7 +334,9 @@
       duration = #{record.duration,jdbcType=VARCHAR},
       competition_introduction = #{record.competitionIntroduction,jdbcType=VARCHAR},
       competition_state = #{record.competitionState,jdbcType=INTEGER},
-      approve_reason = #{record.approveReason,jdbcType=VARCHAR}
+      approve_reason = #{record.approveReason,jdbcType=VARCHAR},
+      if_icpc_regional_competition = #{record.ifIcpcRegionalCompetition,jdbcType=INTEGER},
+      icpc_regional_competition_year = #{record.icpcRegionalCompetitionYear,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -365,6 +389,12 @@
       <if test="approveReason != null" >
         approve_reason = #{approveReason,jdbcType=VARCHAR},
       </if>
+      <if test="ifIcpcRegionalCompetition != null" >
+        if_icpc_regional_competition = #{ifIcpcRegionalCompetition,jdbcType=INTEGER},
+      </if>
+      <if test="icpcRegionalCompetitionYear != null" >
+        icpc_regional_competition_year = #{icpcRegionalCompetitionYear,jdbcType=VARCHAR},
+      </if>
     </set>
     where competition_id = #{competitionId,jdbcType=VARCHAR}
   </update>
@@ -384,7 +414,9 @@
       duration = #{duration,jdbcType=VARCHAR},
       competition_introduction = #{competitionIntroduction,jdbcType=VARCHAR},
       competition_state = #{competitionState,jdbcType=INTEGER},
-      approve_reason = #{approveReason,jdbcType=VARCHAR}
+      approve_reason = #{approveReason,jdbcType=VARCHAR},
+      if_icpc_regional_competition = #{ifIcpcRegionalCompetition,jdbcType=INTEGER},
+      icpc_regional_competition_year = #{icpcRegionalCompetitionYear,jdbcType=VARCHAR}
     where competition_id = #{competitionId,jdbcType=VARCHAR}
   </update>
 </mapper>

@@ -1154,6 +1154,136 @@ public class CompetitionDoExample {
             addCriterion("approve_reason not between", value1, value2, "approveReason");
             return (Criteria) this;
         }
+
+        public Criteria andIfIcpcRegionalCompetitionIsNull() {
+            addCriterion("if_icpc_regional_competition is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfIcpcRegionalCompetitionIsNotNull() {
+            addCriterion("if_icpc_regional_competition is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfIcpcRegionalCompetitionEqualTo(Integer value) {
+            addCriterion("if_icpc_regional_competition =", value, "ifIcpcRegionalCompetition");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfIcpcRegionalCompetitionNotEqualTo(Integer value) {
+            addCriterion("if_icpc_regional_competition <>", value, "ifIcpcRegionalCompetition");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfIcpcRegionalCompetitionGreaterThan(Integer value) {
+            addCriterion("if_icpc_regional_competition >", value, "ifIcpcRegionalCompetition");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfIcpcRegionalCompetitionGreaterThanOrEqualTo(Integer value) {
+            addCriterion("if_icpc_regional_competition >=", value, "ifIcpcRegionalCompetition");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfIcpcRegionalCompetitionLessThan(Integer value) {
+            addCriterion("if_icpc_regional_competition <", value, "ifIcpcRegionalCompetition");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfIcpcRegionalCompetitionLessThanOrEqualTo(Integer value) {
+            addCriterion("if_icpc_regional_competition <=", value, "ifIcpcRegionalCompetition");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfIcpcRegionalCompetitionIn(List<Integer> values) {
+            addCriterion("if_icpc_regional_competition in", values, "ifIcpcRegionalCompetition");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfIcpcRegionalCompetitionNotIn(List<Integer> values) {
+            addCriterion("if_icpc_regional_competition not in", values, "ifIcpcRegionalCompetition");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfIcpcRegionalCompetitionBetween(Integer value1, Integer value2) {
+            addCriterion("if_icpc_regional_competition between", value1, value2, "ifIcpcRegionalCompetition");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfIcpcRegionalCompetitionNotBetween(Integer value1, Integer value2) {
+            addCriterion("if_icpc_regional_competition not between", value1, value2, "ifIcpcRegionalCompetition");
+            return (Criteria) this;
+        }
+
+        public Criteria andIcpcRegionalCompetitionYearIsNull() {
+            addCriterion("icpc_regional_competition_year is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIcpcRegionalCompetitionYearIsNotNull() {
+            addCriterion("icpc_regional_competition_year is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIcpcRegionalCompetitionYearEqualTo(String value) {
+            addCriterion("icpc_regional_competition_year =", value, "icpcRegionalCompetitionYear");
+            return (Criteria) this;
+        }
+
+        public Criteria andIcpcRegionalCompetitionYearNotEqualTo(String value) {
+            addCriterion("icpc_regional_competition_year <>", value, "icpcRegionalCompetitionYear");
+            return (Criteria) this;
+        }
+
+        public Criteria andIcpcRegionalCompetitionYearGreaterThan(String value) {
+            addCriterion("icpc_regional_competition_year >", value, "icpcRegionalCompetitionYear");
+            return (Criteria) this;
+        }
+
+        public Criteria andIcpcRegionalCompetitionYearGreaterThanOrEqualTo(String value) {
+            addCriterion("icpc_regional_competition_year >=", value, "icpcRegionalCompetitionYear");
+            return (Criteria) this;
+        }
+
+        public Criteria andIcpcRegionalCompetitionYearLessThan(String value) {
+            addCriterion("icpc_regional_competition_year <", value, "icpcRegionalCompetitionYear");
+            return (Criteria) this;
+        }
+
+        public Criteria andIcpcRegionalCompetitionYearLessThanOrEqualTo(String value) {
+            addCriterion("icpc_regional_competition_year <=", value, "icpcRegionalCompetitionYear");
+            return (Criteria) this;
+        }
+
+        public Criteria andIcpcRegionalCompetitionYearLike(String value) {
+            addCriterion("icpc_regional_competition_year like", value, "icpcRegionalCompetitionYear");
+            return (Criteria) this;
+        }
+
+        public Criteria andIcpcRegionalCompetitionYearNotLike(String value) {
+            addCriterion("icpc_regional_competition_year not like", value, "icpcRegionalCompetitionYear");
+            return (Criteria) this;
+        }
+
+        public Criteria andIcpcRegionalCompetitionYearIn(List<String> values) {
+            addCriterion("icpc_regional_competition_year in", values, "icpcRegionalCompetitionYear");
+            return (Criteria) this;
+        }
+
+        public Criteria andIcpcRegionalCompetitionYearNotIn(List<String> values) {
+            addCriterion("icpc_regional_competition_year not in", values, "icpcRegionalCompetitionYear");
+            return (Criteria) this;
+        }
+
+        public Criteria andIcpcRegionalCompetitionYearBetween(String value1, String value2) {
+            addCriterion("icpc_regional_competition_year between", value1, value2, "icpcRegionalCompetitionYear");
+            return (Criteria) this;
+        }
+
+        public Criteria andIcpcRegionalCompetitionYearNotBetween(String value1, String value2) {
+            addCriterion("icpc_regional_competition_year not between", value1, value2, "icpcRegionalCompetitionYear");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

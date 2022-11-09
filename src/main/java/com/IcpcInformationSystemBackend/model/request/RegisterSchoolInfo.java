@@ -32,6 +32,10 @@ public class RegisterSchoolInfo {
     @ApiModelProperty(value = "学校位置，非空", example = "上海市宝山区")
     private String schoolPosition;
 
+    @NotBlank(message="学校负责人身份证号不能为空")
+    @ApiModelProperty(value = "学校负责人身份证号，非空", example = "例如320301200112131234")
+    private String idCard;
+
     @NotBlank(message="学校负责人中文名不能为空")
     @ApiModelProperty(value = "学校负责人中文名，非空", example = "王启隆")
     private String chiName;

@@ -29,10 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Slf4j
@@ -53,6 +50,9 @@ public class TeamServiceImpl implements TeamService {
 
     @Resource
     private EmailTool emailTool;
+
+    @Resource
+    private CompetitionDoMapper competitionDoMapper;
 
     @Override
     public Result studentSignUp4Competition(RegisterTeamInfo registerTeamInfo, boolean ifFirstCreateTeam) {
@@ -128,6 +128,24 @@ public class TeamServiceImpl implements TeamService {
             return ResultTool.error(EmAllException.BAD_REQUEST);
         if (registerTeamInfo.getNeedTeamCertificate() != 1 && registerTeamInfo.getNeedTeamCertificate() != 2)
             return ResultTool.error(EmAllException.BAD_REQUEST);
+
+
+
+        if (commonTool.judgeCompetitionIfIcpcRegionalCompetition(registerTeamInfo.getCompetitionId())) {
+            CompetitionDoExample competitionDoExample = new CompetitionDoExample();
+            competitionDoExample.createCriteria().andCompetitionIdEqualTo(registerTeamInfo.getCompetitionId());
+            List<CompetitionDo> competitionDos = competitionDoMapper.selectByExample(competitionDoExample);
+            String icpcRegionalCompetitionYear = competitionDos.get(0).getIcpcRegionalCompetitionYear();
+            if (commonTool.getUserParticipateInIcpcRegionalCompetitionTimes(icpcRegionalCompetitionYear, registerTeamInfo.getMember1Email()) >= 2)
+                return ResultTool.error(EmAllException.USER_HAS_PARTICIPATED_IN_2_REGIONAL_COMPETITIONS_THIS_YEAR);
+            if (commonTool.getUserParticipateInIcpcRegionalCompetitionTimes(icpcRegionalCompetitionYear, registerTeamInfo.getMember2Email()) >= 2)
+                return ResultTool.error(EmAllException.USER_HAS_PARTICIPATED_IN_2_REGIONAL_COMPETITIONS_THIS_YEAR);
+            if (commonTool.getUserParticipateInIcpcRegionalCompetitionTimes(icpcRegionalCompetitionYear, registerTeamInfo.getMember3Email()) >= 2)
+                return ResultTool.error(EmAllException.USER_HAS_PARTICIPATED_IN_2_REGIONAL_COMPETITIONS_THIS_YEAR);
+        }
+
+
+
         String teamId;
         if (ifFirstCreateTeam)
             teamId = generateTeamId(registerTeamInfo.getCompetitionId());
@@ -182,6 +200,8 @@ public class TeamServiceImpl implements TeamService {
         if (Objects.equals(teamId, ""))
             return ResultTool.error(EmAllException.USER_NOT_SIGN_UP_4_COMPETITION);
         TeamInfoResponse teamInfoResponse = new TeamInfoResponse();
+        log.info("competitionId: " + competitionId);
+        log.info("teamId: " + teamId);
         TeamDo teamDo = commonTool.getTeamByCompetitionIdAndTeamId(competitionId, teamId);
         if (teamDo == null)
             return ResultTool.error(EmAllException.NO_SUCH_TEAM);
@@ -290,6 +310,22 @@ public class TeamServiceImpl implements TeamService {
             return ResultTool.error(EmAllException.BAD_REQUEST);
         if (registerTeamInfo.getNeedTeamCertificate() != 1 && registerTeamInfo.getNeedTeamCertificate() != 2)
             return ResultTool.error(EmAllException.BAD_REQUEST);
+
+
+        if (commonTool.judgeCompetitionIfIcpcRegionalCompetition(registerTeamInfo.getCompetitionId())) {
+            CompetitionDoExample competitionDoExample = new CompetitionDoExample();
+            competitionDoExample.createCriteria().andCompetitionIdEqualTo(registerTeamInfo.getCompetitionId());
+            List<CompetitionDo> competitionDos = competitionDoMapper.selectByExample(competitionDoExample);
+            String icpcRegionalCompetitionYear = competitionDos.get(0).getIcpcRegionalCompetitionYear();
+            if (commonTool.getUserParticipateInIcpcRegionalCompetitionTimes(icpcRegionalCompetitionYear, registerTeamInfo.getMember1Email()) >= 2)
+                return ResultTool.error(EmAllException.USER_HAS_PARTICIPATED_IN_2_REGIONAL_COMPETITIONS_THIS_YEAR);
+            if (commonTool.getUserParticipateInIcpcRegionalCompetitionTimes(icpcRegionalCompetitionYear, registerTeamInfo.getMember2Email()) >= 2)
+                return ResultTool.error(EmAllException.USER_HAS_PARTICIPATED_IN_2_REGIONAL_COMPETITIONS_THIS_YEAR);
+            if (commonTool.getUserParticipateInIcpcRegionalCompetitionTimes(icpcRegionalCompetitionYear, registerTeamInfo.getMember3Email()) >= 2)
+                return ResultTool.error(EmAllException.USER_HAS_PARTICIPATED_IN_2_REGIONAL_COMPETITIONS_THIS_YEAR);
+        }
+
+
         String teamId;
         if (ifFirstCreateTeam)
             teamId = generateTeamId(registerTeamInfo.getCompetitionId());

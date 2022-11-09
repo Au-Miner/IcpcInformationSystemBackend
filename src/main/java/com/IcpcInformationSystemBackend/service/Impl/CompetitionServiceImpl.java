@@ -131,7 +131,8 @@ public class CompetitionServiceImpl implements CompetitionService {
             return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
         competitionDo.setCompetitionState(1);
         competitionDo.setApproveReason("");
-        if (competitionDoMapper.updateByPrimaryKeySelective(competitionDo) == 0)
+        if (competitionDoMapper.updateByPrimaryKey(competitionDo) == 0)
+            //这里要updateByPrimaryKey，是因为如果是修改了是否属于icpc区域赛，icpc区域赛年份应当重置
             return ResultTool.error(EmAllException.DATABASE_ERR);
         return ResultTool.success();
     }
@@ -165,6 +166,7 @@ public class CompetitionServiceImpl implements CompetitionService {
             if (userDos.isEmpty())
                 return ResultTool.error(EmAllException.DATABASE_ERR);
             BeanUtils.copyProperties(userDos.get(0), competitionInfoResponse);
+            competitionInfoResponse.setIfIcpcRegionalCompetition(competitionDo.getIfIcpcRegionalCompetition() == 1);
             res.add(competitionInfoResponse);
         }
         return ResultTool.success(res);
@@ -186,6 +188,7 @@ public class CompetitionServiceImpl implements CompetitionService {
             if (userDos.isEmpty())
                 return ResultTool.error(EmAllException.DATABASE_ERR);
             BeanUtils.copyProperties(userDos.get(0), competitionInfoResponse);
+            competitionInfoResponse.setIfIcpcRegionalCompetition(competitionDo.getIfIcpcRegionalCompetition() == 1);
             res.add(competitionInfoResponse);
         }
         return ResultTool.success(res);

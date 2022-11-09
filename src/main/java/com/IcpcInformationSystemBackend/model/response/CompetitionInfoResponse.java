@@ -28,4 +28,6 @@ public class CompetitionInfoResponse {
     private String chiName;
     private String engName;
     private String telephone;
+    private boolean ifIcpcRegionalCompetition;
+    private String IcpcRegionalCompetitionYear;
 }

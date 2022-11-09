@@ -3,6 +3,8 @@ package com.IcpcInformationSystemBackend.model.entity;
 public class UserDo {
     private String userEmail;
 
+    private String idCard;
+
     private Integer identity;
 
     private String chiName;
@@ -25,6 +27,14 @@ public class UserDo {
 
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail == null ? null : userEmail.trim();
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard == null ? null : idCard.trim();
     }
 
     public Integer getIdentity() {

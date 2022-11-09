@@ -35,6 +35,10 @@ public class CompetitionDo {
 
     private String approveReason;
 
+    private Integer ifIcpcRegionalCompetition;
+
+    private String icpcRegionalCompetitionYear;
+
     public String getCompetitionId() {
         return competitionId;
     }
@@ -161,5 +165,21 @@ public class CompetitionDo {
 
     public void setApproveReason(String approveReason) {
         this.approveReason = approveReason == null ? null : approveReason.trim();
+    }
+
+    public Integer getIfIcpcRegionalCompetition() {
+        return ifIcpcRegionalCompetition;
+    }
+
+    public void setIfIcpcRegionalCompetition(Integer ifIcpcRegionalCompetition) {
+        this.ifIcpcRegionalCompetition = ifIcpcRegionalCompetition;
+    }
+
+    public String getIcpcRegionalCompetitionYear() {
+        return icpcRegionalCompetitionYear;
+    }
+
+    public void setIcpcRegionalCompetitionYear(String icpcRegionalCompetitionYear) {
+        this.icpcRegionalCompetitionYear = icpcRegionalCompetitionYear == null ? null : icpcRegionalCompetitionYear.trim();
     }
 }

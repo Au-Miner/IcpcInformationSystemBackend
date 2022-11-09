@@ -243,4 +243,30 @@ public class CommonTool {
         List<PositionDo> positionDos = positionDoMapper.selectByExample(positionDoExample);
         return !positionDos.isEmpty();
     }
+
+    public boolean judgeCompetitionIfIcpcRegionalCompetition(String competitionId) {
+        CompetitionDoExample competitionDoExample = new CompetitionDoExample();
+        competitionDoExample.createCriteria().andCompetitionIdEqualTo(competitionId);
+        List<CompetitionDo> competitionDos = competitionDoMapper.selectByExample(competitionDoExample);
+        if (competitionDos.isEmpty())
+            return false;
+        return competitionDos.get(0).getIfIcpcRegionalCompetition() == 1;
+    }
+
+    public int getUserParticipateInIcpcRegionalCompetitionTimes(String year, String userEmail) {
+        UserCompetitionDoExample userCompetitionDoExample = new UserCompetitionDoExample();
+        userCompetitionDoExample.createCriteria().andStudentEmailEqualTo(userEmail);
+        List<UserCompetitionDo> userCompetitionDos = userCompetitionDoMapper.selectByExample(userCompetitionDoExample);
+        int times = 0;
+        for (UserCompetitionDo userCompetitionDo : userCompetitionDos) {
+            String teamId = userCompetitionDo.getTeamId();
+            String competitionId = userCompetitionDo.getCompetitionId();
+            if (judgeCompetitionIfIcpcRegionalCompetition(competitionId)) {
+                TeamDo teamDo = getTeamByCompetitionIdAndTeamId(competitionId, teamId);
+                if (teamDo.getType() != 2) //针对icpc区域赛非打星参赛次数计数
+                    times++;
+            }
+        }
+        return times;
+    }
 }
