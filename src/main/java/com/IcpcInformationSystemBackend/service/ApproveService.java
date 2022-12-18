@@ -28,4 +28,8 @@ public interface ApproveService {
     Result coachApproveTeamInfoByTeamKey(ApproveTeamInfo approveTeamInfo);
 
     Result competitionChairmanApproveTeamInfoByTeamKey(ApproveTeamInfo approveTeamInfo);
+
+    Result getStudentInfo();
+
+    Result deleteSchoolImg(String schoolId);
 }

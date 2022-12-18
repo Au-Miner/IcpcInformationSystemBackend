@@ -98,4 +98,28 @@ public class LoginServiceImpl implements LoginService {
             return ResultTool.error(EmAllException.NO_SUCH_USER);
         return ResultTool.success(passwordDos.get(0).getPasswd());
     }
+
+    @Override
+    public Result modifyPassword(String email, String emailCode, String newPassword) {
+        UserDoExample userDoExample = new UserDoExample();
+        userDoExample.createCriteria().andUserEmailEqualTo(email);
+        List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
+        if (userDos.isEmpty())
+            return ResultTool.error(EmAllException.NO_SUCH_USER);
+        int mark = emailTool.judgeEmailCode(email, emailCode);
+        switch (mark) {
+            case 1:
+                return ResultTool.error(EmAllException.EMAIL_CODE_WRONG);
+            case 2:
+                return ResultTool.error(EmAllException.EMAIL_CODE_OVERTIME);
+            default:
+                break;
+        }
+        PasswordDo passwordDo = new PasswordDo();
+        passwordDo.setPasswd(newPassword);
+        passwordDo.setUserEmail(email);
+        if (passwordDoMapper.updateByPrimaryKeySelective(passwordDo) == 0)
+            return ResultTool.error(EmAllException.DATABASE_ERR);
+        return ResultTool.success();
+    }
 }

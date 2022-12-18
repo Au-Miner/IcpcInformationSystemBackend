@@ -16,6 +16,7 @@ public enum EmAllException implements CommonError{
     FILE_EMPTY(403, "上传文件为空"),
     NO_SUCH_FILE(403, "找不到该文件"),
     FILE_FORMAT_ERROR(403, "文件格式错误"),
+    FILE_TOO_LARGE(403, "文件大小过大"),
 
     //学校相关
     NO_SUCH_SCHOOL(403, "查无此校"),

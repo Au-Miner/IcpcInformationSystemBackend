@@ -211,6 +211,9 @@ public class TeamServiceImpl implements TeamService {
         teamInfoResponse.setMember3chiName(commonTool.getChiNameByUserEmail(teamDo.getMember3Email()));
         teamInfoResponse.setCoach1chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach1Email()));
         teamInfoResponse.setCoach2chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach2Email()));
+
+        TeamScoreDo teamScoreDo = commonTool.getTeamScoreByCompetitionIdAndTeamId(competitionId, teamId);
+        BeanUtils.copyProperties(teamScoreDo, teamInfoResponse);
         ArrayList<TeamInfoResponse> res = new ArrayList<>();
         res.add(teamInfoResponse);
         return ResultTool.success(res);

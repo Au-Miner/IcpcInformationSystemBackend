@@ -4,6 +4,7 @@ import com.IcpcInformationSystemBackend.dao.CompetitionDoMapper;
 import com.IcpcInformationSystemBackend.dao.SchoolDoMapper;
 import com.IcpcInformationSystemBackend.dao.TeamDoMapper;
 import com.IcpcInformationSystemBackend.dao.UserDoMapper;
+import com.IcpcInformationSystemBackend.exception.AllException;
 import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.entity.*;
 import com.IcpcInformationSystemBackend.model.request.ApproveCompetitionInfo;
@@ -14,6 +15,7 @@ import com.IcpcInformationSystemBackend.model.response.*;
 import com.IcpcInformationSystemBackend.service.ApproveService;
 import com.IcpcInformationSystemBackend.tools.AuthTool;
 import com.IcpcInformationSystemBackend.tools.CommonTool;
+import com.IcpcInformationSystemBackend.tools.FileTool;
 import com.IcpcInformationSystemBackend.tools.ResultTool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -44,6 +46,9 @@ public class ApproveServiceImpl implements ApproveService {
 
     @Resource
     private TeamDoMapper teamDoMapper;
+
+    @Resource
+    private FileTool fileTool;
 
     @Override
     public Result getSchoolRegitsterInfo() {
@@ -281,6 +286,8 @@ public class ApproveServiceImpl implements ApproveService {
             teamInfoResponse.setMember3chiName(commonTool.getChiNameByUserEmail(teamDo.getMember3Email()));
             teamInfoResponse.setCoach1chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach1Email()));
             teamInfoResponse.setCoach2chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach2Email()));
+            TeamScoreDo teamScoreDo = commonTool.getTeamScoreByCompetitionIdAndTeamId(competitionId, teamDo.getTeamId());
+            BeanUtils.copyProperties(teamScoreDo, teamInfoResponse);
             res.add(teamInfoResponse);
         }
         return ResultTool.success(res);
@@ -301,6 +308,34 @@ public class ApproveServiceImpl implements ApproveService {
         teamDo.setTeamState(approveTeamInfo.getApproveResult());
         if (teamDoMapper.updateByPrimaryKeySelective(teamDo) == 0)
             return ResultTool.error(EmAllException.DATABASE_ERR);
+        return ResultTool.success();
+    }
+
+    @Override
+    public Result getStudentInfo() {
+        String schoolId = commonTool.getSchoolIdByUserEmail(authTool.getUserId());
+        UserDoExample userDoExample = new UserDoExample();
+        userDoExample.createCriteria().andSchoolIdEqualTo(schoolId);
+        List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
+        ArrayList<UserInfoResponse> res = new ArrayList<>();
+        for (UserDo userDo : userDos) {
+            if (userDo.getUserState() == 2) {
+                UserInfoResponse userInfoResponse = new UserInfoResponse();
+                BeanUtils.copyProperties(userDo, userInfoResponse);
+                res.add(userInfoResponse);
+            }
+        }
+        return ResultTool.success(res);
+    }
+
+    @Override
+    public Result deleteSchoolImg(String schoolId) {
+        SchoolDo schoolDo = commonTool.getSchoolDoBySchoolId(schoolId);
+        try {
+            fileTool.deleteFile(schoolDo.getSchoolImg());
+        } catch (AllException e) {
+            return ResultTool.error(EmAllException.NO_SUCH_FILE);
+        }
         return ResultTool.success();
     }
 }

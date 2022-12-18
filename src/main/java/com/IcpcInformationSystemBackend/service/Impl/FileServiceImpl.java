@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -179,14 +178,18 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void downloadCompetitionCertificate(HttpServletRequest request, HttpServletResponse response, String competitionId, String teamId) {
-        String competitionCertificatePath = "";
+        ArrayList<String> arr = new ArrayList<>();
+        /**
+         * arr.get(0): 二维码路径
+         * arr.get(1): 证书路径
+         */
         try {
-            competitionCertificatePath = fileTool.generateCompetitionCertificate(competitionId, teamId);
+            arr = fileTool.generateCompetitionCertificate(competitionId, teamId);
         }catch (IOException | DocumentException e) {
             log.info(e.getMessage());
         }
         try {
-            fileTool.downloadFile(request, response, competitionCertificatePath);
+            fileTool.downloadFile(request, response, arr.get(1));
         } catch (IOException e) {
             log.info(e.getMessage());
         } catch (AllException e) {
@@ -194,7 +197,8 @@ public class FileServiceImpl implements FileService {
         }
         // log.info("competitionCertificatePath:" + competitionCertificatePath);
         try {
-            fileTool.deleteFile(competitionCertificatePath);
+            fileTool.deleteFile(arr.get(0));
+            fileTool.deleteFile(arr.get(1));
         } catch (AllException e) {
             log.info(e.getMsg());
         }

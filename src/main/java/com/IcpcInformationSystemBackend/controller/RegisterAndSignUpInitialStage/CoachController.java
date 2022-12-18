@@ -63,6 +63,12 @@ public class CoachController {
         return approveService.coachGetTeamInfoByCompetitionId(competitionId);
     }
 
+    @GetMapping("/getStudentInfo")
+    @ApiOperation(value = "教练获取本校所有学生信息，在创建队伍的时候方便快捷选择学生")
+    public Result getStudentInfo() {
+        return approveService.getStudentInfo();
+    }
+
     @PostMapping("/approveTeamInfoByTeamKey")
     @ApiOperation(value = "教练审核队伍报名信息")
     public Result approveTeamInfoByTeamKey(@ApiParam(name = "审核队伍时需要提供的信息", required = true) @Validated @RequestBody ApproveTeamInfo approveTeamInfo) {

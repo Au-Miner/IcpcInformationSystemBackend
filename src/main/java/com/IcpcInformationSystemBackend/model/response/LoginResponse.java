@@ -12,6 +12,8 @@ public class LoginResponse {
     private String schoolId;
     private String chiSchoolName;
     private String clothSize;
-    private Integer state;
+    private Integer userState;
+    private String idCard;
+    private Integer identity;
     private String token;
 }

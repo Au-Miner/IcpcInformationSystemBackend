@@ -1,6 +1,5 @@
 package com.IcpcInformationSystemBackend.service.Impl;
 
-import com.IcpcInformationSystemBackend.dao.EmailCodeDoMapper;
 import com.IcpcInformationSystemBackend.dao.PasswordDoMapper;
 import com.IcpcInformationSystemBackend.dao.SchoolDoMapper;
 import com.IcpcInformationSystemBackend.dao.UserDoMapper;
@@ -43,12 +42,20 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     public Result registerSchool(RegisterSchoolInfo registerSchoolInfo) {
+        switch (emailTool.judgeEmailCode(registerSchoolInfo.getUserEmail(), registerSchoolInfo.getEmailCode())) {
+            case 1:
+                return ResultTool.error(EmAllException.EMAIL_CODE_WRONG);
+            case 2:
+                return ResultTool.error(EmAllException.EMAIL_CODE_OVERTIME);
+            default:
+                break;
+        }
         SchoolDoExample schoolDoExample = new SchoolDoExample();
         schoolDoExample.createCriteria().andSchoolIdEqualTo(registerSchoolInfo.getSchoolId());
         List<SchoolDo> schoolDos = schoolDoMapper.selectByExample(schoolDoExample);
         if (!schoolDos.isEmpty()) {
-            if (schoolDos.get(0).getSchoolState() != 3)
-                return ResultTool.error(EmAllException.SCHOOL_HAVE_REGISTERED);
+            // if (schoolDos.get(0).getSchoolState() != 3)
+            //     return ResultTool.error(EmAllException.SCHOOL_HAVE_REGISTERED);
             if (schoolDoMapper.deleteByExample(schoolDoExample) == 0)
                 return ResultTool.error(EmAllException.DATABASE_ERR);
         }
@@ -60,8 +67,8 @@ public class RegisterServiceImpl implements RegisterService {
         userDoExample.createCriteria().andUserEmailEqualTo(registerSchoolInfo.getUserEmail());
         List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
         if (!userDos.isEmpty()) {
-            if (userDos.get(0).getUserState() != 3)
-                return ResultTool.error(EmAllException.EMAIL_HAVE_REGISTERED);
+            // if (userDos.get(0).getUserState() != 3)
+            //     return ResultTool.error(EmAllException.EMAIL_HAVE_REGISTERED);
             if (userDoMapper.deleteByExample(userDoExample) == 0)
                 return ResultTool.error(EmAllException.DATABASE_ERR);
         }
@@ -73,15 +80,6 @@ public class RegisterServiceImpl implements RegisterService {
         PasswordDo passwordDo = new PasswordDo();
         passwordDo.setUserEmail(userDo.getUserEmail());
         passwordDo.setPasswd(registerSchoolInfo.getPasswd());
-
-        switch (emailTool.judgeEmailCode(registerSchoolInfo.getUserEmail(), registerSchoolInfo.getEmailCode())) {
-            case 1:
-                return ResultTool.error(EmAllException.EMAIL_CODE_WRONG);
-            case 2:
-                return ResultTool.error(EmAllException.EMAIL_CODE_OVERTIME);
-            default:
-                break;
-        }
 
         if (!idCardTool.judgeIdCardFormatIfRight(registerSchoolInfo.getIdCard()))
             return ResultTool.error(EmAllException.ID_CARD_FORMAT_ERROR);
@@ -101,23 +99,6 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     public Result reigsterUser(ReigsterUserInfo reigsterUserInfo) {
-        if (reigsterUserInfo.getIdentity() != 1 && reigsterUserInfo.getIdentity() != 2)
-            return ResultTool.error(EmAllException.BAD_REQUEST);
-        UserDoExample userDoExample = new UserDoExample();
-        userDoExample.createCriteria().andUserEmailEqualTo(reigsterUserInfo.getUserEmail());
-        List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
-        if (!userDos.isEmpty()) {
-            if (userDos.get(0).getUserState() != 3)
-                return ResultTool.error(EmAllException.EMAIL_HAVE_REGISTERED);
-            if (userDoMapper.deleteByExample(userDoExample) == 0)
-                return ResultTool.error(EmAllException.DATABASE_ERR);
-        }
-
-        userDoExample.clear();
-        userDoExample.createCriteria().andSchoolIdEqualTo(reigsterUserInfo.getSchoolId());
-        if (userDoMapper.countByExample(userDoExample) == 0)
-            return ResultTool.error(EmAllException.SCHOOL_NOT_REGISTERED);
-
         switch (emailTool.judgeEmailCode(reigsterUserInfo.getUserEmail(), reigsterUserInfo.getEmailCode())) {
             case 1:
                 return ResultTool.error(EmAllException.EMAIL_CODE_WRONG);
@@ -126,6 +107,22 @@ public class RegisterServiceImpl implements RegisterService {
             default:
                 break;
         }
+        if (reigsterUserInfo.getIdentity() != 1 && reigsterUserInfo.getIdentity() != 2)
+            return ResultTool.error(EmAllException.BAD_REQUEST);
+        UserDoExample userDoExample = new UserDoExample();
+        userDoExample.createCriteria().andUserEmailEqualTo(reigsterUserInfo.getUserEmail());
+        List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
+        if (!userDos.isEmpty()) {
+            // if (userDos.get(0).getUserState() != 3)
+            //     return ResultTool.error(EmAllException.EMAIL_HAVE_REGISTERED);
+            if (userDoMapper.deleteByExample(userDoExample) == 0)
+                return ResultTool.error(EmAllException.DATABASE_ERR);
+        }
+
+        userDoExample.clear();
+        userDoExample.createCriteria().andSchoolIdEqualTo(reigsterUserInfo.getSchoolId());
+        if (userDoMapper.countByExample(userDoExample) == 0)
+            return ResultTool.error(EmAllException.SCHOOL_NOT_REGISTERED);
 
         if (!idCardTool.judgeIdCardFormatIfRight(reigsterUserInfo.getIdCard()))
             return ResultTool.error(EmAllException.ID_CARD_FORMAT_ERROR);

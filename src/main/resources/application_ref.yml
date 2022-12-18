@@ -9,6 +9,18 @@ spring:
                 username: gaussdb
                 password: PWD
                 driverClassName: org.postgresql.Driver
+        redis:
+                host: 192.168.xx.xx
+                port: 6379
+                password: 123456
+                jedis:
+                        pool:
+                                max-active: 8
+                                max-wait: -1
+                                max-idle: 500
+                                min-idle: 0
+                lettuce:
+                        shutdown-timeout: 0
 
 mybatis:
         mapper-locations: classpath:mapping/*.xml

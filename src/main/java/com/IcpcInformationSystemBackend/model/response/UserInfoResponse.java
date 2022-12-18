@@ -19,4 +19,6 @@ public class UserInfoResponse {
     private String chiSchoolName;
     private String clothSize;
     private Integer userState;
+    private String idCard;
+    private Integer identity;
 }

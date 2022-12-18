@@ -34,13 +34,13 @@ public class CompetitionCertificateSearchController {
 
     @PostMapping("judgeCompetitionCertificate")
     @ApiOperation(value = "判断比赛证书真伪")
-    public Result judgeCompetitionCertificate(@ApiParam(name = "更新当前比赛所有队伍成绩时需要提供的信息", required = true) @Validated @RequestBody TeamScoreInfo teamScoreInfo) {
-        TeamScoreInfoResponse teamScoreInfoResponse1 = teamService.getCompetitionCertificateInfo2(teamScoreInfo.getCompetitionId(), teamScoreInfo.getTeamId());
-        TeamScoreInfoResponse teamScoreInfoResponse2 = new TeamScoreInfoResponse();
-        BeanUtils.copyProperties(teamScoreInfo, teamScoreInfoResponse2);
-        log.info(teamScoreInfoResponse1.toString());
-        log.info(teamScoreInfoResponse2.toString());
-        if (Objects.equals(teamScoreInfoResponse1.toString(), teamScoreInfoResponse2.toString()))
+    public Result judgeCompetitionCertificate(@ApiParam(name = "更新当前比赛所有队伍成绩时需要提供的信息", required = true) @Validated @RequestBody TeamScoreInfo teamScoreInfo1) {
+        TeamScoreInfoResponse teamScoreInfoResponse1 = teamService.getCompetitionCertificateInfo2(teamScoreInfo1.getCompetitionId(), teamScoreInfo1.getTeamId());
+        TeamScoreInfo teamScoreInfo2 = new TeamScoreInfo();
+        BeanUtils.copyProperties(teamScoreInfoResponse1, teamScoreInfo2);
+        log.info(teamScoreInfo1.toString());
+        log.info(teamScoreInfo2.toString());
+        if (Objects.equals(teamScoreInfo1.toString(), teamScoreInfo2.toString()))
             return ResultTool.success();
         return ResultTool.error(EmAllException.COMPETITION_CERTIFICATE_FAKE);
     }

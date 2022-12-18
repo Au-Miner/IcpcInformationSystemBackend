@@ -1,5 +1,7 @@
 package com.IcpcInformationSystemBackend.security;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,6 +9,7 @@ import java.util.Map;
  * program: com.shu.TechEthics.security
  * description: 检查上传的文件类型，阻止PDF/JPG,PNG以外类型的文件上传
  */
+@Slf4j
 public class FileTypeChecker {
 
     public final static Map<String, String> FILE_TYPE_MAP = new HashMap<>();
@@ -73,6 +76,7 @@ public class FileTypeChecker {
     public static String getFileTypeByStream(byte[] b)
     {
         String filetypeHex = String.valueOf(getFileHexString(b));
+        log.info(filetypeHex.substring(0,100));
         for (Map.Entry<String, String> stringStringEntry : FILE_TYPE_MAP.entrySet()) {
             String fileTypeHexValue = stringStringEntry.getValue();
             if (filetypeHex.toUpperCase().startsWith(fileTypeHexValue)) {

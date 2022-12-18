@@ -1,19 +1,16 @@
 package com.IcpcInformationSystemBackend.service.Impl;
 
-import com.IcpcInformationSystemBackend.dao.EmailCodeDoMapper;
 import com.IcpcInformationSystemBackend.exception.EmAllException;
-import com.IcpcInformationSystemBackend.model.entity.EmailCodeDo;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.service.EmailService;
 import com.IcpcInformationSystemBackend.tools.ResultTool;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
-import java.sql.Timestamp;
-import java.util.Date;
+import java.time.Duration;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static com.IcpcInformationSystemBackend.model.ImportantRepository.emailAuthenticationCode;
@@ -22,8 +19,11 @@ import static com.IcpcInformationSystemBackend.model.ImportantRepository.emailAu
 @Service
 public class EmailServiceImpl implements EmailService {
 
-    @Resource
-    private EmailCodeDoMapper emailCodeDoMapper;
+    // @Resource
+    // private EmailCodeDoMapper emailCodeDoMapper;
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     @Override
     public Result sendEmailCode(String emailAddress) {
@@ -39,15 +39,16 @@ public class EmailServiceImpl implements EmailService {
             email.setMsg("您的验证码为" + code + "，有效期10分钟，请及时使用，不要告诉他人");          //设置发送内容
             email.send();                       //进行发送
 
-            java.util.Date date = new Date();//获得当前时间
-            Timestamp tim = new Timestamp(date.getTime());//将时间转换成Timestamp类型，这样便可以存入到Mysql数据库中
-            emailCodeDoMapper.deleteByPrimaryKey(emailAddress);
-            EmailCodeDo emailCodeDo = new EmailCodeDo();
-            emailCodeDo.setUserEmail(emailAddress);
-            emailCodeDo.setTimeOfCode(tim);
-            emailCodeDo.setVerificationCode(code);
-            emailCodeDoMapper.insert(emailCodeDo);
-
+            redisTemplate.opsForValue().set(emailAddress, code);
+            redisTemplate.expire(emailAddress, Duration.ofSeconds(600));
+            // java.util.Date date = new Date();//获得当前时间
+            // Timestamp tim = new Timestamp(date.getTime());//将时间转换成Timestamp类型，这样便可以存入到Mysql数据库中
+            // emailCodeDoMapper.deleteByPrimaryKey(emailAddress);
+            // EmailCodeDo emailCodeDo = new EmailCodeDo();
+            // emailCodeDo.setUserEmail(emailAddress);
+            // emailCodeDo.setTimeOfCode(tim);
+            // emailCodeDo.setVerificationCode(code);
+            // emailCodeDoMapper.insert(emailCodeDo);
             return ResultTool.success();
         } catch (EmailException e) {
             e.printStackTrace();

@@ -3,6 +3,7 @@ package com.IcpcInformationSystemBackend.service.Impl;
 import com.IcpcInformationSystemBackend.dao.CompetitionDoMapper;
 import com.IcpcInformationSystemBackend.dao.TeamScoreDoMapper;
 import com.IcpcInformationSystemBackend.dao.UserDoMapper;
+import com.IcpcInformationSystemBackend.exception.AllException;
 import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.entity.*;
 import com.IcpcInformationSystemBackend.model.request.RegisterCompetitionInfo;
@@ -131,8 +132,9 @@ public class CompetitionServiceImpl implements CompetitionService {
             return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
         competitionDo.setCompetitionState(1);
         competitionDo.setApproveReason("");
-        if (competitionDoMapper.updateByPrimaryKey(competitionDo) == 0)
-            //这里要updateByPrimaryKey，是因为如果是修改了是否属于icpc区域赛，icpc区域赛年份应当重置
+        if (registerCompetitionInfo.getIfIcpcRegionalCompetition() == 0)
+            competitionDo.setIcpcRegionalCompetitionYear(null);
+        if (competitionDoMapper.updateByPrimaryKeySelective(competitionDo) == 0)
             return ResultTool.error(EmAllException.DATABASE_ERR);
         return ResultTool.success();
     }
@@ -166,7 +168,7 @@ public class CompetitionServiceImpl implements CompetitionService {
             if (userDos.isEmpty())
                 return ResultTool.error(EmAllException.DATABASE_ERR);
             BeanUtils.copyProperties(userDos.get(0), competitionInfoResponse);
-            competitionInfoResponse.setIfIcpcRegionalCompetition(competitionDo.getIfIcpcRegionalCompetition() == 1);
+            competitionInfoResponse.setIfIcpcRegionalCompetition(competitionDo.getIfIcpcRegionalCompetition());
             res.add(competitionInfoResponse);
         }
         return ResultTool.success(res);
@@ -188,7 +190,7 @@ public class CompetitionServiceImpl implements CompetitionService {
             if (userDos.isEmpty())
                 return ResultTool.error(EmAllException.DATABASE_ERR);
             BeanUtils.copyProperties(userDos.get(0), competitionInfoResponse);
-            competitionInfoResponse.setIfIcpcRegionalCompetition(competitionDo.getIfIcpcRegionalCompetition() == 1);
+            competitionInfoResponse.setIfIcpcRegionalCompetition(competitionDo.getIfIcpcRegionalCompetition());
             res.add(competitionInfoResponse);
         }
         return ResultTool.success(res);

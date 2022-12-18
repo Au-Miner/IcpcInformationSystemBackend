@@ -109,7 +109,10 @@ public class QRCTool {
         hints.put(EncodeHintType.MARGIN, 1);
 
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+
         BitMatrix bitMatrix = multiFormatWriter.encode(content, BarcodeFormat.QR_CODE, CODE_WIDTH, CODE_HEIGHT, hints);
+        // BitMatrix bitMatrix = multiFormatWriter.encode("https://www.sunjs.com", BarcodeFormat.QR_CODE, CODE_WIDTH, CODE_HEIGHT, hints);
+
         BufferedImage bufferedImage = new BufferedImage(CODE_WIDTH, CODE_HEIGHT, BufferedImage.TYPE_INT_BGR);
         for (int x = 0; x < CODE_WIDTH; x++) {
             for (int y = 0; y < CODE_HEIGHT; y++) {

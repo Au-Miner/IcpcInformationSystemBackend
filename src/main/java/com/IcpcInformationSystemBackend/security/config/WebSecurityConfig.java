@@ -47,7 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/signUpOver/position/**").hasAnyRole("ADMINISTRATOR", "CHAIRMAN", "COACH")
                 .antMatchers("/signUpOver/file2/**").authenticated()
                 // 三阶段
-                .antMatchers("/competitionOver/teamScoreEnroll/**").hasAnyRole("ADMINISTRATOR", "CHAIRMAN", "COACH")
+                .antMatchers("/competitionOver/teamResultEnroll/**").hasAnyRole("ADMINISTRATOR", "CHAIRMAN", "COACH")
                 .antMatchers("/competitionOver/competitionCertificateSearch/**").permitAll()
                 .antMatchers("/competitionOver/competitionCertificate/**").authenticated()
                 ;

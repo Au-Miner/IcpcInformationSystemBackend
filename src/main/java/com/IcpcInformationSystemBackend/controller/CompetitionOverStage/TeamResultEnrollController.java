@@ -1,9 +1,13 @@
 package com.IcpcInformationSystemBackend.controller.CompetitionOverStage;
 
+import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.request.UpdateTeamScoresInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.service.CompetitionService;
 import com.IcpcInformationSystemBackend.service.FileService;
+import com.IcpcInformationSystemBackend.tools.EmailTool;
+import com.IcpcInformationSystemBackend.tools.ResultTool;
+import com.ramostear.captcha.HappyCaptcha;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -32,6 +36,9 @@ public class TeamResultEnrollController {
     @Resource
     private CompetitionService competitionService;
 
+    @Resource
+    private EmailTool emailTool;
+
     @GetMapping("downloadTeamScoresDemo")
     @ApiOperation(value = "下载队伍成绩表模板")
     public void downloadTeamScoresDemo(HttpServletRequest request, HttpServletResponse response) {
@@ -40,7 +47,9 @@ public class TeamResultEnrollController {
 
     @PostMapping("uploadTeamScores")
     @ApiOperation(value = "上传比赛所有队伍成绩表，以excel形式上传，并返回文件地址", notes = "仅能上传.xls和.xlsx形式文件，并返回文件地址")
-    public Result uploadTeamScores(@RequestBody MultipartFile file) {
+    public Result uploadTeamScores(@RequestBody MultipartFile file, String verificationCode, HttpServletRequest request) {
+        if (!emailTool.verifyVerificationCode(verificationCode, request))
+            return ResultTool.error(EmAllException.VERIFICATION_CODE_ERROR);
         return fileService.uploadExcel(file);
     }
 

@@ -29,6 +29,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
@@ -51,6 +52,9 @@ public class FileTool {
     @Resource
     private FileService fileService;
 
+    @Resource
+    private UriEncoder uriEncoder;
+
 
     public String uploadImg(MultipartFile file, String directoryNeed) throws AllException {
         if (file.isEmpty()) {
@@ -58,12 +62,16 @@ public class FileTool {
         }
         try {
             String fileType = FileTypeChecker.getFileTypeByStream(file.getBytes());
+            log.info("fileType: " + fileType);
             if(!Objects.equals(fileType, "jpg") && !Objects.equals(fileType, "png")){
                 throw new AllException(EmAllException.BAD_FILE_TYPE, "上传文件类型错误");
             }
         } catch (IOException e){
             throw new AllException(EmAllException.UNKNOWN_ERROR, "未知错误");
         }
+        if (file.getSize() > 1048576)
+            throw new AllException(EmAllException.BAD_FILE_TYPE, "文件大小过大");
+
         //文件存放的id名
         String fileId = UUID.randomUUID().toString();
         //源文件名
@@ -186,10 +194,11 @@ public class FileTool {
         toClient.close();
     }
 
-    public String generateCompetitionCertificate(String competitionId, String teamId) throws IOException, DocumentException {
+    public ArrayList<String> generateCompetitionCertificate(String competitionId, String teamId) throws IOException, DocumentException {
+        ArrayList<String> res = new ArrayList<>();
         TeamScoreInfoResponse teamScoreInfoResponse = teamService.getCompetitionCertificateInfo2(competitionId, teamId);
         if (teamScoreInfoResponse == null)
-            return "";
+            return res;
         String fileId = UUID.randomUUID().toString();
         String absolutePath = ChangeCharset.toUtf8(temporaryBin + File.separator + fileId + "---" + "competitionCertificate.pdf");
         File destDirectory = new File(temporaryBin);
@@ -201,7 +210,7 @@ public class FileTool {
         InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(competititonCertificatePath);
         if (resourceAsStream == null) {
             log.info("文件为空！！！！！！！！！！！！！！！！！！！！！！！！！！！！！");
-            return "";
+            return res;
         }
         PdfReader reader = new PdfReader(resourceAsStream);
 
@@ -227,7 +236,34 @@ public class FileTool {
         form.setField("heldSchoolChiNameAndCompetitionChiTime", teamScoreInfoResponse.getChiSchoolName() + "，" + teamScoreInfoResponse.getCompetitionChiTime());
         form.setField("heldSchoolEngNameAndCompetitionEngTime", teamScoreInfoResponse.getEngSchoolName() + "，" + teamScoreInfoResponse.getCompetitionEngTime());
 
-        String QRCode = fileService.generateQRCodeToFile(String.valueOf(teamScoreInfoResponse));
+        String url = "http://49.235.72.163:8088/certificateVerify/?";
+        url += "teamId=" + teamScoreInfoResponse.getTeamId() + "&";
+        url += "chiTeamName=" + teamScoreInfoResponse.getChiTeamName() + "&";
+        // url += "engTeamName=" + teamScoreInfoResponse.getEngTeamName() + "&";
+        url += "competitionId=" + teamScoreInfoResponse.getCompetitionId() + "&";
+        url += "competitionChiName=" + teamScoreInfoResponse.getCompetitionChiName() + "&";
+        // url += "competitionEngName=" + teamScoreInfoResponse.getCompetitionEngName() + "&";
+        url += "competitionChiTime=" + teamScoreInfoResponse.getCompetitionChiTime() + "&";
+        // url += "competitionEngTime=" + teamScoreInfoResponse.getCompetitionEngTime() + "&";
+        // url += "schoolImg=" + teamScoreInfoResponse.getSchoolImg() + "&";
+        url += "chiSchoolName=" + teamScoreInfoResponse.getChiSchoolName() + "&";
+        // url += "engSchoolName=" + teamScoreInfoResponse.getEngSchoolName() + "&";
+        url += "member1chiName=" + teamScoreInfoResponse.getMember1chiName() + "&";
+        // url += "member1engName=" + teamScoreInfoResponse.getMember1engName() + "&";
+        url += "member2chiName=" + teamScoreInfoResponse.getMember2chiName() + "&";
+        // url += "member2engName=" + teamScoreInfoResponse.getMember2engName() + "&";
+        url += "member3chiName=" + teamScoreInfoResponse.getMember3chiName() + "&";
+        // url += "member3engName=" + teamScoreInfoResponse.getMember3engName() + "&";
+        url += "coach1chiName=" + teamScoreInfoResponse.getCoach1chiName() + "&";
+        // url += "coach1engName=" + teamScoreInfoResponse.getCoach1engName() + "&";
+        // url += "coach2chiName=" + teamScoreInfoResponse.getCoach2chiName() + "&";
+        // url += "coach2engName=" + teamScoreInfoResponse.getCoach2engName() + "&";
+        // url += "rnk=" + teamScoreInfoResponse.getRnk() + "&";
+        url += "chiMedal=" + teamScoreInfoResponse.getChiMedal() + "&";
+        // url += "engMedal=" + teamScoreInfoResponse.getEngMedal();
+        url = uriEncoder.encodeURIComponent(url);
+        log.info(url);
+        String QRCodePath = fileService.generateQRCodeToFile(url);
         //后面需要根据前端的选择改变QRCode~~~
         //后面需要根据前端的选择改变QRCode~~~
         //后面需要根据前端的选择改变QRCode~~~
@@ -236,7 +272,7 @@ public class FileTool {
         float x = signRect.getLeft();
         float y = signRect.getBottom();
         // 读图片
-        Image image = Image.getInstance(QRCode);
+        Image image = Image.getInstance(QRCodePath);
         // 获取操作的页面
         PdfContentByte under = stamper.getOverContent(pageNo);
         // 根据域的大小缩放图片
@@ -257,7 +293,9 @@ public class FileTool {
         doc.close();
         out.close();
 
-        return absolutePath;
+        res.add(QRCodePath);
+        res.add(absolutePath);
+        return res;
     }
 
     public String generateCompetitionAdmissionTicket(CompetitionAdmissionTicketResponse competitionAdmissionTicketResponse) throws IOException, DocumentException {

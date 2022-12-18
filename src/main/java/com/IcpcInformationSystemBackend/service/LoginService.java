@@ -8,4 +8,6 @@ public interface LoginService {
     Result loginUser(LoginUserInfo loginUserInfo);
 
     Result forgetUser(String email, String emailCode);
+
+    Result modifyPassword(String email, String emailCode, String newPassword);
 }

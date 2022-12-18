@@ -21,4 +21,8 @@ public class LoginUserInfo {
     @NotNull(message="用户身份不能为空")
     @ApiModelProperty(value = "用户身份，非空", example = "1或者2或者3或者4")
     private Integer identity;
+
+    @NotBlank(message="验证码不能为空")
+    @ApiModelProperty(value = "验证码，非空", example = "asdasd")
+    private String verificationCode;
 }

@@ -5,6 +5,7 @@ import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.service.ApproveService;
 import com.IcpcInformationSystemBackend.service.CompetitionService;
 import com.IcpcInformationSystemBackend.service.TeamService;
+import com.IcpcInformationSystemBackend.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -29,6 +30,9 @@ public class StudentController {
 
     @Resource
     private TeamService teamService;
+
+    @Resource
+    private UserService userService;
 
     @PostMapping("/signUp4Competition")
     @ApiOperation(value = "选手通过提交队伍信息来报名比赛")
@@ -55,5 +59,11 @@ public class StudentController {
     @ApiOperation(value = "选手删除自己队伍信息")
     public Result deleteTeamInfo(String competitionId, String teamId) {
         return teamService.deleteTeamInfo(competitionId, teamId);
+    }
+
+    @GetMapping("/getSelfUserInfo")
+    @ApiOperation(value = "选手查看自己的个人信息")
+    public Result getSelfUserInfo() {
+        return userService.getSelfUserInfo();
     }
 }
