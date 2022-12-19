@@ -133,7 +133,7 @@ public class CompetitionServiceImpl implements CompetitionService {
         competitionDo.setCompetitionState(1);
         competitionDo.setApproveReason("");
         if (registerCompetitionInfo.getIfIcpcRegionalCompetition() == 0)
-            competitionDo.setIcpcRegionalCompetitionYear(null);
+            competitionDo.setIcpcRegionalCompetitionYear("");
         if (competitionDoMapper.updateByPrimaryKeySelective(competitionDo) == 0)
             return ResultTool.error(EmAllException.DATABASE_ERR);
         return ResultTool.success();
