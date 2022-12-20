@@ -34,6 +34,7 @@ public enum EmAllException implements CommonError{
     AUTHORIZATION_ERROR(403, "权限错误"),
     ID_CARD_FORMAT_ERROR(403, "身份证格式错误"),
     ID_CARD_HAS_REGISTERED(403, "身份证已注册"),
+    ID_CARD_ERROR(403, "身份证错误"),
 
     //比赛相关
     NO_SUCH_COMPETITION(403,"查无此赛"),

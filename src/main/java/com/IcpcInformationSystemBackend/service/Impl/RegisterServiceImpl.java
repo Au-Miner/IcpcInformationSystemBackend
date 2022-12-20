@@ -71,6 +71,8 @@ public class RegisterServiceImpl implements RegisterService {
             //     return ResultTool.error(EmAllException.EMAIL_HAVE_REGISTERED);
             if (userDoMapper.deleteByExample(userDoExample) == 0)
                 return ResultTool.error(EmAllException.DATABASE_ERR);
+            if (passwordDoMapper.deleteByPrimaryKey(registerSchoolInfo.getUserEmail()) == 0)
+                return ResultTool.error(EmAllException.DATABASE_ERR);
         }
         UserDo userDo = new UserDo();
         BeanUtils.copyProperties(registerSchoolInfo, userDo);
@@ -116,6 +118,8 @@ public class RegisterServiceImpl implements RegisterService {
             // if (userDos.get(0).getUserState() != 3)
             //     return ResultTool.error(EmAllException.EMAIL_HAVE_REGISTERED);
             if (userDoMapper.deleteByExample(userDoExample) == 0)
+                return ResultTool.error(EmAllException.DATABASE_ERR);
+            if (passwordDoMapper.deleteByPrimaryKey(reigsterUserInfo.getUserEmail()) == 0)
                 return ResultTool.error(EmAllException.DATABASE_ERR);
         }
 

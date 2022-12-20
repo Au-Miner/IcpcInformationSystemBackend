@@ -76,12 +76,14 @@ public class LoginServiceImpl implements LoginService {
 
 
     @Override
-    public Result forgetUser(String email, String emailCode) {
+    public Result forgetUser(String email, String emailCode, String idCard) {
         UserDoExample userDoExample = new UserDoExample();
         userDoExample.createCriteria().andUserEmailEqualTo(email);
         List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
         if (userDos.isEmpty())
             return ResultTool.error(EmAllException.NO_SUCH_USER);
+        if (!Objects.equals(userDos.get(0).getIdCard(), idCard))
+            return ResultTool.error(EmAllException.ID_CARD_ERROR);
         int mark = emailTool.judgeEmailCode(email, emailCode);
         switch (mark) {
             case 1:
@@ -100,12 +102,14 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public Result modifyPassword(String email, String emailCode, String newPassword) {
+    public Result modifyPassword(String email, String emailCode, String idCard, String newPassword) {
         UserDoExample userDoExample = new UserDoExample();
         userDoExample.createCriteria().andUserEmailEqualTo(email);
         List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
         if (userDos.isEmpty())
             return ResultTool.error(EmAllException.NO_SUCH_USER);
+        if (!Objects.equals(userDos.get(0).getIdCard(), idCard))
+            return ResultTool.error(EmAllException.ID_CARD_ERROR);
         int mark = emailTool.judgeEmailCode(email, emailCode);
         switch (mark) {
             case 1:

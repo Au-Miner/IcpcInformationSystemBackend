@@ -7,7 +7,7 @@ public interface LoginService {
 
     Result loginUser(LoginUserInfo loginUserInfo);
 
-    Result forgetUser(String email, String emailCode);
+    Result forgetUser(String email, String emailCode, String idCard);
 
-    Result modifyPassword(String email, String emailCode, String newPassword);
+    Result modifyPassword(String email, String emailCode, String idCard, String newPassword);
 }
