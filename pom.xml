@@ -170,7 +170,12 @@
             <artifactId>commons-pool2</artifactId>
             <version>2.6.0</version>
         </dependency>
-
+        <!--对象存储cos-->
+        <dependency>
+            <groupId>com.qcloud</groupId>
+            <artifactId>cos_api</artifactId>
+            <version>5.6.89</version>
+        </dependency>
 
 
     </dependencies>

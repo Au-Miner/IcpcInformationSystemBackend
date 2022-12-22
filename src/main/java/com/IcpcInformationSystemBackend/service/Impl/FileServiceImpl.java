@@ -86,13 +86,31 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void downloadFile(HttpServletRequest request, HttpServletResponse response, String fileAddress) {
+    public void downloadLocalFile(HttpServletRequest request, HttpServletResponse response, String fileAddress) {
         try {
             try {
-                fileTool.downloadFile(request, response, fileAddress);
+                fileTool.downloadLocalFile(request, response, fileAddress);
             } catch (IOException e) {
                 log.info(e.getMessage());
             }
+        } catch (AllException e) {
+            log.info(e.getMsg());
+        }
+    }
+
+    @Override
+    public void downloadRemoteFile(HttpServletRequest request, HttpServletResponse response, String fileAddress) {
+        try {
+            try {
+                fileTool.downloadRemoteFile(request, response, fileAddress);
+            } catch (IOException e) {
+                log.info(e.getMessage());
+            }
+        } catch (AllException e) {
+            log.info(e.getMsg());
+        }
+        try {
+            fileTool.deleteLocalFile(fileAddress);
         } catch (AllException e) {
             log.info(e.getMsg());
         }
@@ -123,7 +141,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public Result deleteFile(String filePath) {
         try {
-            fileTool.deleteFile(filePath);
+            fileTool.deleteLocalFile(filePath);
         } catch (AllException e) {
             return ResultTool.error(e.getErrCode(), e.getMsg());
         }
@@ -189,7 +207,7 @@ public class FileServiceImpl implements FileService {
             log.info(e.getMessage());
         }
         try {
-            fileTool.downloadFile(request, response, arr.get(1));
+            fileTool.downloadLocalFile(request, response, arr.get(1));
         } catch (IOException e) {
             log.info(e.getMessage());
         } catch (AllException e) {
@@ -197,8 +215,8 @@ public class FileServiceImpl implements FileService {
         }
         // log.info("competitionCertificatePath:" + competitionCertificatePath);
         try {
-            fileTool.deleteFile(arr.get(0));
-            fileTool.deleteFile(arr.get(1));
+            fileTool.deleteLocalFile(arr.get(0));
+            fileTool.deleteLocalFile(arr.get(1));
         } catch (AllException e) {
             log.info(e.getMsg());
         }
@@ -214,7 +232,7 @@ public class FileServiceImpl implements FileService {
         }
         // log.info(competitionAdmissionTicketPath);
         try {
-            fileTool.downloadFile(request, response, competitionAdmissionTicketPath);
+            fileTool.downloadLocalFile(request, response, competitionAdmissionTicketPath);
         } catch (IOException e) {
             log.info(e.getMessage());
         } catch (AllException e) {
@@ -222,7 +240,7 @@ public class FileServiceImpl implements FileService {
         }
         // log.info("competitionCertificatePath:" + competitionCertificatePath);
         try {
-            fileTool.deleteFile(competitionAdmissionTicketPath);
+            fileTool.deleteLocalFile(competitionAdmissionTicketPath);
         } catch (AllException e) {
             log.info(e.getMsg());
         }

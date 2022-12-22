@@ -33,14 +33,26 @@ public class FileController1 {
     @PostMapping("uploadSchoolImg")
     @ApiOperation(value = "上传学校校徽", notes = "仅能上传jpg/png格式图片，并返回图片地址")
     public Result uploadSchoolImg(@RequestBody MultipartFile file, String verificationCode, HttpServletRequest request) {
-        if (!emailTool.verifyVerificationCode(verificationCode, request))
-            return ResultTool.error(EmAllException.VERIFICATION_CODE_ERROR);
+//        if (!emailTool.verifyVerificationCode(verificationCode, request))
+//            return ResultTool.error(EmAllException.VERIFICATION_CODE_ERROR);
         return fileService.uploadSchoolImg(file);
     }
 
-    @GetMapping("downloadFile")
-    @ApiOperation(value = "（仅供测试使用）下载文件")
-    public void downloadFile(HttpServletRequest request, HttpServletResponse response, String filePath) {
-        fileService.downloadFile(request, response, filePath);
+    @GetMapping("downloadLocalFile")
+    @ApiOperation(value = "（仅供测试使用）下载本地文件")
+    public void downloadLocalFile(HttpServletRequest request, HttpServletResponse response, String filePath) {
+        fileService.downloadLocalFile(request, response, filePath);
+    }
+
+    @GetMapping("downloadRemoteFile")
+    @ApiOperation(value = "（仅供测试使用）下载远程文件")
+    public void downloadRemoteFile(HttpServletRequest request, HttpServletResponse response, String filePath) {
+        fileService.downloadRemoteFile(request, response, filePath);
+    }
+
+    @GetMapping("downloadSchoolImg")
+    @ApiOperation(value = "下载校徽")
+    public void downloadSchoolImg(HttpServletRequest request, HttpServletResponse response, String filePath) {
+        fileService.downloadRemoteFile(request, response, filePath);
     }
 }

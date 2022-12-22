@@ -332,7 +332,7 @@ public class ApproveServiceImpl implements ApproveService {
     public Result deleteSchoolImg(String schoolId) {
         SchoolDo schoolDo = commonTool.getSchoolDoBySchoolId(schoolId);
         try {
-            fileTool.deleteFile(schoolDo.getSchoolImg());
+            fileTool.deleteLocalFile(schoolDo.getSchoolImg());
         } catch (AllException e) {
             return ResultTool.error(EmAllException.NO_SUCH_FILE);
         }

@@ -58,6 +58,6 @@ public class CompetitionCertificateController {
         if (teamScoreDo == null || Objects.equals(teamScoreDo.getPhotos(), ""))
             return;
         String filePath = teamScoreDo.getPhotos();
-        fileService.downloadFile(request, response, filePath);
+        fileService.downloadRemoteFile(request, response, filePath);
     }
 }

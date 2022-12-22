@@ -16,4 +16,5 @@ public class SchoolInfoResponse {
     private String userEmail;
     private String clothSize;
     private Integer schoolState;
+    private String idCard;
 }

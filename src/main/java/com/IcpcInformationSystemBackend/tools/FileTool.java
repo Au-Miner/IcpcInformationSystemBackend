@@ -14,6 +14,15 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.*;
+import com.qcloud.cos.COSClient;
+import com.qcloud.cos.ClientConfig;
+import com.qcloud.cos.auth.BasicCOSCredentials;
+import com.qcloud.cos.auth.COSCredentials;
+import com.qcloud.cos.model.GetObjectRequest;
+import com.qcloud.cos.model.ObjectMetadata;
+import com.qcloud.cos.model.PutObjectRequest;
+import com.qcloud.cos.model.PutObjectResult;
+import com.qcloud.cos.region.Region;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -55,6 +64,76 @@ public class FileTool {
     @Resource
     private UriEncoder uriEncoder;
 
+    @Value("${tencent.cos.secretId}")
+    private String secretId;
+    @Value("${tencent.cos.secretKey}")
+    private String secretKey;
+    @Value("${tencent.cos.bucketName}")
+    private String bucketName;
+    @Value("${tencent.cos.region}")
+    private String region;
+
+
+    public static File MultipartFileToFile(MultipartFile multiFile) {
+        // 获取文件名
+        String fileName = multiFile.getOriginalFilename();
+        // 获取文件后缀
+        String prefix = fileName.substring(fileName.lastIndexOf("."));
+        // 若须要防止生成的临时文件重复,能够在文件名后添加随机码
+
+        try {
+            File file = File.createTempFile(fileName, prefix);
+            multiFile.transferTo(file);
+            return file;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void uploadRemoteFile(MultipartFile file, String onlineFilePath) {
+        COSCredentials cred = new BasicCOSCredentials(secretId, secretKey);
+        ClientConfig clientConfig = new ClientConfig(new Region(region));
+        COSClient cosClient = new COSClient(cred, clientConfig);
+
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, onlineFilePath, MultipartFileToFile(file));
+        PutObjectResult putObjectResult = cosClient.putObject(putObjectRequest);
+        // String etag = putObjectResult.getETag();
+        // return etag;
+    }
+
+    public File downloadRemoteFileToLocal(String localFilePath, String onlineFilePath) {
+        COSCredentials cred = new BasicCOSCredentials(secretId, secretKey);
+        ClientConfig clientConfig = new ClientConfig(new Region(region));
+        COSClient cosClient = new COSClient(cred, clientConfig);
+
+        File downFile = new File(localFilePath);
+        GetObjectRequest getObjectRequest = new GetObjectRequest(bucketName, onlineFilePath);
+        ObjectMetadata downObjectMeta = cosClient.getObject(getObjectRequest, downFile);
+        return downFile;
+    }
+
+    public void downloadRemoteFile(HttpServletRequest request,
+                                  HttpServletResponse response, String fileAddress) throws IOException, AllException {
+        File downloadFile = downloadRemoteFileToLocal(fileAddress, fileAddress);
+        if (downloadFile.exists()) {
+            response.setContentType("application/octet-stream");
+            String headerKey = "Content-Disposition";
+            String fileName = downloadFile.getName().substring(downloadFile.getName().indexOf("---") + 3);
+            String headerValue = "attachment; filename=" + new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
+            response.setHeader(headerKey, headerValue);
+            response.setContentLength((int) downloadFile.length());
+
+            InputStream myStream = new FileInputStream(fileAddress);
+            OutputStream toClient = response.getOutputStream();
+            IOUtils.copy(myStream, toClient);
+            response.flushBuffer();
+            myStream.close();
+            toClient.close();
+        } else {
+            throw new AllException(EmAllException.BAD_REQUEST, "请求文件不存在");
+        }
+    }
 
     public String uploadImg(MultipartFile file, String directoryNeed) throws AllException {
         if (file.isEmpty()) {
@@ -63,10 +142,10 @@ public class FileTool {
         try {
             String fileType = FileTypeChecker.getFileTypeByStream(file.getBytes());
             log.info("fileType: " + fileType);
-            if(!Objects.equals(fileType, "jpg") && !Objects.equals(fileType, "png")){
+            if (!Objects.equals(fileType, "jpg") && !Objects.equals(fileType, "png")) {
                 throw new AllException(EmAllException.BAD_FILE_TYPE, "上传文件类型错误");
             }
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new AllException(EmAllException.UNKNOWN_ERROR, "未知错误");
         }
         if (file.getSize() > 1048576)
@@ -77,18 +156,22 @@ public class FileTool {
         //源文件名
         String originalFileName = ChangeCharset.toUtf8(file.getOriginalFilename());
         //在指定的目录位置下存放文件
-        String absolutePath = ChangeCharset.toUtf8(directoryNeed + File.separator + fileId + "---" + originalFileName);
-        //如果存放文件的文件夹不存在，就创建文件夹
-        File destDirectory = new File(directoryNeed);
-        if (!destDirectory.exists()) {
-            destDirectory.mkdirs();
-        }
+        // String absolutePath = ChangeCharset.toUtf8(directoryNeed + File.separator + fileId + "---" + originalFileName);
+        String absolutePath = ChangeCharset.toUtf8(directoryNeed + "/" + fileId + "---" + originalFileName);
 
-        try (OutputStream os = new FileOutputStream(absolutePath)) {
-            os.write(file.getBytes());
-        } catch (IOException e) {
-            throw new AllException(EmAllException.FILE_EMPTY, "上传文件为空");
-        }
+
+        uploadRemoteFile(file, absolutePath);
+        // 如果存放文件的文件夹不存在，就创建文件夹
+        // File destDirectory = new File(directoryNeed);
+        // if (!destDirectory.exists()) {
+        //    destDirectory.mkdirs();
+        // }
+        //
+        // try (OutputStream os = new FileOutputStream(absolutePath)) {
+        //    os.write(file.getBytes());
+        // } catch (IOException e) {
+        //    throw new AllException(EmAllException.FILE_EMPTY, "上传文件为空");
+        // }
         return absolutePath;
     }
 
@@ -104,7 +187,7 @@ public class FileTool {
             else if (Objects.equals(fileType, "zip") && postfix.equals("xlsx")) ;
             else
                 throw new AllException(EmAllException.BAD_FILE_TYPE, "上传文件类型错误");
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new AllException(EmAllException.UNKNOWN_ERROR, "未知错误");
         }
         //文件存放的id名
@@ -114,6 +197,8 @@ public class FileTool {
         //在指定的目录位置下存放文件
         String absolutePath = ChangeCharset.toUtf8(directoryNeed + File.separator + fileId + "---" + originalFileName);
         //如果存放文件的文件夹不存在，就创建文件夹
+
+
         File destDirectory = new File(directoryNeed);
         if (!destDirectory.exists()) {
             destDirectory.mkdirs();
@@ -127,12 +212,8 @@ public class FileTool {
         return absolutePath;
     }
 
-    /**
-     * 构造函数，初始化excel数据
-     * @param filePath  excel路径
-     * @param sheetName sheet表名
-     */
-    public XSSFSheet getExcelSheet(String filePath, String sheetName){
+
+    public XSSFSheet getExcelSheet(String filePath, String sheetName) {
         FileInputStream fileInputStream = null;
         try {
             fileInputStream = new FileInputStream(filePath);
@@ -144,7 +225,7 @@ public class FileTool {
         }
     }
 
-    public void deleteFile(String filePath) throws AllException {
+    public void deleteLocalFile(String filePath) throws AllException {
         try {
             Files.delete(Paths.get(filePath));
         } catch (IOException e) {
@@ -152,7 +233,7 @@ public class FileTool {
         }
     }
 
-    public void downloadFile(HttpServletRequest request,
+    public void downloadLocalFile(HttpServletRequest request,
                              HttpServletResponse response, String fileAddress) throws IOException, AllException {
 
         File downloadFile = new File(fileAddress);

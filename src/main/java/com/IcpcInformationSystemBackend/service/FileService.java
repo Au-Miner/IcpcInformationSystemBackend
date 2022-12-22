@@ -17,7 +17,9 @@ public interface FileService {
 
     void generateQRCodeToResponse(HttpServletResponse servletResponse, String content);
 
-    void downloadFile(HttpServletRequest request, HttpServletResponse response, String fileAddress);
+    void downloadLocalFile(HttpServletRequest request, HttpServletResponse response, String fileAddress);
+
+    void downloadRemoteFile(HttpServletRequest request, HttpServletResponse response, String filePath);
 
     void downloadStaticFile(HttpServletRequest request, HttpServletResponse response, String fileAddress, String fileName);
 
