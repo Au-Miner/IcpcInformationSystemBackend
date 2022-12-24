@@ -66,4 +66,10 @@ public class StudentController {
     public Result getSelfUserInfo() {
         return userService.getSelfUserInfo();
     }
+
+    @GetMapping("/getSelfCompetitionInfo")
+    @ApiOperation(value = "选手获取自己参加所有比赛的信息")
+    public Result getSelfCompetitionInfo() {
+        return userService.getSelfCompetitionInfo();
+    }
 }

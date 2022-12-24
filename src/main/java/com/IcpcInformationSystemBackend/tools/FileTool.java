@@ -98,8 +98,6 @@ public class FileTool {
 
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, onlineFilePath, MultipartFileToFile(file));
         PutObjectResult putObjectResult = cosClient.putObject(putObjectRequest);
-        // String etag = putObjectResult.getETag();
-        // return etag;
     }
 
     public File downloadRemoteFileToLocal(String localFilePath, String onlineFilePath) {

@@ -33,8 +33,8 @@ public class FileController1 {
     @PostMapping("uploadSchoolImg")
     @ApiOperation(value = "上传学校校徽", notes = "仅能上传jpg/png格式图片，并返回图片地址")
     public Result uploadSchoolImg(@RequestBody MultipartFile file, String verificationCode, HttpServletRequest request) {
-//        if (!emailTool.verifyVerificationCode(verificationCode, request))
-//            return ResultTool.error(EmAllException.VERIFICATION_CODE_ERROR);
+       if (!emailTool.verifyVerificationCode(verificationCode, request))
+           return ResultTool.error(EmAllException.VERIFICATION_CODE_ERROR);
         return fileService.uploadSchoolImg(file);
     }
 

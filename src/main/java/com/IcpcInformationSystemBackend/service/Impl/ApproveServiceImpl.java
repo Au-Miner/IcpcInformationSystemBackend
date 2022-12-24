@@ -287,7 +287,8 @@ public class ApproveServiceImpl implements ApproveService {
             teamInfoResponse.setCoach1chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach1Email()));
             teamInfoResponse.setCoach2chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach2Email()));
             TeamScoreDo teamScoreDo = commonTool.getTeamScoreByCompetitionIdAndTeamId(competitionId, teamDo.getTeamId());
-            BeanUtils.copyProperties(teamScoreDo, teamInfoResponse);
+            if (teamScoreDo != null)
+                BeanUtils.copyProperties(teamScoreDo, teamInfoResponse);
             res.add(teamInfoResponse);
         }
         return ResultTool.success(res);
