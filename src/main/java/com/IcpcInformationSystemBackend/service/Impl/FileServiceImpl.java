@@ -4,6 +4,7 @@ import com.IcpcInformationSystemBackend.dao.TeamScoreDoMapper;
 import com.IcpcInformationSystemBackend.exception.AllException;
 import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.entity.TeamScoreDo;
+import com.IcpcInformationSystemBackend.model.entity.TeamScoreDoExample;
 import com.IcpcInformationSystemBackend.model.response.CompetitionAdmissionTicketResponse;
 import com.IcpcInformationSystemBackend.model.response.CompetitionEntryListResponse;
 import com.IcpcInformationSystemBackend.model.response.Result;
@@ -259,7 +260,14 @@ public class FileServiceImpl implements FileService {
             teamScoreDo.setTeamId(teamId);
             teamScoreDo.setCompetitionId(competitionId);
             teamScoreDo.setPhotos(filePath);
-            if (teamScoreDoMapper.updateByPrimaryKeySelective(teamScoreDo) == 0)
+
+            TeamScoreDoExample teamScoreDoExample = new TeamScoreDoExample();
+            teamScoreDoExample.createCriteria().andCompetitionIdEqualTo(competitionId).andTeamIdEqualTo(teamId);
+            if (teamScoreDoMapper.countByExample(teamScoreDoExample) == 0) {
+                if (teamScoreDoMapper.insertSelective(teamScoreDo) == 0)
+                    return ResultTool.error(EmAllException.DATABASE_ERR);
+            }
+            else if (teamScoreDoMapper.updateByPrimaryKeySelective(teamScoreDo) == 0)
                 return ResultTool.error(EmAllException.DATABASE_ERR);
             return ResultTool.success();
         } catch (AllException e) {
