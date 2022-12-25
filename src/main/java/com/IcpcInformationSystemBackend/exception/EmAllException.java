@@ -53,6 +53,9 @@ public enum EmAllException implements CommonError{
     USER_NOT_SIGN_UP_4_COMPETITION(403, "选手没有报名该比赛"),
     TEAM_DONT_APPROVE_SUCCESS(403, "队伍未审批通过"),
     TEAM_SCORE_DONT_RELEASE(403, "比赛结果还未发布"),
+    TEAM_USER_NUMBER_ERROR(403, "比赛人数错误"),
+    STUDENT_IDENTITY_ERROR(403, "选手身份错误"),
+    COACH_IDENTITY_ERROR(403, "教练身份错误"),
 
     //场地相关
     NO_SUCH_POSITION(403, "查无此场"),

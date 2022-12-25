@@ -15,6 +15,7 @@ import com.IcpcInformationSystemBackend.tools.AuthTool;
 import com.IcpcInformationSystemBackend.tools.EmailTool;
 import com.IcpcInformationSystemBackend.tools.ResultTool;
 import com.IcpcInformationSystemBackend.tools.CommonTool;
+import com.google.common.collect.Multiset;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.AcroFields;
 import com.itextpdf.text.pdf.PdfReader;
@@ -64,6 +65,20 @@ public class TeamServiceImpl implements TeamService {
             if (Objects.equals(registerTeamInfo.getTeamId(), ""))
                 return ResultTool.error(EmAllException.BAD_REQUEST);
         }
+
+        HashSet<String> st = new HashSet<>();
+        st.add(registerTeamInfo.getMember1Email());
+        st.add(registerTeamInfo.getMember2Email());
+        st.add(registerTeamInfo.getMember3Email());
+        st.add(registerTeamInfo.getCoach1Email());
+        int userNum = 4;
+        if (!Objects.equals(registerTeamInfo.getCoach2Email(), "")) {
+            st.add(registerTeamInfo.getCoach2Email());
+            userNum += 1;
+        }
+        if (st.size() != userNum)
+            return ResultTool.error(EmAllException.TEAM_USER_NUMBER_ERROR);
+
         if (!Objects.equals(authTool.getUserId(), registerTeamInfo.getMember1Email()) && !Objects.equals(authTool.getUserId(), registerTeamInfo.getMember2Email()) && !Objects.equals(authTool.getUserId(), registerTeamInfo.getMember3Email()))
             return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
         if (!commonTool.judgeSchoolIdIfExists(registerTeamInfo.getSchoolId()))
@@ -100,6 +115,16 @@ public class TeamServiceImpl implements TeamService {
             return ResultTool.error(EmAllException.USER_DONT_APPROVE_SUCCESS);
         if (!commonTool.judgeUserStateIfRight(registerTeamInfo.getCoach1Email()))
             return ResultTool.error(EmAllException.USER_DONT_APPROVE_SUCCESS);
+        if (!commonTool.judgeUserIdentityIfStudent(registerTeamInfo.getMember1Email()))
+            return ResultTool.error(EmAllException.STUDENT_IDENTITY_ERROR);
+        if (!commonTool.judgeUserIdentityIfStudent(registerTeamInfo.getMember2Email()))
+            return ResultTool.error(EmAllException.STUDENT_IDENTITY_ERROR);
+        if (!commonTool.judgeUserIdentityIfStudent(registerTeamInfo.getMember3Email()))
+            return ResultTool.error(EmAllException.STUDENT_IDENTITY_ERROR);
+        if (!commonTool.judgeUserIdentityIfCoach(registerTeamInfo.getCoach1Email()))
+            return ResultTool.error(EmAllException.COACH_IDENTITY_ERROR);
+        if (!Objects.equals(registerTeamInfo.getCoach2Email(), "") && !commonTool.judgeUserIdentityIfCoach(registerTeamInfo.getCoach2Email()))
+            return ResultTool.error(EmAllException.COACH_IDENTITY_ERROR);
 
         if (commonTool.judgeUserIfHasSignUp4Competition(registerTeamInfo.getMember1Email(), registerTeamInfo.getCompetitionId()))
             return ResultTool.error(EmAllException.USER_HAS_SIGN_UP_4_COMPETITION);
@@ -249,6 +274,20 @@ public class TeamServiceImpl implements TeamService {
             if (Objects.equals(registerTeamInfo.getTeamId(), ""))
                 return ResultTool.error(EmAllException.BAD_REQUEST);
         }
+
+        HashSet<String> st = new HashSet<>();
+        st.add(registerTeamInfo.getMember1Email());
+        st.add(registerTeamInfo.getMember2Email());
+        st.add(registerTeamInfo.getMember3Email());
+        st.add(registerTeamInfo.getCoach1Email());
+        int userNum = 4;
+        if (!Objects.equals(registerTeamInfo.getCoach2Email(), "")) {
+            st.add(registerTeamInfo.getCoach2Email());
+            userNum += 1;
+        }
+        if (st.size() != userNum)
+            return ResultTool.error(EmAllException.TEAM_USER_NUMBER_ERROR);
+
         if (!Objects.equals(authTool.getUserId(), registerTeamInfo.getCoach1Email()) && !Objects.equals(authTool.getUserId(), registerTeamInfo.getCoach2Email()))
             return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
         if (!commonTool.judgeSchoolIdIfExists(registerTeamInfo.getSchoolId()))
@@ -286,6 +325,16 @@ public class TeamServiceImpl implements TeamService {
             return ResultTool.error(EmAllException.USER_DONT_APPROVE_SUCCESS);
         if (!commonTool.judgeUserStateIfRight(registerTeamInfo.getCoach1Email()))
             return ResultTool.error(EmAllException.USER_DONT_APPROVE_SUCCESS);
+        if (!commonTool.judgeUserIdentityIfStudent(registerTeamInfo.getMember1Email()))
+            return ResultTool.error(EmAllException.STUDENT_IDENTITY_ERROR);
+        if (!commonTool.judgeUserIdentityIfStudent(registerTeamInfo.getMember2Email()))
+            return ResultTool.error(EmAllException.STUDENT_IDENTITY_ERROR);
+        if (!commonTool.judgeUserIdentityIfStudent(registerTeamInfo.getMember3Email()))
+            return ResultTool.error(EmAllException.STUDENT_IDENTITY_ERROR);
+        if (!commonTool.judgeUserIdentityIfCoach(registerTeamInfo.getCoach1Email()))
+            return ResultTool.error(EmAllException.COACH_IDENTITY_ERROR);
+        if (!Objects.equals(registerTeamInfo.getCoach2Email(), "") && !commonTool.judgeUserIdentityIfCoach(registerTeamInfo.getCoach2Email()))
+            return ResultTool.error(EmAllException.COACH_IDENTITY_ERROR);
 
         if (commonTool.judgeUserIfHasSignUp4Competition(registerTeamInfo.getMember1Email(), registerTeamInfo.getCompetitionId()))
             return ResultTool.error(EmAllException.USER_HAS_SIGN_UP_4_COMPETITION);

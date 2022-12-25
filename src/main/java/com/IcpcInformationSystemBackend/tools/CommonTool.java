@@ -34,6 +34,9 @@ public class CommonTool {
     @Resource
     private TeamScoreDoMapper teamScoreDoMapper;
 
+    @Resource
+    private AuthTool authTool;
+
     public SchoolDo getSchoolDoBySchoolId(String schoolId) {
         SchoolDoExample schoolDoExample = new SchoolDoExample();
         schoolDoExample.createCriteria().andSchoolIdEqualTo(schoolId);
@@ -133,6 +136,23 @@ public class CommonTool {
         PositionDoExample positionDoExample = new PositionDoExample();
         positionDoExample.createCriteria().andCompetitionIdEqualTo(competitionId);
         return positionDoMapper.selectByExample(positionDoExample);
+    }
+
+    public int getUserParticipateInIcpcRegionalCompetitionTimes(String year, String userEmail) {
+        UserCompetitionDoExample userCompetitionDoExample = new UserCompetitionDoExample();
+        userCompetitionDoExample.createCriteria().andStudentEmailEqualTo(userEmail);
+        List<UserCompetitionDo> userCompetitionDos = userCompetitionDoMapper.selectByExample(userCompetitionDoExample);
+        int times = 0;
+        for (UserCompetitionDo userCompetitionDo : userCompetitionDos) {
+            String teamId = userCompetitionDo.getTeamId();
+            String competitionId = userCompetitionDo.getCompetitionId();
+            if (judgeCompetitionIfIcpcRegionalCompetition(competitionId)) {
+                TeamDo teamDo = getTeamByCompetitionIdAndTeamId(competitionId, teamId);
+                if (teamDo.getType() != 2) //针对icpc区域赛非打星参赛次数计数
+                    times++;
+            }
+        }
+        return times;
     }
 
     public boolean judgeUserEmailIfExists(String userEmail) {
@@ -253,20 +273,20 @@ public class CommonTool {
         return competitionDos.get(0).getIfIcpcRegionalCompetition() == 1;
     }
 
-    public int getUserParticipateInIcpcRegionalCompetitionTimes(String year, String userEmail) {
-        UserCompetitionDoExample userCompetitionDoExample = new UserCompetitionDoExample();
-        userCompetitionDoExample.createCriteria().andStudentEmailEqualTo(userEmail);
-        List<UserCompetitionDo> userCompetitionDos = userCompetitionDoMapper.selectByExample(userCompetitionDoExample);
-        int times = 0;
-        for (UserCompetitionDo userCompetitionDo : userCompetitionDos) {
-            String teamId = userCompetitionDo.getTeamId();
-            String competitionId = userCompetitionDo.getCompetitionId();
-            if (judgeCompetitionIfIcpcRegionalCompetition(competitionId)) {
-                TeamDo teamDo = getTeamByCompetitionIdAndTeamId(competitionId, teamId);
-                if (teamDo.getType() != 2) //针对icpc区域赛非打星参赛次数计数
-                    times++;
-            }
-        }
-        return times;
+    public boolean judgeUserIdentityIfStudent(String userEmail) {
+        UserDoExample userDoExample = new UserDoExample();
+        userDoExample.createCriteria().andUserEmailEqualTo(userEmail);
+        List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
+        return !userDos.isEmpty() && userDos.get(0).getIdentity() == 1;
     }
+
+    public boolean judgeUserIdentityIfCoach(String userEmail) {
+        UserDoExample userDoExample = new UserDoExample();
+        userDoExample.createCriteria().andUserEmailEqualTo(userEmail);
+        List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
+        return !userDos.isEmpty() && userDos.get(0).getIdentity() == 2;
+    }
+
+
+
 }
