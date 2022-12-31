@@ -25,6 +25,7 @@ public class TeamInfoResponse {
     private Integer needTeamCertificate;
     private String competitionPosition;
     private Integer rnk;
+    private String photos;
     private String chiMedal;
     private String engMedal;
 }

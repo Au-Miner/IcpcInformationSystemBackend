@@ -53,6 +53,6 @@ public class FileController1 {
     @GetMapping("downloadSchoolImg")
     @ApiOperation(value = "下载校徽")
     public void downloadSchoolImg(HttpServletRequest request, HttpServletResponse response, String filePath) {
-        fileService.downloadRemoteFile(request, response, filePath);
+        fileService.downloadLocalFile(request, response, filePath);
     }
 }

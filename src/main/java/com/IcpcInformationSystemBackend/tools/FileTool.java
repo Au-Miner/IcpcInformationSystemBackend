@@ -158,18 +158,18 @@ public class FileTool {
         String absolutePath = ChangeCharset.toUtf8(directoryNeed + "/" + fileId + "---" + originalFileName);
 
 
-        uploadRemoteFile(file, absolutePath);
+        // uploadRemoteFile(file, absolutePath);
         // 如果存放文件的文件夹不存在，就创建文件夹
-        // File destDirectory = new File(directoryNeed);
-        // if (!destDirectory.exists()) {
-        //    destDirectory.mkdirs();
-        // }
-        //
-        // try (OutputStream os = new FileOutputStream(absolutePath)) {
-        //    os.write(file.getBytes());
-        // } catch (IOException e) {
-        //    throw new AllException(EmAllException.FILE_EMPTY, "上传文件为空");
-        // }
+        File destDirectory = new File(directoryNeed);
+        if (!destDirectory.exists()) {
+           destDirectory.mkdirs();
+        }
+
+        try (OutputStream os = new FileOutputStream(absolutePath)) {
+           os.write(file.getBytes());
+        } catch (IOException e) {
+           throw new AllException(EmAllException.FILE_EMPTY, "上传文件为空");
+        }
         return absolutePath;
     }
 
