@@ -17,6 +17,7 @@ import com.IcpcInformationSystemBackend.tools.CommonTool;
 import com.IcpcInformationSystemBackend.tools.FileTool;
 import com.IcpcInformationSystemBackend.tools.ResultTool;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.jdbc.Null;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.springframework.beans.BeanUtils;
@@ -281,7 +282,7 @@ public class CompetitionServiceImpl implements CompetitionService {
                 }
             }
             ss = ss.substring(0, pos);
-            int rnk = Integer.parseInt(ss);
+            String rnk = ss;
             String teamId = row.getCell(1).toString();
             String chiMedal = row.getCell(2).toString();
             String engMedal = row.getCell(3).toString();
@@ -329,5 +330,18 @@ public class CompetitionServiceImpl implements CompetitionService {
                 return 1;
         }
         return 2;
+    }
+
+    @Override
+    public Result clearCompetitionScore(String competitionId) {
+        TeamScoreDo teamScoreDo = new TeamScoreDo();
+        teamScoreDo.setRnk("");
+        teamScoreDo.setChiMedal("");
+        teamScoreDo.setEngMedal("");
+        TeamScoreDoExample teamScoreDoExample = new TeamScoreDoExample();
+        teamScoreDoExample.createCriteria().andCompetitionIdEqualTo(competitionId);
+        if (teamScoreDoMapper.updateByExampleSelective(teamScoreDo, teamScoreDoExample) == 0)
+            return ResultTool.error(EmAllException.DATABASE_ERR);
+        return ResultTool.success();
     }
 }

@@ -3,10 +3,10 @@ package com.IcpcInformationSystemBackend.service.Impl;
 import com.IcpcInformationSystemBackend.dao.PositionDoMapper;
 import com.IcpcInformationSystemBackend.dao.TeamDoMapper;
 import com.IcpcInformationSystemBackend.exception.EmAllException;
-import com.IcpcInformationSystemBackend.model.entity.TeamDo;
-import com.IcpcInformationSystemBackend.model.entity.PositionDoExample;
 import com.IcpcInformationSystemBackend.model.entity.PositionDo;
+import com.IcpcInformationSystemBackend.model.entity.TeamDo;
 import com.IcpcInformationSystemBackend.model.entity.TeamDoExample;
+import com.IcpcInformationSystemBackend.model.entity.PositionDoExample;
 import com.IcpcInformationSystemBackend.model.entity.myEntity.MyTeamPositionDo;
 import com.IcpcInformationSystemBackend.model.request.PositionInfo;
 import com.IcpcInformationSystemBackend.model.response.PositionResponse;
@@ -128,61 +128,84 @@ public class PositionServiceImpl implements PositionService {
         PositionDoExample positionDoExample = new PositionDoExample();
         positionDoExample.createCriteria().andCompetitionIdEqualTo(competitionId);
         List<PositionDo> positionDos = positionDoMapper.selectByExample(positionDoExample);
-        int teamSize = teamDos.size();
-        int positionCapacity = 0;
-        for (PositionDo positionDo : positionDos)
-            positionCapacity += positionDo.getCapacity();
-        if (positionCapacity < teamSize)
-            return ResultTool.error(EmAllException.POSITION_CAPACITY_NOT_ENOUGH);
-        positionCapacity = teamSize;
-        ArrayList<MyTeamPositionDo> positions = new ArrayList<>();
-        positions.ensureCapacity(teamSize);
-        ArrayList<MyTeamPositionDo> myTeamPositionDos = new ArrayList<>();
-        myTeamPositionDos.ensureCapacity(teamSize);
-        for (int i = 0; i < teamSize; i++) {
-            MyTeamPositionDo tmp = new MyTeamPositionDo();
-            tmp.setPos(i);
-            tmp.setSchoolId(teamDos.get(i).getSchoolId());
-            tmp.setTeamId(teamDos.get(i).getTeamId());
-            myTeamPositionDos.add(tmp);
-        }
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-        // log.info("positionCapacity: " + positionCapacity);
-        while (positionCapacity-- > 0) {
-            int wrongTimes = 0;
-            int pos;
-            while (true) {
-                pos = random.nextInt(positionCapacity + 1);
-                if (positions.isEmpty() || !Objects.equals(positions.get(positions.size() - 1).getSchoolId(), myTeamPositionDos.get(pos).getSchoolId()))
-                    break;
-                if (wrongTimes++ == 100) {
-                    // log.info("已经重复失败了100次！！！！！！");
-                    for (int i = 0; i < positions.size() - 1; i++) {
-                        int mark1 = 0, mark2 = 0, mark3 = 0;
-                        if (i == 0 || !Objects.equals(positions.get(i - 1).getSchoolId(), myTeamPositionDos.get(pos).getSchoolId()))
-                            mark1 = 1;
-                        if (!Objects.equals(positions.get(i + 1).getSchoolId(), myTeamPositionDos.get(pos).getSchoolId()))
-                            mark2 = 1;
-                        if (!Objects.equals(positions.get(positions.size() - 1).getSchoolId(), positions.get(i).getSchoolId()))
-                            mark3 = 1;
-                        if (mark1 + mark2 + mark3 == 3) {
-                            // log.info("和" + i + "成功交换！！！");
-                            MyTeamPositionDo tmp = positions.get(i);
-                            positions.set(i, myTeamPositionDos.get(pos));
-                            myTeamPositionDos.set(pos, tmp);
-                            break;
+
+        for (int tryTime = 1; tryTime <= 30; tryTime++) {
+            int teamSize = teamDos.size();
+            int positionCapacity = 0;
+            for (PositionDo positionDo : positionDos)
+                positionCapacity += positionDo.getCapacity();
+            if (positionCapacity < teamSize)
+                return ResultTool.error(EmAllException.POSITION_CAPACITY_NOT_ENOUGH);
+            positionCapacity = teamSize;
+            ArrayList<MyTeamPositionDo> positions = new ArrayList<>();
+            positions.ensureCapacity(teamSize);
+            ArrayList<MyTeamPositionDo> myTeamPositionDos = new ArrayList<>();
+            myTeamPositionDos.ensureCapacity(teamSize);
+            for (int i = 0; i < teamSize; i++) {
+                MyTeamPositionDo tmp = new MyTeamPositionDo();
+                tmp.setPos(i);
+                tmp.setSchoolId(teamDos.get(i).getSchoolId());
+                tmp.setTeamId(teamDos.get(i).getTeamId());
+                myTeamPositionDos.add(tmp);
+            }
+            ThreadLocalRandom random = ThreadLocalRandom.current();
+            // log.info("positionCapacity: " + positionCapacity);
+            int allWrongTimes = 0;
+            while (positionCapacity > 0) {
+                int successFind = 0;
+                int tempWrongTimes = 0;
+                int pos = random.nextInt(positionCapacity);
+                if (!positions.isEmpty() && Objects.equals(positions.get(positions.size() - 1).getSchoolId(), myTeamPositionDos.get(pos).getSchoolId())) {
+                    while (tempWrongTimes++ < 30) {
+                        for (int i = 0; i < positions.size() - 1; i++) {
+                            int mark1 = 0, mark2 = 0, mark3 = 0;
+                            if (i == 0 || !Objects.equals(positions.get(i - 1).getSchoolId(), myTeamPositionDos.get(pos).getSchoolId()))
+                                mark1 = 1;
+                            if (!Objects.equals(positions.get(i + 1).getSchoolId(), myTeamPositionDos.get(pos).getSchoolId()))
+                                mark2 = 1;
+                            if (!Objects.equals(positions.get(positions.size() - 1).getSchoolId(), positions.get(i).getSchoolId()))
+                                mark3 = 1;
+                            if (mark1 + mark2 + mark3 == 3) {
+                                // log.info("和" + i + "成功交换！！！");
+                                MyTeamPositionDo tmp = positions.get(i);
+                                positions.set(i, myTeamPositionDos.get(pos));
+                                myTeamPositionDos.set(pos, tmp);
+                                successFind = 1;
+                                break;
+                            }
                         }
                     }
+                }
+                else
+                    successFind = 1;
+                if (successFind == 1) {
+                    positionCapacity--;
+                    positions.add(myTeamPositionDos.get(pos));
+                    // String competitionPosition = findPositionName(positionDos, positions.size());
+                    // // log.info(teamDos.get(myTeamPositionDos.get(pos).getPos()).getTeamId() + "的位置id为：" + competitionPosition);
+                    // teamDos.get(myTeamPositionDos.get(pos).getPos()).setCompetitionPosition(competitionPosition);
+                    swap(myTeamPositionDos, pos, myTeamPositionDos.size() - 1);
+                    myTeamPositionDos.remove(myTeamPositionDos.size() - 1);
+                }
+                else
+                    allWrongTimes++;
+                if (allWrongTimes == 30) {
+                    // log.info("30次分配位置全部失败！！！");
                     break;
                 }
             }
-            positions.add(myTeamPositionDos.get(pos));
-            String competitionPosition = findPositionName(positionDos, positions.size());
-            // log.info(teamDos.get(myTeamPositionDos.get(pos).getPos()).getTeamId() + "的位置id为：" + competitionPosition);
-            teamDos.get(myTeamPositionDos.get(pos).getPos()).setCompetitionPosition(competitionPosition);
-            swap(myTeamPositionDos, pos, myTeamPositionDos.size() - 1);
-            myTeamPositionDos.remove(myTeamPositionDos.size() - 1);
+            if (allWrongTimes == 30 && tryTime < 30) {
+                // log.info("正在经历第" + tryTime + "次重试！！！");
+                continue;
+            }
+            for (int i = 0; i < positions.size(); i++) {
+                MyTeamPositionDo position = positions.get(i);
+                String competitionPosition = findPositionName(positionDos, i + 1);
+                teamDos.get(position.getPos()).setCompetitionPosition(competitionPosition);
+            }
+            break;
         }
+
         for (TeamDo teamDo : teamDos) {
             if (teamDoMapper.updateByPrimaryKeySelective(teamDo) == 0)
                 return ResultTool.error(EmAllException.DATABASE_ERR);

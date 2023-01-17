@@ -25,4 +25,6 @@ public interface CompetitionService {
     ArrayList<CompetitionEntryListResponse> getCompetitionEntryList2(String competitionId);
 
     Result updateTeamScores(UpdateTeamScoresInfo updateTeamScoresInfo);
+
+    Result clearCompetitionScore(String competitionId);
 }

@@ -1,6 +1,7 @@
 package com.IcpcInformationSystemBackend.service.Impl;
 
 import com.IcpcInformationSystemBackend.dao.CompetitionDoMapper;
+import com.IcpcInformationSystemBackend.dao.SchoolDoMapper;
 import com.IcpcInformationSystemBackend.dao.UserCompetitionDoMapper;
 import com.IcpcInformationSystemBackend.exception.AllException;
 import com.IcpcInformationSystemBackend.exception.EmAllException;

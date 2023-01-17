@@ -56,9 +56,12 @@ public class TeamResultEnrollController {
     @PostMapping("updateTeamScores")
     @ApiOperation(value = "上传/更新当前比赛所有队伍成绩")
     public Result updateTeamScores(@ApiParam(name = "更新当前比赛所有队伍成绩时需要提供的信息", required = true) @Validated @RequestBody UpdateTeamScoresInfo updateTeamScoresInfo) {
-        Result result = competitionService.updateTeamScores(updateTeamScoresInfo);
-        if (result.getCode() != 200)
-            return result;
+        Result result1 = competitionService.clearCompetitionScore(updateTeamScoresInfo.getCompetitionId());
+        if (result1.getCode() != 200)
+            return result1;
+        Result result2 = competitionService.updateTeamScores(updateTeamScoresInfo);
+        if (result2.getCode() != 200)
+            return result2;
         return fileService.deleteFile(updateTeamScoresInfo.getTeamScoresAddress());
     }
 

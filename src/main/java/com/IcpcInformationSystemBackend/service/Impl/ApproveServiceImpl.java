@@ -320,7 +320,7 @@ public class ApproveServiceImpl implements ApproveService {
         List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
         ArrayList<UserInfoResponse> res = new ArrayList<>();
         for (UserDo userDo : userDos) {
-            if (userDo.getUserState() == 2) {
+            if (userDo.getUserState() == 2 && userDo.getIdentity() == 1) {
                 UserInfoResponse userInfoResponse = new UserInfoResponse();
                 BeanUtils.copyProperties(userDo, userInfoResponse);
                 res.add(userInfoResponse);
