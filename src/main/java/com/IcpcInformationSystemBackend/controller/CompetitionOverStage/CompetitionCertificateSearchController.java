@@ -36,10 +36,12 @@ public class CompetitionCertificateSearchController {
     @ApiOperation(value = "判断比赛证书真伪")
     public Result judgeCompetitionCertificate(@ApiParam(name = "更新当前比赛所有队伍成绩时需要提供的信息", required = true) @Validated @RequestBody TeamScoreInfo teamScoreInfo1) {
         TeamScoreInfoResponse teamScoreInfoResponse1 = teamService.getCompetitionCertificateInfo2(teamScoreInfo1.getCompetitionId(), teamScoreInfo1.getTeamId());
+        if (teamScoreInfoResponse1 == null)
+            return ResultTool.error(EmAllException.COMPETITION_CERTIFICATE_FAKE);
         TeamScoreInfo teamScoreInfo2 = new TeamScoreInfo();
         BeanUtils.copyProperties(teamScoreInfoResponse1, teamScoreInfo2);
-        log.info(teamScoreInfo1.toString());
-        log.info(teamScoreInfo2.toString());
+        // log.info(teamScoreInfo1.toString());
+        // log.info(teamScoreInfo2.toString());
         if (Objects.equals(teamScoreInfo1.toString(), teamScoreInfo2.toString()))
             return ResultTool.success();
         return ResultTool.error(EmAllException.COMPETITION_CERTIFICATE_FAKE);
