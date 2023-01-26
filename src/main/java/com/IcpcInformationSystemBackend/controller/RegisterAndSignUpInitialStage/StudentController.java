@@ -1,11 +1,14 @@
 package com.IcpcInformationSystemBackend.controller.RegisterAndSignUpInitialStage;
 
 import com.IcpcInformationSystemBackend.model.request.RegisterTeamInfo;
+import com.IcpcInformationSystemBackend.model.response.CompetitionInfoResponse;
 import com.IcpcInformationSystemBackend.model.response.Result;
+import com.IcpcInformationSystemBackend.model.response.TeamInfoResponse;
 import com.IcpcInformationSystemBackend.service.ApproveService;
 import com.IcpcInformationSystemBackend.service.CompetitionService;
 import com.IcpcInformationSystemBackend.service.TeamService;
 import com.IcpcInformationSystemBackend.service.UserService;
+import com.IcpcInformationSystemBackend.tools.ResultTool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -14,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 
 
 @Slf4j
@@ -71,5 +75,25 @@ public class StudentController {
     @ApiOperation(value = "选手获取自己参加所有比赛的信息")
     public Result getSelfCompetitionInfo() {
         return userService.getSelfCompetitionInfo();
+    }
+
+    @GetMapping("/getAllOwnTeamInfo")
+    @ApiOperation(value = "选手获取所有自己参加的队伍信息")
+    public Result getAllOwnTeamInfo() {
+        Result res1 = userService.getSelfCompetitionInfo();
+        if (res1.getCode() != 200)
+            return res1;
+        ArrayList<CompetitionInfoResponse> competitionInfoResponses = (ArrayList<CompetitionInfoResponse>) res1.getData();
+        ArrayList<TeamInfoResponse> res = new ArrayList<>();
+        for (CompetitionInfoResponse competitionInfoResponse : competitionInfoResponses) {
+            // log.info("competitionInfoResponse:" + competitionInfoResponse.getCompetitionId());
+            Result res2 = teamService.getOwnTeamInfo(competitionInfoResponse.getCompetitionId());
+            if (res2.getCode() == 200) {
+                TeamInfoResponse tmp = ((ArrayList<TeamInfoResponse>) res2.getData()).get(0);
+                tmp.setCompetitionChiName(competitionInfoResponse.getCompetitionChiName());
+                res.add(tmp);
+            }
+        }
+        return ResultTool.success(res);
     }
 }

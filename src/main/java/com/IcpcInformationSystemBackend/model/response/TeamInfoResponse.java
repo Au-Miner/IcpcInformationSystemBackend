@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class TeamInfoResponse {
     private String competitionId;
+    private String competitionChiName;
     private String teamId;
     private String chiTeamName;
     private String engTeamName;
