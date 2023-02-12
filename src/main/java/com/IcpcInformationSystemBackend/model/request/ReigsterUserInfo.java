@@ -18,8 +18,8 @@ public class ReigsterUserInfo {
     @ApiModelProperty(value = "用户邮箱，非空", example = "123456@qq.com")
     private String userEmail;
 
-    @NotBlank(message="学校负责人身份证号不能为空")
-    @ApiModelProperty(value = "学校负责人身份证号，非空", example = "例如320301200112131234")
+
+    @ApiModelProperty(value = "用户身份证号，教练允许为空", example = "例如320301200112131234")
     private String idCard;
 
     @NotNull(message="用户身份不能为空")

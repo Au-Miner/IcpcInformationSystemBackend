@@ -83,15 +83,18 @@ public class RegisterServiceImpl implements RegisterService {
         passwordDo.setUserEmail(userDo.getUserEmail());
         passwordDo.setPasswd(registerSchoolInfo.getPasswd());
 
-        if (!idCardTool.judgeIdCardFormatIfRight(registerSchoolInfo.getIdCard()))
+        if (!Objects.equals(registerSchoolInfo.getIdCard(), "") && !idCardTool.judgeIdCardFormatIfRight(registerSchoolInfo.getIdCard()))
             return ResultTool.error(EmAllException.ID_CARD_FORMAT_ERROR);
-        if (idCardTool.judgeIdCardIfHasRegistered(registerSchoolInfo.getIdCard()))
-            return ResultTool.error(EmAllException.ID_CARD_HAS_REGISTERED);
+        // if (idCardTool.judgeIdCardIfHasRegistered(registerSchoolInfo.getIdCard()))
+        //     return ResultTool.error(EmAllException.ID_CARD_HAS_REGISTERED);
 
         if (schoolDoMapper.insertSelective(schoolDo) == 0)
             return ResultTool.error(EmAllException.DATABASE_ERR);
         if (userDoMapper.insertSelective(userDo) == 0)
             return ResultTool.error(EmAllException.DATABASE_ERR);
+        log.info(passwordDo.getPasswd());
+        log.info(passwordDo.getUserEmail());
+        log.info("11111111111111111");
         if (passwordDoMapper.insertSelective(passwordDo) == 0)
             return ResultTool.error(EmAllException.DATABASE_ERR);
         return ResultTool.success();
@@ -123,14 +126,18 @@ public class RegisterServiceImpl implements RegisterService {
                 return ResultTool.error(EmAllException.DATABASE_ERR);
         }
 
-        userDoExample.clear();
-        userDoExample.createCriteria().andSchoolIdEqualTo(reigsterUserInfo.getSchoolId());
-        if (userDoMapper.countByExample(userDoExample) == 0)
+        SchoolDoExample schoolDoExample = new SchoolDoExample();
+        schoolDoExample.createCriteria().andSchoolIdEqualTo(reigsterUserInfo.getSchoolId());
+        if (schoolDoMapper.countByExample(schoolDoExample) == 0)
             return ResultTool.error(EmAllException.SCHOOL_NOT_REGISTERED);
 
-        if (!idCardTool.judgeIdCardFormatIfRight(reigsterUserInfo.getIdCard()))
+        if (reigsterUserInfo.getIdentity() == 1 && !idCardTool.judgeIdCardFormatIfRight(reigsterUserInfo.getIdCard()))
             return ResultTool.error(EmAllException.ID_CARD_FORMAT_ERROR);
-        if (idCardTool.judgeIdCardIfHasRegistered(reigsterUserInfo.getIdCard()))
+        else if (reigsterUserInfo.getIdentity() == 2 && !Objects.equals(reigsterUserInfo.getIdCard(), "") && !idCardTool.judgeIdCardFormatIfRight(reigsterUserInfo.getIdCard()))
+            return ResultTool.error(EmAllException.ID_CARD_FORMAT_ERROR);
+        if (reigsterUserInfo.getIdentity() == 1 && idCardTool.judgeIdCardIfHasRegistered(reigsterUserInfo.getIdCard()))
+            return ResultTool.error(EmAllException.ID_CARD_HAS_REGISTERED);
+        else if (reigsterUserInfo.getIdentity() == 2 && !Objects.equals(reigsterUserInfo.getIdCard(), "") && idCardTool.judgeIdCardIfHasRegistered(reigsterUserInfo.getIdCard()))
             return ResultTool.error(EmAllException.ID_CARD_HAS_REGISTERED);
 
         UserDo userDo = new UserDo();
