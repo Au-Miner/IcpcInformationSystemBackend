@@ -121,9 +121,9 @@ public class TeamServiceImpl implements TeamService {
             return ResultTool.error(EmAllException.STUDENT_IDENTITY_ERROR);
         if (!commonTool.judgeUserIdentityIfStudent(registerTeamInfo.getMember3Email()))
             return ResultTool.error(EmAllException.STUDENT_IDENTITY_ERROR);
-        if (!commonTool.judgeUserIdentityIfCoach(registerTeamInfo.getCoach1Email()))
+        if (!commonTool.judgeUserIdentityIfCoach(registerTeamInfo.getCoach1Email()) && !commonTool.judgeUserIdentityIfChairman(registerTeamInfo.getCoach1Email()))
             return ResultTool.error(EmAllException.COACH_IDENTITY_ERROR);
-        if (!Objects.equals(registerTeamInfo.getCoach2Email(), "") && !commonTool.judgeUserIdentityIfCoach(registerTeamInfo.getCoach2Email()))
+        if (!Objects.equals(registerTeamInfo.getCoach2Email(), "") && !commonTool.judgeUserIdentityIfCoach(registerTeamInfo.getCoach2Email()) && !commonTool.judgeUserIdentityIfChairman(registerTeamInfo.getCoach2Email()))
             return ResultTool.error(EmAllException.COACH_IDENTITY_ERROR);
 
         if (commonTool.judgeUserIfHasSignUp4Competition(registerTeamInfo.getMember1Email(), registerTeamInfo.getCompetitionId()))
@@ -331,9 +331,9 @@ public class TeamServiceImpl implements TeamService {
             return ResultTool.error(EmAllException.STUDENT_IDENTITY_ERROR);
         if (!commonTool.judgeUserIdentityIfStudent(registerTeamInfo.getMember3Email()))
             return ResultTool.error(EmAllException.STUDENT_IDENTITY_ERROR);
-        if (!commonTool.judgeUserIdentityIfCoach(registerTeamInfo.getCoach1Email()))
+        if (!commonTool.judgeUserIdentityIfCoach(registerTeamInfo.getCoach1Email()) && !commonTool.judgeUserIdentityIfChairman(registerTeamInfo.getCoach1Email()))
             return ResultTool.error(EmAllException.COACH_IDENTITY_ERROR);
-        if (!Objects.equals(registerTeamInfo.getCoach2Email(), "") && !commonTool.judgeUserIdentityIfCoach(registerTeamInfo.getCoach2Email()))
+        if (!Objects.equals(registerTeamInfo.getCoach2Email(), "") && !commonTool.judgeUserIdentityIfCoach(registerTeamInfo.getCoach2Email()) && !commonTool.judgeUserIdentityIfChairman(registerTeamInfo.getCoach2Email()))
             return ResultTool.error(EmAllException.COACH_IDENTITY_ERROR);
 
         if (commonTool.judgeUserIfHasSignUp4Competition(registerTeamInfo.getMember1Email(), registerTeamInfo.getCompetitionId()))

@@ -1,9 +1,6 @@
 package com.IcpcInformationSystemBackend.service.Impl;
 
-import com.IcpcInformationSystemBackend.dao.CompetitionDoMapper;
-import com.IcpcInformationSystemBackend.dao.SchoolDoMapper;
-import com.IcpcInformationSystemBackend.dao.TeamDoMapper;
-import com.IcpcInformationSystemBackend.dao.UserDoMapper;
+import com.IcpcInformationSystemBackend.dao.*;
 import com.IcpcInformationSystemBackend.exception.AllException;
 import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.entity.*;
@@ -49,6 +46,9 @@ public class ApproveServiceImpl implements ApproveService {
 
     @Resource
     private FileTool fileTool;
+
+    @Resource
+    private TeamScoreDoMapper teamScoreDoMapper;
 
     @Override
     public Result getSchoolRegitsterInfo() {
@@ -247,6 +247,10 @@ public class ApproveServiceImpl implements ApproveService {
             teamInfoResponse.setMember3chiName(commonTool.getChiNameByUserEmail(teamDo.getMember3Email()));
             teamInfoResponse.setCoach1chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach1Email()));
             teamInfoResponse.setCoach2chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach2Email()));
+
+            TeamScoreDo teamScoreDo = commonTool.getTeamScoreByCompetitionIdAndTeamId(competitionId, teamDo.getTeamId());
+            if (teamScoreDo != null)
+                BeanUtils.copyProperties(teamScoreDo, teamInfoResponse);
             res.add(teamInfoResponse);
         }
         return ResultTool.success(res);

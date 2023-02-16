@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.IcpcInformationSystemBackend.dao.SchoolDoMapper" >
+  <resultMap id="BaseResultMap" type="com.IcpcInformationSystemBackend.model.entity.SchoolDo" >
+    <id column="school_id" property="schoolId" jdbcType="VARCHAR" />
+    <result column="chi_school_name" property="chiSchoolName" jdbcType="VARCHAR" />
+    <result column="eng_school_name" property="engSchoolName" jdbcType="VARCHAR" />
+    <result column="school_img" property="schoolImg" jdbcType="VARCHAR" />
+    <result column="school_state" property="schoolState" jdbcType="INTEGER" />
+    <result column="school_position" property="schoolPosition" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    school_id, chi_school_name, eng_school_name, school_img, school_state, school_position
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.IcpcInformationSystemBackend.model.entity.SchoolDoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from school
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from school
+    where school_id = #{schoolId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from school
+    where school_id = #{schoolId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.IcpcInformationSystemBackend.model.entity.SchoolDoExample" >
+    delete from school
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.IcpcInformationSystemBackend.model.entity.SchoolDo" >
+    insert into school (school_id, chi_school_name, eng_school_name, 
+      school_img, school_state, school_position
+      )
+    values (#{schoolId,jdbcType=VARCHAR}, #{chiSchoolName,jdbcType=VARCHAR}, #{engSchoolName,jdbcType=VARCHAR}, 
+      #{schoolImg,jdbcType=VARCHAR}, #{schoolState,jdbcType=INTEGER}, #{schoolPosition,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.IcpcInformationSystemBackend.model.entity.SchoolDo" >
+    insert into school
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="schoolId != null" >
+        school_id,
+      </if>
+      <if test="chiSchoolName != null" >
+        chi_school_name,
+      </if>
+      <if test="engSchoolName != null" >
+        eng_school_name,
+      </if>
+      <if test="schoolImg != null" >
+        school_img,
+      </if>
+      <if test="schoolState != null" >
+        school_state,
+      </if>
+      <if test="schoolPosition != null" >
+        school_position,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="schoolId != null" >
+        #{schoolId,jdbcType=VARCHAR},
+      </if>
+      <if test="chiSchoolName != null" >
+        #{chiSchoolName,jdbcType=VARCHAR},
+      </if>
+      <if test="engSchoolName != null" >
+        #{engSchoolName,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolImg != null" >
+        #{schoolImg,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolState != null" >
+        #{schoolState,jdbcType=INTEGER},
+      </if>
+      <if test="schoolPosition != null" >
+        #{schoolPosition,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.IcpcInformationSystemBackend.model.entity.SchoolDoExample" resultType="java.lang.Integer" >
+    select count(*) from school
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update school
+    <set >
+      <if test="record.schoolId != null" >
+        school_id = #{record.schoolId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.chiSchoolName != null" >
+        chi_school_name = #{record.chiSchoolName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.engSchoolName != null" >
+        eng_school_name = #{record.engSchoolName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.schoolImg != null" >
+        school_img = #{record.schoolImg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.schoolState != null" >
+        school_state = #{record.schoolState,jdbcType=INTEGER},
+      </if>
+      <if test="record.schoolPosition != null" >
+        school_position = #{record.schoolPosition,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update school
+    set school_id = #{record.schoolId,jdbcType=VARCHAR},
+      chi_school_name = #{record.chiSchoolName,jdbcType=VARCHAR},
+      eng_school_name = #{record.engSchoolName,jdbcType=VARCHAR},
+      school_img = #{record.schoolImg,jdbcType=VARCHAR},
+      school_state = #{record.schoolState,jdbcType=INTEGER},
+      school_position = #{record.schoolPosition,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.IcpcInformationSystemBackend.model.entity.SchoolDo" >
+    update school
+    <set >
+      <if test="chiSchoolName != null" >
+        chi_school_name = #{chiSchoolName,jdbcType=VARCHAR},
+      </if>
+      <if test="engSchoolName != null" >
+        eng_school_name = #{engSchoolName,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolImg != null" >
+        school_img = #{schoolImg,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolState != null" >
+        school_state = #{schoolState,jdbcType=INTEGER},
+      </if>
+      <if test="schoolPosition != null" >
+        school_position = #{schoolPosition,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where school_id = #{schoolId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.IcpcInformationSystemBackend.model.entity.SchoolDo" >
+    update school
+    set chi_school_name = #{chiSchoolName,jdbcType=VARCHAR},
+      eng_school_name = #{engSchoolName,jdbcType=VARCHAR},
+      school_img = #{schoolImg,jdbcType=VARCHAR},
+      school_state = #{schoolState,jdbcType=INTEGER},
+      school_position = #{schoolPosition,jdbcType=VARCHAR}
+    where school_id = #{schoolId,jdbcType=VARCHAR}
+  </update>
+</mapper>

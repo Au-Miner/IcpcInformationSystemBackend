@@ -38,8 +38,8 @@ public class LoginController {
     @PostMapping("/loginUser")
     @ApiOperation(value = "使用邮箱+密码+身份id+验证码，登陆当前账号")
     public Result loginUser(@ApiParam(name = "用户登录提供的信息", required = true) @Validated @RequestBody LoginUserInfo loginUserInfo, HttpServletRequest request) {
-        if (!emailTool.verifyVerificationCode(loginUserInfo.getVerificationCode(), request))
-            return ResultTool.error(EmAllException.VERIFICATION_CODE_ERROR);
+        // if (!emailTool.verifyVerificationCode(loginUserInfo.getVerificationCode(), request))
+        //     return ResultTool.error(EmAllException.VERIFICATION_CODE_ERROR);
         return loginService.loginUser(loginUserInfo);
     }
 

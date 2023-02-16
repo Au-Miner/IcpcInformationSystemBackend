@@ -287,6 +287,11 @@ public class CommonTool {
         return !userDos.isEmpty() && userDos.get(0).getIdentity() == 2;
     }
 
-
+    public boolean judgeUserIdentityIfChairman(String userEmail) {
+        UserDoExample userDoExample = new UserDoExample();
+        userDoExample.createCriteria().andUserEmailEqualTo(userEmail);
+        List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
+        return !userDos.isEmpty() && userDos.get(0).getIdentity() == 3;
+    }
 
 }

@@ -40,7 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/email/sendEmailMessage").authenticated()
                 .antMatchers("/administrator/**").hasRole("ADMINISTRATOR")
                 .antMatchers("/chairman/**").hasRole("CHAIRMAN")
-                .antMatchers("/coach/**").hasRole("COACH")
+                .antMatchers("/coach/**").hasAnyRole("COACH", "CHAIRMAN")
                 .antMatchers("/student/**").hasRole("STUDENT")
                 .antMatchers("/competitionChairman/**").hasAnyRole("ADMINISTRATOR", "CHAIRMAN", "COACH")
                 // 二阶段
