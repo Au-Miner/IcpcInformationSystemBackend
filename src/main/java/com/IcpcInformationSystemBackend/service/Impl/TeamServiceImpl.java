@@ -247,6 +247,16 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public Result deleteTeamInfo(String competitionId, String teamId) {
+        switch (commonTool.judgeTeamRegisterIfRightAboutCompetitionTime(competitionId)) {
+            case -1:
+                return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);
+            case 1:
+                return ResultTool.error(EmAllException.COMPETITION_NOT_START);
+            case 2:
+                return ResultTool.error(EmAllException.COMPETITION_HAS_END);
+            default:
+                break;
+        }
         TeamDo teamDo = commonTool.getTeamByCompetitionIdAndTeamId(competitionId, teamId);
         if (teamDo == null)
             return ResultTool.error(EmAllException.NO_SUCH_TEAM);

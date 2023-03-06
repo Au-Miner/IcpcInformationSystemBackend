@@ -1,5 +1,6 @@
 package com.IcpcInformationSystemBackend.controller.RegisterAndSignUpInitialStage;
 
+import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.request.RegisterTeamInfo;
 import com.IcpcInformationSystemBackend.model.response.CompetitionInfoResponse;
 import com.IcpcInformationSystemBackend.model.response.Result;
@@ -8,6 +9,7 @@ import com.IcpcInformationSystemBackend.service.ApproveService;
 import com.IcpcInformationSystemBackend.service.CompetitionService;
 import com.IcpcInformationSystemBackend.service.TeamService;
 import com.IcpcInformationSystemBackend.service.UserService;
+import com.IcpcInformationSystemBackend.tools.CommonTool;
 import com.IcpcInformationSystemBackend.tools.ResultTool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
