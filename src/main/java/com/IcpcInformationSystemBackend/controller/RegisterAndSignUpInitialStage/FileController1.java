@@ -31,7 +31,7 @@ public class FileController1 {
     private EmailTool emailTool;
 
     @PostMapping("uploadSchoolImg")
-    @ApiOperation(value = "上传学校校徽", notes = "仅能上传jpg/png格式图片，并返回图片地址")
+    @ApiOperation(value = "上传学校校徽", notes = "仅能上传jpg/png格式图片，并返回图片名")
     public Result uploadSchoolImg(@RequestBody MultipartFile file, String verificationCode, HttpServletRequest request) {
        if (!emailTool.verifyVerificationCode(verificationCode, request))
            return ResultTool.error(EmAllException.VERIFICATION_CODE_ERROR);

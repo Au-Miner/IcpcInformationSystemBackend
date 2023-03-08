@@ -170,7 +170,8 @@ public class FileTool {
         } catch (IOException e) {
            throw new AllException(EmAllException.FILE_EMPTY, "上传文件为空");
         }
-        return absolutePath;
+        return originalFileName;
+        // return absolutePath;
     }
 
     public String uploadExcel(MultipartFile file, String directoryNeed) throws AllException {
@@ -207,7 +208,8 @@ public class FileTool {
         } catch (IOException e) {
             throw new AllException(EmAllException.FILE_EMPTY, "上传文件为空");
         }
-        return absolutePath;
+        return originalFileName;
+        // return absolutePath;
     }
 
 

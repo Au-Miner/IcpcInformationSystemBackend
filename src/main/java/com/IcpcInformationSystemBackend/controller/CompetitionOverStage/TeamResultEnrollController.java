@@ -46,7 +46,7 @@ public class TeamResultEnrollController {
     }
 
     @PostMapping("uploadTeamScores")
-    @ApiOperation(value = "上传比赛所有队伍成绩表，以excel形式上传，并返回文件地址", notes = "仅能上传.xls和.xlsx形式文件，并返回文件地址")
+    @ApiOperation(value = "上传比赛所有队伍成绩表，以excel形式上传，并返回文件名", notes = "仅能上传.xls和.xlsx形式文件，并返回文件地址")
     public Result uploadTeamScores(@RequestBody MultipartFile file, String verificationCode, HttpServletRequest request) {
         if (!emailTool.verifyVerificationCode(verificationCode, request))
             return ResultTool.error(EmAllException.VERIFICATION_CODE_ERROR);
