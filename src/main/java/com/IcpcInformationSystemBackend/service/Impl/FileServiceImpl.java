@@ -255,7 +255,7 @@ public class FileServiceImpl implements FileService {
             return ResultTool.error(EmAllException.AUTHORIZATION_ERROR);
         String fileDirectory = teamPhotosDirectory + File.separator + competitionId + File.separator + teamId;
         try {
-            String filePath = fileTool.uploadImg(file, fileDirectory);
+            String filePath = fileDirectory + '/' + fileTool.uploadImg(file, fileDirectory);
             TeamScoreDo teamScoreDo = new TeamScoreDo();
             teamScoreDo.setTeamId(teamId);
             teamScoreDo.setCompetitionId(competitionId);

@@ -208,8 +208,8 @@ public class FileTool {
         } catch (IOException e) {
             throw new AllException(EmAllException.FILE_EMPTY, "上传文件为空");
         }
-        return fileId + "---" + originalFileName;
-        // return absolutePath;
+        // return fileId + "---" + originalFileName;
+        return absolutePath;
     }
 
 

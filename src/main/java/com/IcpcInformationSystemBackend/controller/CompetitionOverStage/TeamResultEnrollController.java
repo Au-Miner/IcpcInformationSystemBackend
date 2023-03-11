@@ -66,7 +66,7 @@ public class TeamResultEnrollController {
     }
 
     @PostMapping("uploadTeamPhoto")
-    @ApiOperation(value = "上传参赛人员合影", notes = "仅能上传jpg/png格式图片，并返回图片地址")
+    @ApiOperation(value = "上传参赛人员合影", notes = "仅能上传jpg/png格式图片")
     public Result uploadTeamPhoto(@RequestBody MultipartFile file, String competitionId, String teamId) {
         return fileService.uploadTeamPhoto(file, competitionId, teamId);
     }
