@@ -52,8 +52,14 @@ public class FileTool {
     @Value("${static.competitionCertificateDemo}")
     private String competititonCertificatePath;
 
+    @Value("${static.personalCompetitionCertificateDemo}")
+    private String personalCompetititonCertificatePath;
+
     @Value("${static.competitionAdmissionTicketDemo}")
     private String competitionAdmissionTicketPath;
+
+    @Value("${static.personalCompetitionAdmissionTicketDemo}")
+    private String personalCompetitionAdmissionTicketPath;
 
     @Value("${files.temporaryBin}")
     private String temporaryBin;
@@ -275,11 +281,12 @@ public class FileTool {
         toClient.close();
     }
 
-    public ArrayList<String> generateCompetitionCertificate(String competitionId, String teamId) throws IOException, DocumentException {
+    public ArrayList<String> generateCompetitionCertificate(String competitionId, String teamId, boolean ifTeamCompetition) throws IOException, DocumentException {
         ArrayList<String> res = new ArrayList<>();
         TeamScoreInfoResponse teamScoreInfoResponse = teamService.getCompetitionCertificateInfo2(competitionId, teamId);
-        if (teamScoreInfoResponse == null)
+        if (teamScoreInfoResponse == null) {
             return res;
+        }
         String fileId = UUID.randomUUID().toString();
         String absolutePath = ChangeCharset.toUtf8(temporaryBin + File.separator + fileId + "---" + "competitionCertificate.pdf");
         File destDirectory = new File(temporaryBin);
@@ -288,11 +295,14 @@ public class FileTool {
         }
 
         // PdfReader reader = new PdfReader(competititonCertificatePath);// 读取pdf模板（因静态文件 故不用）
-        InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(competititonCertificatePath);
-        if (resourceAsStream == null) {
-            log.info("文件为空！！！！！！！！！！！！！！！！！！！！！！！！！！！！！");
+        InputStream resourceAsStream;
+        if (ifTeamCompetition)
+            resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(competititonCertificatePath);
+        else
+            resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(personalCompetititonCertificatePath);
+        if (resourceAsStream == null)
             return res;
-        }
+
         PdfReader reader = new PdfReader(resourceAsStream);
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -302,24 +312,37 @@ public class FileTool {
         AcroFields form = stamper.getAcroFields();
         form.setField("certificateId", "编号/No." + teamScoreInfoResponse.getCompetitionId() + teamScoreInfoResponse.getTeamId());
         form.setField("schoolName", teamScoreInfoResponse.getChiSchoolName() + " / " + teamScoreInfoResponse.getEngSchoolName());
-        form.setField("membersName",
-                teamScoreInfoResponse.getMember1chiName() + " / " + teamScoreInfoResponse.getMember1engName() + "，" +
-                        teamScoreInfoResponse.getMember2chiName() + " / " + teamScoreInfoResponse.getMember2engName() + "，" +
-                        teamScoreInfoResponse.getMember3chiName() + " / " + teamScoreInfoResponse.getMember3engName()
-        );
-        String coachName = teamScoreInfoResponse.getCoach1chiName() + " / " + teamScoreInfoResponse.getCoach1engName();
-        if (!Objects.equals(teamScoreInfoResponse.getCoach2chiName(), ""))
-            coachName += "，" + teamScoreInfoResponse.getCoach2chiName() + " / " + teamScoreInfoResponse.getCoach2engName();
-        form.setField("coachName", coachName);
+        if (ifTeamCompetition) {
+            form.setField("membersName",
+                    teamScoreInfoResponse.getMember1chiName() + " / " + teamScoreInfoResponse.getMember1engName() + "，" +
+                            teamScoreInfoResponse.getMember2chiName() + " / " + teamScoreInfoResponse.getMember2engName() + "，" +
+                            teamScoreInfoResponse.getMember3chiName() + " / " + teamScoreInfoResponse.getMember3engName()
+            );
+            String coachName = teamScoreInfoResponse.getCoach1chiName() + " / " + teamScoreInfoResponse.getCoach1engName();
+            if (!Objects.equals(teamScoreInfoResponse.getCoach2chiName(), ""))
+                coachName += "，" + teamScoreInfoResponse.getCoach2chiName() + " / " + teamScoreInfoResponse.getCoach2engName();
+            form.setField("coachName", coachName);
+        }
+        else {
+            form.setField("membersName",
+                    teamScoreInfoResponse.getMember1chiName() + " / " + teamScoreInfoResponse.getMember1engName()
+            );
+        }
         form.setField("medal", teamScoreInfoResponse.getChiMedal() + " / " + teamScoreInfoResponse.getEngMedal());
         form.setField("competitionChiName", teamScoreInfoResponse.getCompetitionChiName());
         form.setField("competitionEngName", teamScoreInfoResponse.getCompetitionEngName());
         form.setField("heldSchoolChiNameAndCompetitionChiTime", teamScoreInfoResponse.getChiSchoolName() + "，" + teamScoreInfoResponse.getCompetitionChiTime());
         form.setField("heldSchoolEngNameAndCompetitionEngTime", teamScoreInfoResponse.getEngSchoolName() + "，" + teamScoreInfoResponse.getCompetitionEngTime());
 
-        String url = "http://49.235.72.163:8088/certificateVerify/?";
+        String url = "https://xcpc.shu.edu.cn/certificateVerify/?";
         url += "teamId=" + teamScoreInfoResponse.getTeamId() + "&";
-        url += "chiTeamName=" + teamScoreInfoResponse.getChiTeamName() + "&";
+        if (ifTeamCompetition) {
+            url += "chiTeamName=" + teamScoreInfoResponse.getChiTeamName() + "&";
+            url += "member2chiName=" + teamScoreInfoResponse.getMember2chiName() + "&";
+            url += "member3chiName=" + teamScoreInfoResponse.getMember3chiName() + "&";
+            url += "coach1chiName=" + teamScoreInfoResponse.getCoach1chiName() + "&";
+        }
+
         // url += "engTeamName=" + teamScoreInfoResponse.getEngTeamName() + "&";
         url += "competitionId=" + teamScoreInfoResponse.getCompetitionId() + "&";
         url += "competitionChiName=" + teamScoreInfoResponse.getCompetitionChiName() + "&";
@@ -331,19 +354,18 @@ public class FileTool {
         // url += "engSchoolName=" + teamScoreInfoResponse.getEngSchoolName() + "&";
         url += "member1chiName=" + teamScoreInfoResponse.getMember1chiName() + "&";
         // url += "member1engName=" + teamScoreInfoResponse.getMember1engName() + "&";
-        url += "member2chiName=" + teamScoreInfoResponse.getMember2chiName() + "&";
         // url += "member2engName=" + teamScoreInfoResponse.getMember2engName() + "&";
-        url += "member3chiName=" + teamScoreInfoResponse.getMember3chiName() + "&";
         // url += "member3engName=" + teamScoreInfoResponse.getMember3engName() + "&";
-        url += "coach1chiName=" + teamScoreInfoResponse.getCoach1chiName() + "&";
         // url += "coach1engName=" + teamScoreInfoResponse.getCoach1engName() + "&";
         // url += "coach2chiName=" + teamScoreInfoResponse.getCoach2chiName() + "&";
         // url += "coach2engName=" + teamScoreInfoResponse.getCoach2engName() + "&";
         // url += "rnk=" + teamScoreInfoResponse.getRnk() + "&";
-        url += "chiMedal=" + teamScoreInfoResponse.getChiMedal() + "&";
+        url += "chiMedal=" + teamScoreInfoResponse.getChiMedal();
         // url += "engMedal=" + teamScoreInfoResponse.getEngMedal();
+
+        // log.info(url);
         url = uriEncoder.encodeURIComponent(url);
-        log.info(url);
+        // log.info(url);
         String QRCodePath = fileService.generateQRCodeToFile(url);
         //后面需要根据前端的选择改变QRCode~~~
         //后面需要根据前端的选择改变QRCode~~~
@@ -379,7 +401,9 @@ public class FileTool {
         return res;
     }
 
-    public String generateCompetitionAdmissionTicket(CompetitionAdmissionTicketResponse competitionAdmissionTicketResponse) throws IOException, DocumentException {
+
+
+    public String generateCompetitionAdmissionTicket(CompetitionAdmissionTicketResponse competitionAdmissionTicketResponse, boolean ifTeamCompetition) throws IOException, DocumentException {
         if (competitionAdmissionTicketResponse == null)
             return "";
         String fileId = UUID.randomUUID().toString();
@@ -390,11 +414,13 @@ public class FileTool {
         }
 
         // PdfReader reader = new PdfReader(competititonCertificatePath);// 读取pdf模板（因静态文件 故不用）
-        InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(competitionAdmissionTicketPath);
-        if (resourceAsStream == null) {
-            log.info("文件为空！！！！！！！！！！！！！！！！！！！！！！！！！！！！！");
+        InputStream resourceAsStream;
+        if (ifTeamCompetition)
+            resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(competitionAdmissionTicketPath);
+        else
+            resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(personalCompetitionAdmissionTicketPath);
+        if (resourceAsStream == null)
             return "";
-        }
         PdfReader reader = new PdfReader(resourceAsStream);
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -402,20 +428,23 @@ public class FileTool {
         PdfStamper stamper = new PdfStamper(reader, bos);
         // PdfStamper: pdf编辑器类
         AcroFields form = stamper.getAcroFields();
+        if (ifTeamCompetition) {
+            form.setField("chiTeamName", competitionAdmissionTicketResponse.getChiTeamName());
+            form.setField("engTeamName", competitionAdmissionTicketResponse.getEngTeamName());
+            form.setField("member2chiName", competitionAdmissionTicketResponse.getMember2chiName());
+            form.setField("member3chiName", competitionAdmissionTicketResponse.getMember3chiName());
+            form.setField("coach1chiName", competitionAdmissionTicketResponse.getCoach1chiName());
+        }
         form.setField("competitionId", competitionAdmissionTicketResponse.getCompetitionId());
         form.setField("teamId", competitionAdmissionTicketResponse.getTeamId());
+        form.setField("member1chiName", competitionAdmissionTicketResponse.getMember1chiName());
         form.setField("schoolName", competitionAdmissionTicketResponse.getSchoolName());
         form.setField("competitionName", competitionAdmissionTicketResponse.getCompetitionName());
-        form.setField("chiTeamName", competitionAdmissionTicketResponse.getChiTeamName());
-        form.setField("engTeamName", competitionAdmissionTicketResponse.getEngTeamName());
-        form.setField("member1chiName", competitionAdmissionTicketResponse.getMember1chiName());
-        form.setField("member2chiName", competitionAdmissionTicketResponse.getMember2chiName());
-        form.setField("member3chiName", competitionAdmissionTicketResponse.getMember3chiName());
-        form.setField("coach1chiName", competitionAdmissionTicketResponse.getCoach1chiName());
         form.setField("competitionTime", competitionAdmissionTicketResponse.getCompetitionTime());
         form.setField("durationTime", competitionAdmissionTicketResponse.getDurationTime());
         form.setField("type", competitionAdmissionTicketResponse.getType());
         form.setField("competitionPosition", competitionAdmissionTicketResponse.getCompetitionPosition());
+
 
         stamper.setFormFlattening(true);// 如果为false那么生成的PDF文件还能编辑，一定要设为true
         stamper.close();

@@ -30,4 +30,5 @@ public class CompetitionInfoResponse {
     private String telephone;
     private int ifIcpcRegionalCompetition;
     private String IcpcRegionalCompetitionYear;
+    private Integer competitionType;
 }

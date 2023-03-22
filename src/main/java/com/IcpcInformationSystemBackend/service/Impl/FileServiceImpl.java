@@ -159,9 +159,26 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void downloadCompetitionEntryList(HttpServletResponse response, ArrayList<String> colHead, ArrayList<CompetitionEntryListResponse> competitionEntryList2) {
+    public void downloadCompetitionEntryList(HttpServletResponse response, ArrayList<CompetitionEntryListResponse> competitionEntryList2, String competitionId) {
         //创建XSSFWorkbook对象
         try {
+            ArrayList<String> colHead = new ArrayList<>();
+            if (commonTool.judgeCompetitionTypeIfTeamCompetition(competitionId)) {
+                colHead.add("队伍中文名");
+                colHead.add("队伍英文名");
+                colHead.add("学校名");
+                colHead.add("选手1姓名");
+                colHead.add("选手2姓名");
+                colHead.add("选手3姓名");
+                colHead.add("教练1姓名");
+                colHead.add("教练2姓名");
+                colHead.add("队伍身份");
+            }
+            else  {
+                colHead.add("学校名");
+                colHead.add("选手姓名");
+                colHead.add("队伍身份");
+            }
             XSSFWorkbook result = new XSSFWorkbook();
             //创建HSSFSheet对象
             XSSFSheet sheet = result.createSheet("competitionEntryList");
@@ -171,15 +188,22 @@ public class FileServiceImpl implements FileService {
                 row1.createCell(i).setCellValue(colHead.get(i));
             for (int i = 0; i < competitionEntryList2.size(); i++) {
                 XSSFRow tmp = sheet.createRow(i + 1);
-                tmp.createCell(0).setCellValue(competitionEntryList2.get(i).getChiTeamName());
-                tmp.createCell(1).setCellValue(competitionEntryList2.get(i).getEngTeamName());
-                tmp.createCell(2).setCellValue(competitionEntryList2.get(i).getSchoolId());
-                tmp.createCell(3).setCellValue(competitionEntryList2.get(i).getMember1chiName());
-                tmp.createCell(4).setCellValue(competitionEntryList2.get(i).getMember2chiName());
-                tmp.createCell(5).setCellValue(competitionEntryList2.get(i).getMember3chiName());
-                tmp.createCell(6).setCellValue(competitionEntryList2.get(i).getCoach1chiName());
-                tmp.createCell(7).setCellValue(competitionEntryList2.get(i).getCoach2chiName());
-                tmp.createCell(8).setCellValue(competitionEntryList2.get(i).getType());
+                if (commonTool.judgeCompetitionTypeIfTeamCompetition(competitionId)) {
+                    tmp.createCell(0).setCellValue(competitionEntryList2.get(i).getChiTeamName());
+                    tmp.createCell(1).setCellValue(competitionEntryList2.get(i).getEngTeamName());
+                    tmp.createCell(2).setCellValue(commonTool.getSchoolDoBySchoolId(competitionEntryList2.get(i).getSchoolId()).getChiSchoolName());
+                    tmp.createCell(3).setCellValue(competitionEntryList2.get(i).getMember1chiName());
+                    tmp.createCell(4).setCellValue(competitionEntryList2.get(i).getMember2chiName());
+                    tmp.createCell(5).setCellValue(competitionEntryList2.get(i).getMember3chiName());
+                    tmp.createCell(6).setCellValue(competitionEntryList2.get(i).getCoach1chiName());
+                    tmp.createCell(7).setCellValue(competitionEntryList2.get(i).getCoach2chiName());
+                    tmp.createCell(8).setCellValue(competitionEntryList2.get(i).getType());
+                }
+                else {
+                    tmp.createCell(0).setCellValue(commonTool.getSchoolDoBySchoolId(competitionEntryList2.get(i).getSchoolId()).getChiSchoolName());
+                    tmp.createCell(1).setCellValue(competitionEntryList2.get(i).getMember1chiName());
+                    tmp.createCell(2).setCellValue(competitionEntryList2.get(i).getType());
+                }
             }
             //输出Excel文件
             String fileName1 = new String("competitionEntryList.xlsx".getBytes("UTF-8"), "UTF-8");
@@ -203,10 +227,13 @@ public class FileServiceImpl implements FileService {
          * arr.get(1): 证书路径
          */
         try {
-            arr = fileTool.generateCompetitionCertificate(competitionId, teamId);
+            boolean ifTeamCompetition = commonTool.judgeCompetitionTypeIfTeamCompetition(competitionId);
+            arr = fileTool.generateCompetitionCertificate(competitionId, teamId, ifTeamCompetition);
         }catch (IOException | DocumentException e) {
             log.info(e.getMessage());
         }
+        if (arr.isEmpty())
+            return;
         try {
             fileTool.downloadLocalFile(request, response, arr.get(1));
         } catch (IOException e) {
@@ -227,7 +254,8 @@ public class FileServiceImpl implements FileService {
     public void downCompetitionAdmissionTicket(HttpServletRequest request, HttpServletResponse response, CompetitionAdmissionTicketResponse competitionAdmissionTicketResponse) {
         String competitionAdmissionTicketPath = "";
         try {
-            competitionAdmissionTicketPath = fileTool.generateCompetitionAdmissionTicket(competitionAdmissionTicketResponse);
+            boolean ifTeamCompetition = commonTool.judgeCompetitionTypeIfTeamCompetition(competitionAdmissionTicketResponse.getCompetitionId());
+            competitionAdmissionTicketPath = fileTool.generateCompetitionAdmissionTicket(competitionAdmissionTicketResponse, ifTeamCompetition);
         }catch (IOException | DocumentException e) {
             log.info(e.getMessage());
         }

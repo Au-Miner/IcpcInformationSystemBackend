@@ -13,6 +13,8 @@ public interface TeamService {
 
     Result coachSignUp4Competition(RegisterTeamInfo registerTeamInfo, boolean ifFirstCreateTeam);
 
+    Result studentSignUp4PersonalCompetition(String competitionId, Integer type, Integer needTeamCertificate);
+
     Result getOwnTeamInfo(String competitionId);
 
     Result deleteTeamInfo(String competitionId, String teamId);

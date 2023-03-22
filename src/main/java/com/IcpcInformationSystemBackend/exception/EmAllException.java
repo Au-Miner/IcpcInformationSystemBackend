@@ -44,6 +44,7 @@ public enum EmAllException implements CommonError{
     COMPETITION_HAS_END(403, "比赛报名已经结束"),
     COMPETITION_CERTIFICATE_FAKE(403, "比赛证书有误"),
     USER_HAS_PARTICIPATED_IN_2_REGIONAL_COMPETITIONS_THIS_YEAR(403, "选手已经参加两届icpc区域赛了"),
+    COMPETITION_TYPE_ERROR(403, "比赛类型错误"),
 
     //队伍相关
     NO_SUCH_TEAM(403, "查无此队"),

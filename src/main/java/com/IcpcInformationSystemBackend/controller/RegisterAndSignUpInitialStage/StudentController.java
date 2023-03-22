@@ -14,6 +14,7 @@ import com.IcpcInformationSystemBackend.tools.ResultTool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -41,9 +42,15 @@ public class StudentController {
     private UserService userService;
 
     @PostMapping("/signUp4Competition")
-    @ApiOperation(value = "选手通过提交队伍信息来报名比赛")
+    @ApiOperation(value = "选手通过提交队伍信息来报名团队赛！！")
     public Result signUp4Competition(@ApiParam(name = "报名比赛创建队伍需要提供的信息", required = true) @Validated @RequestBody RegisterTeamInfo registerTeamInfo) {
         return teamService.studentSignUp4Competition(registerTeamInfo, true);
+    }
+
+    @GetMapping("/signUp4PersonalCompetition")
+    @ApiOperation(value = "选手通过提交队伍信息来报名个人赛！！")
+    public Result signUp4PersonalCompetition(String competitionId, Integer type, Integer needTeamCertificate) {
+        return teamService.studentSignUp4PersonalCompetition(competitionId, type, needTeamCertificate);
     }
 
     @GetMapping("/getOwnTeamInfo")

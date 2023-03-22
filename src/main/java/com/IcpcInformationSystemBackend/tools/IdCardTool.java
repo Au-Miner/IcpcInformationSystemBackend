@@ -46,7 +46,8 @@ public class IdCardTool {
     public boolean judgeIdCardIfHasRegistered(String idCard) {
         UserDoExample userDoExample = new UserDoExample();
         userDoExample.createCriteria().andIdCardEqualTo(idCard);
-        List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
+        List<UserDo> userDos;
+        userDos = userDoMapper.selectByExample(userDoExample);
         return !userDos.isEmpty();
     }
 }

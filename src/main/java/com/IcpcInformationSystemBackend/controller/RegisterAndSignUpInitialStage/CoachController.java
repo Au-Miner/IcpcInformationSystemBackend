@@ -82,13 +82,13 @@ public class CoachController {
     }
 
     @PostMapping("/signUp4Competition")
-    @ApiOperation(value = "教练或学校负责人通过提交队伍信息来报名比赛")
+    @ApiOperation(value = "教练或学校负责人通过提交队伍信息来报名团队赛！！")
     public Result signUp4Competition(@ApiParam(name = "报名比赛创建队伍需要提供的信息", required = true) @Validated @RequestBody RegisterTeamInfo registerTeamInfo) {
         return teamService.coachSignUp4Competition(registerTeamInfo, true);
     }
 
     @PostMapping("/reSignUp4Competition")
-    @ApiOperation(value = "教练或学校负责人通过提交队伍信息来重新报名比赛（教练修改队伍信息并重新提交审核）")
+    @ApiOperation(value = "教练或学校负责人通过提交队伍信息来重新报名团队赛！！（教练修改队伍信息并重新提交审核）")
     public Result reSignUp4Competition(@ApiParam(name = "重新报名比赛创建队伍需要提供的信息", required = true) @Validated @RequestBody RegisterTeamInfo registerTeamInfo) {
         Result result = teamService.deleteTeamInfo(registerTeamInfo.getCompetitionId(), registerTeamInfo.getTeamId());
         if (result.getCode() != 200)

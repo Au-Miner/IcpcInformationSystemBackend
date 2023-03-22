@@ -66,4 +66,10 @@ public class CompetitionChairmanController {
     public Result approveTeamInfoByTeamKey(@ApiParam(name = "审核队伍时需要提供的信息", required = true) @Validated @RequestBody ApproveTeamInfo approveTeamInfo) {
         return approveService.competitionChairmanApproveTeamInfoByTeamKey(approveTeamInfo);
     }
+
+    @GetMapping("/deleteCompetition")
+    @ApiOperation(value = "比赛负责人删除比赛")
+    public Result deleteCompetition(String competitionId) {
+        return competitionService.deleteCompetition(competitionId);
+    }
 }

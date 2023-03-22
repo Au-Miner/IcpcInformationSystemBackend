@@ -5,11 +5,10 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Data
-@ApiModel(value = "判断比赛证书真伪时需要提供的信息TeamScoreInfo")
-public class TeamScoreInfo {
+@ApiModel(value = "判断比赛证书真伪时需要提供的信息TeamCompetitionTeamScoreInfo")
+public class TeamCompetitionTeamScoreInfo {
     @NotBlank(message = "队伍id错误")
     @ApiModelProperty(value = "队伍id，非空", example = "xxxxx")
     private String teamId;

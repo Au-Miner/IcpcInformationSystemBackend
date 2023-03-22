@@ -3,6 +3,7 @@ package com.IcpcInformationSystemBackend.service.Impl;
 import com.IcpcInformationSystemBackend.dao.CompetitionDoMapper;
 import com.IcpcInformationSystemBackend.dao.TeamDoMapper;
 import com.IcpcInformationSystemBackend.dao.UserCompetitionDoMapper;
+import com.IcpcInformationSystemBackend.exception.AllException;
 import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.entity.*;
 import com.IcpcInformationSystemBackend.model.request.RegisterTeamInfo;
@@ -20,6 +21,7 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.AcroFields;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,7 +67,6 @@ public class TeamServiceImpl implements TeamService {
             if (Objects.equals(registerTeamInfo.getTeamId(), ""))
                 return ResultTool.error(EmAllException.BAD_REQUEST);
         }
-
         HashSet<String> st = new HashSet<>();
         st.add(registerTeamInfo.getMember1Email());
         st.add(registerTeamInfo.getMember2Email());
@@ -87,6 +88,8 @@ public class TeamServiceImpl implements TeamService {
             return ResultTool.error(EmAllException.SCHOOL_DONT_APPROVE_SUCCESS);
         if (!commonTool.judgeCompetitionIdIfExists(registerTeamInfo.getCompetitionId()))
             return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);
+        if (!commonTool.judgeCompetitionTypeIfTeamCompetition(registerTeamInfo.getCompetitionId()))
+            return ResultTool.error(EmAllException.COMPETITION_TYPE_ERROR);
         if (!commonTool.judgeCompetitionStateIfPass(registerTeamInfo.getCompetitionId()))
             return ResultTool.error(EmAllException.COMPETITION_STATE_ERROR);
         switch (commonTool.judgeTeamRegisterIfRightAboutCompetitionTime(registerTeamInfo.getCompetitionId())) {
@@ -192,6 +195,61 @@ public class TeamServiceImpl implements TeamService {
         if (userCompetitionDoMapper.insertSelective(userCompetitionDo) == 0)
             return ResultTool.error(EmAllException.DATABASE_ERR);
         userCompetitionDo.setStudentEmail(registerTeamInfo.getMember3Email());
+        if (userCompetitionDoMapper.insertSelective(userCompetitionDo) == 0)
+            return ResultTool.error(EmAllException.DATABASE_ERR);
+        return ResultTool.success();
+    }
+
+    @Override
+    public Result studentSignUp4PersonalCompetition(String competitionId, Integer type, Integer needTeamCertificate) {
+        UserDo userDo;
+        try {
+            userDo = authTool.getUser();
+        } catch (AllException e) {
+            return ResultTool.error(EmAllException.NO_SUCH_USER);
+        }
+        if (!commonTool.judgeSchoolIdIfExists(userDo.getSchoolId()))
+            return ResultTool.error(EmAllException.NO_SUCH_SCHOOL);
+        if (!commonTool.judgeSchoolStateIfPass(userDo.getSchoolId()))
+            return ResultTool.error(EmAllException.SCHOOL_DONT_APPROVE_SUCCESS);
+        if (!commonTool.judgeCompetitionIdIfExists(competitionId))
+            return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);
+        if (commonTool.judgeCompetitionTypeIfTeamCompetition(competitionId))
+            return ResultTool.error(EmAllException.COMPETITION_TYPE_ERROR);
+        if (!commonTool.judgeCompetitionStateIfPass(competitionId))
+            return ResultTool.error(EmAllException.COMPETITION_STATE_ERROR);
+        switch (commonTool.judgeTeamRegisterIfRightAboutCompetitionTime(competitionId)) {
+            case -1:
+                return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);
+            case 1:
+                return ResultTool.error(EmAllException.COMPETITION_NOT_START);
+            case 2:
+                return ResultTool.error(EmAllException.COMPETITION_HAS_END);
+            default:
+                break;
+        }
+        if (!commonTool.judgeUserStateIfRight(authTool.getUserId()))
+            return ResultTool.error(EmAllException.USER_DONT_APPROVE_SUCCESS);
+        if (!commonTool.judgeUserIdentityIfStudent(authTool.getUserId()))
+            return ResultTool.error(EmAllException.STUDENT_IDENTITY_ERROR);
+        if (commonTool.judgeUserIfHasSignUp4Competition(authTool.getUserId(), competitionId))
+            return ResultTool.error(EmAllException.USER_HAS_SIGN_UP_4_COMPETITION);
+
+        String teamId = generateTeamId(competitionId);
+        TeamDo teamDo = new TeamDo();
+        teamDo.setMember1Email(userDo.getUserEmail());
+        teamDo.setSchoolId(userDo.getSchoolId());
+        teamDo.setType(type);
+        teamDo.setTeamState(2);
+        teamDo.setTeamId(teamId);
+        teamDo.setCompetitionId(competitionId);
+        teamDo.setNeedTeamCertificate(needTeamCertificate);
+        if (teamDoMapper.insertSelective(teamDo) == 0)
+            return ResultTool.error(EmAllException.DATABASE_ERR);
+        UserCompetitionDo userCompetitionDo = new UserCompetitionDo();
+        userCompetitionDo.setCompetitionId(competitionId);
+        userCompetitionDo.setTeamId(teamId);
+        userCompetitionDo.setStudentEmail(userDo.getUserEmail());
         if (userCompetitionDoMapper.insertSelective(userCompetitionDo) == 0)
             return ResultTool.error(EmAllException.DATABASE_ERR);
         return ResultTool.success();
@@ -306,6 +364,8 @@ public class TeamServiceImpl implements TeamService {
             return ResultTool.error(EmAllException.SCHOOL_DONT_APPROVE_SUCCESS);
         if (!commonTool.judgeCompetitionIdIfExists(registerTeamInfo.getCompetitionId()))
             return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);
+        if (!commonTool.judgeCompetitionTypeIfTeamCompetition(registerTeamInfo.getCompetitionId()))
+            return ResultTool.error(EmAllException.COMPETITION_TYPE_ERROR);
         if (!commonTool.judgeCompetitionStateIfPass(registerTeamInfo.getCompetitionId()))
             return ResultTool.error(EmAllException.COMPETITION_STATE_ERROR);
         switch (commonTool.judgeTeamRegisterIfRightAboutCompetitionTime(registerTeamInfo.getCompetitionId())) {
@@ -472,16 +532,18 @@ public class TeamServiceImpl implements TeamService {
             return null;
         TeamScoreInfoResponse res = new TeamScoreInfoResponse();
         BeanUtils.copyProperties(teamDo, res);
+        if (commonTool.judgeCompetitionTypeIfTeamCompetition(competitionId)) {
+            res.setMember2chiName(commonTool.getChiNameByUserEmail(teamDo.getMember2Email()));
+            res.setMember3chiName(commonTool.getChiNameByUserEmail(teamDo.getMember3Email()));
+            res.setCoach1chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach1Email()));
+            res.setCoach2chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach2Email()));
+            res.setMember2engName(commonTool.getEngNameByUserEmail(teamDo.getMember2Email()));
+            res.setMember3engName(commonTool.getEngNameByUserEmail(teamDo.getMember3Email()));
+            res.setCoach1engName(commonTool.getEngNameByUserEmail(teamDo.getCoach1Email()));
+            res.setCoach2engName(commonTool.getEngNameByUserEmail(teamDo.getCoach2Email()));
+        }
         res.setMember1chiName(commonTool.getChiNameByUserEmail(teamDo.getMember1Email()));
-        res.setMember2chiName(commonTool.getChiNameByUserEmail(teamDo.getMember2Email()));
-        res.setMember3chiName(commonTool.getChiNameByUserEmail(teamDo.getMember3Email()));
-        res.setCoach1chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach1Email()));
-        res.setCoach2chiName(commonTool.getChiNameByUserEmail(teamDo.getCoach2Email()));
         res.setMember1engName(commonTool.getEngNameByUserEmail(teamDo.getMember1Email()));
-        res.setMember2engName(commonTool.getEngNameByUserEmail(teamDo.getMember2Email()));
-        res.setMember3engName(commonTool.getEngNameByUserEmail(teamDo.getMember3Email()));
-        res.setCoach1engName(commonTool.getEngNameByUserEmail(teamDo.getCoach1Email()));
-        res.setCoach2engName(commonTool.getEngNameByUserEmail(teamDo.getCoach2Email()));
         CompetitionDo competitionDo = commonTool.getCompetitionDoByCompetitionId(competitionId);
         res.setCompetitionChiName(competitionDo.getCompetitionChiName());
         res.setCompetitionEngName(competitionDo.getCompetitionEngName());

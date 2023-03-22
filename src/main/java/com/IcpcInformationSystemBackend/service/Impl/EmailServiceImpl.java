@@ -32,8 +32,8 @@ public class EmailServiceImpl implements EmailService {
             email.setHostName("smtp.qq.com");   //邮箱的SMTP服务器，一般123邮箱的是smtp.123.com,qq邮箱为smtp.qq.com
             email.setCharset("utf-8");          //设置发送的字符类型
             email.addTo(emailAddress);          //设置收件人
-            email.setFrom("358671982@qq.com","ICPC上海大学");                      //发送人的邮箱为自己的，用户名可以随便填
-            email.setAuthentication("358671982@qq.com", emailAuthenticationCode);   //设置发送人到的邮箱和用户名和授权码(授权码是自己设置的)
+            email.setFrom("1840347063@qq.com","ICPC上海大学");                      //发送人的邮箱为自己的，用户名可以随便填
+            email.setAuthentication("1840347063@qq.com", emailAuthenticationCode);   //设置发送人到的邮箱和用户名和授权码(授权码是自己设置的)
             email.setSubject("验证码");            //设置发送主题
             String code = generateCode();
             email.setMsg("您的验证码为" + code + "，有效期10分钟，请及时使用，不要告诉他人");          //设置发送内容
@@ -77,8 +77,8 @@ public class EmailServiceImpl implements EmailService {
             email.setHostName("smtp.qq.com");   //邮箱的SMTP服务器，一般123邮箱的是smtp.123.com,qq邮箱为smtp.qq.com
             email.setCharset("utf-8");          //设置发送的字符类型
             email.addTo(userEmail);          //设置收件人
-            email.setFrom("358671982@qq.com","ICPC上海大学");                      //发送人的邮箱为自己的，用户名可以随便填
-            email.setAuthentication("358671982@qq.com", emailAuthenticationCode);   //设置发送人到的邮箱和用户名和授权码(授权码是自己设置的)
+            email.setFrom("1840347063@qq.com","ICPC上海大学");                      //发送人的邮箱为自己的，用户名可以随便填
+            email.setAuthentication("1840347063@qq.com", emailAuthenticationCode);   //设置发送人到的邮箱和用户名和授权码(授权码是自己设置的)
             email.setSubject("邮件通知");            //设置发送主题
             String code = generateCode();
             email.setMsg(message);          //设置发送内容

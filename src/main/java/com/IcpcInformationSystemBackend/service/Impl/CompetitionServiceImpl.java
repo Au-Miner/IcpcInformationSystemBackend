@@ -1,6 +1,7 @@
 package com.IcpcInformationSystemBackend.service.Impl;
 
 import com.IcpcInformationSystemBackend.dao.CompetitionDoMapper;
+import com.IcpcInformationSystemBackend.dao.TeamDoMapper;
 import com.IcpcInformationSystemBackend.dao.TeamScoreDoMapper;
 import com.IcpcInformationSystemBackend.dao.UserDoMapper;
 import com.IcpcInformationSystemBackend.exception.AllException;
@@ -52,6 +53,9 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Resource
     private TeamScoreDoMapper teamScoreDoMapper;
+
+    @Resource
+    private TeamDoMapper teamDoMapper;
 
     @Override
     public Result buildCompetition(RegisterCompetitionInfo registerCompetitionInfo) {
@@ -340,7 +344,33 @@ public class CompetitionServiceImpl implements CompetitionService {
         teamScoreDo.setEngMedal("");
         TeamScoreDoExample teamScoreDoExample = new TeamScoreDoExample();
         teamScoreDoExample.createCriteria().andCompetitionIdEqualTo(competitionId);
-        if (teamScoreDoMapper.updateByExampleSelective(teamScoreDo, teamScoreDoExample) == 0)
+        if (!teamScoreDoMapper.selectByExample(teamScoreDoExample).isEmpty() && teamScoreDoMapper.updateByExampleSelective(teamScoreDo, teamScoreDoExample) == 0) {
+            return ResultTool.error(EmAllException.DATABASE_ERR);
+        }
+        return ResultTool.success();
+    }
+
+    @Override
+    public Result deleteCompetition(String competitionId) {
+        if (!commonTool.judgeCompetitionIdIfExists(competitionId))
+            return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);
+        if (competitionDoMapper.deleteByPrimaryKey(competitionId) == 0)
+            return ResultTool.error(EmAllException.DATABASE_ERR);
+        TeamDoExample teamDoExample = new TeamDoExample();
+        teamDoExample.createCriteria().andCompetitionIdEqualTo(competitionId);
+        if (teamDoMapper.deleteByExample(teamDoExample) == 0)
+            return ResultTool.error(EmAllException.DATABASE_ERR);
+        TeamScoreDoExample teamScoreDoExample = new TeamScoreDoExample();
+        teamScoreDoExample.createCriteria().andCompetitionIdEqualTo(competitionId);
+        List<TeamScoreDo> teamScoreDos = teamScoreDoMapper.selectByExample(teamScoreDoExample);
+        for (TeamScoreDo teamScoreDo : teamScoreDos) {
+            if (!Objects.equals(teamScoreDo.getPhotos(), "")) {
+                try {
+                    fileTool.deleteLocalFile(teamScoreDo.getPhotos());
+                } catch (AllException ignored) {}
+            }
+        }
+        if (teamScoreDoMapper.deleteByExample(teamScoreDoExample) == 0)
             return ResultTool.error(EmAllException.DATABASE_ERR);
         return ResultTool.success();
     }

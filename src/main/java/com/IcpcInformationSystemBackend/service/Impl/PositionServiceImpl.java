@@ -4,9 +4,9 @@ import com.IcpcInformationSystemBackend.dao.PositionDoMapper;
 import com.IcpcInformationSystemBackend.dao.TeamDoMapper;
 import com.IcpcInformationSystemBackend.exception.EmAllException;
 import com.IcpcInformationSystemBackend.model.entity.PositionDo;
+import com.IcpcInformationSystemBackend.model.entity.PositionDoExample;
 import com.IcpcInformationSystemBackend.model.entity.TeamDo;
 import com.IcpcInformationSystemBackend.model.entity.TeamDoExample;
-import com.IcpcInformationSystemBackend.model.entity.PositionDoExample;
 import com.IcpcInformationSystemBackend.model.entity.myEntity.MyTeamPositionDo;
 import com.IcpcInformationSystemBackend.model.request.PositionInfo;
 import com.IcpcInformationSystemBackend.model.response.PositionResponse;
@@ -155,7 +155,10 @@ public class PositionServiceImpl implements PositionService {
                 int successFind = 0;
                 int tempWrongTimes = 0;
                 int pos = random.nextInt(positionCapacity);
-                if (!positions.isEmpty() && Objects.equals(positions.get(positions.size() - 1).getSchoolId(), myTeamPositionDos.get(pos).getSchoolId())) {
+                // 最后一次尝试只能允许相同学校邻接，因此无需比较
+                if (tryTime == 30)
+                    successFind = 1;
+                else if (!positions.isEmpty() && Objects.equals(positions.get(positions.size() - 1).getSchoolId(), myTeamPositionDos.get(pos).getSchoolId())) {
                     while (tempWrongTimes++ < 30) {
                         for (int i = 0; i < positions.size() - 1; i++) {
                             int mark1 = 0, mark2 = 0, mark3 = 0;
@@ -203,7 +206,6 @@ public class PositionServiceImpl implements PositionService {
                 String competitionPosition = findPositionName(positionDos, i + 1);
                 teamDos.get(position.getPos()).setCompetitionPosition(competitionPosition);
             }
-            break;
         }
 
         for (TeamDo teamDo : teamDos) {

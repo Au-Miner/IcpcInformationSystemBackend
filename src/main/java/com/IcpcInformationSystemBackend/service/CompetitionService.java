@@ -27,4 +27,6 @@ public interface CompetitionService {
     Result updateTeamScores(UpdateTeamScoresInfo updateTeamScoresInfo);
 
     Result clearCompetitionScore(String competitionId);
+
+    Result deleteCompetition(String competitionId);
 }

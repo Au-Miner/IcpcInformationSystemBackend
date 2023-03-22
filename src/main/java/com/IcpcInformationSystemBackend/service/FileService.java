@@ -1,7 +1,5 @@
 package com.IcpcInformationSystemBackend.service;
 
-import com.IcpcInformationSystemBackend.exception.AllException;
-import com.IcpcInformationSystemBackend.model.request.TeamScoreInfo;
 import com.IcpcInformationSystemBackend.model.response.CompetitionAdmissionTicketResponse;
 import com.IcpcInformationSystemBackend.model.response.CompetitionEntryListResponse;
 import com.IcpcInformationSystemBackend.model.response.Result;
@@ -31,7 +29,7 @@ public interface FileService {
 
     void downloadCompetitionCertificate(HttpServletRequest request, HttpServletResponse response, String competitionId, String teamId);
 
-    void downloadCompetitionEntryList(HttpServletResponse response, ArrayList<String> colHead, ArrayList<CompetitionEntryListResponse> competitionEntryList2);
+    void downloadCompetitionEntryList(HttpServletResponse response, ArrayList<CompetitionEntryListResponse> competitionEntryList2, String competitionId);
 
     void downCompetitionAdmissionTicket(HttpServletRequest request, HttpServletResponse response, CompetitionAdmissionTicketResponse competitionAdmissionTicketResponse);
 

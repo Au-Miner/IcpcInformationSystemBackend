@@ -1,7 +1,8 @@
 package com.IcpcInformationSystemBackend.controller.CompetitionOverStage;
 
 import com.IcpcInformationSystemBackend.exception.EmAllException;
-import com.IcpcInformationSystemBackend.model.request.TeamScoreInfo;
+import com.IcpcInformationSystemBackend.model.request.PersonalCompetitionTeamScoreInfo;
+import com.IcpcInformationSystemBackend.model.request.TeamCompetitionTeamScoreInfo;
 import com.IcpcInformationSystemBackend.model.response.Result;
 import com.IcpcInformationSystemBackend.model.response.TeamScoreInfoResponse;
 import com.IcpcInformationSystemBackend.service.FileService;
@@ -32,13 +33,28 @@ public class CompetitionCertificateSearchController {
     @Resource
     private TeamService teamService;
 
-    @PostMapping("judgeCompetitionCertificate")
-    @ApiOperation(value = "判断比赛证书真伪")
-    public Result judgeCompetitionCertificate(@ApiParam(name = "更新当前比赛所有队伍成绩时需要提供的信息", required = true) @Validated @RequestBody TeamScoreInfo teamScoreInfo1) {
+    @PostMapping("judgeTeamCompetitionCertificate")
+    @ApiOperation(value = "判断团队比赛证书真伪")
+    public Result judgeTeamCompetitionCertificate(@ApiParam(name = "更新当前比赛所有队伍成绩时需要提供的信息", required = true) @Validated @RequestBody TeamCompetitionTeamScoreInfo teamScoreInfo1) {
         TeamScoreInfoResponse teamScoreInfoResponse1 = teamService.getCompetitionCertificateInfo2(teamScoreInfo1.getCompetitionId(), teamScoreInfo1.getTeamId());
         if (teamScoreInfoResponse1 == null)
             return ResultTool.error(EmAllException.COMPETITION_CERTIFICATE_FAKE);
-        TeamScoreInfo teamScoreInfo2 = new TeamScoreInfo();
+        TeamCompetitionTeamScoreInfo teamScoreInfo2 = new TeamCompetitionTeamScoreInfo();
+        BeanUtils.copyProperties(teamScoreInfoResponse1, teamScoreInfo2);
+        // log.info(teamScoreInfo1.toString());
+        // log.info(teamScoreInfo2.toString());
+        if (Objects.equals(teamScoreInfo1.toString(), teamScoreInfo2.toString()))
+            return ResultTool.success();
+        return ResultTool.error(EmAllException.COMPETITION_CERTIFICATE_FAKE);
+    }
+
+    @PostMapping("judgePersonalCompetitionCertificate")
+    @ApiOperation(value = "判断个人比赛证书真伪")
+    public Result judgePersonalCompetitionCertificate(@ApiParam(name = "更新当前比赛所有队伍成绩时需要提供的信息", required = true) @Validated @RequestBody PersonalCompetitionTeamScoreInfo teamScoreInfo1) {
+        TeamScoreInfoResponse teamScoreInfoResponse1 = teamService.getCompetitionCertificateInfo2(teamScoreInfo1.getCompetitionId(), teamScoreInfo1.getTeamId());
+        if (teamScoreInfoResponse1 == null)
+            return ResultTool.error(EmAllException.COMPETITION_CERTIFICATE_FAKE);
+        PersonalCompetitionTeamScoreInfo teamScoreInfo2 = new PersonalCompetitionTeamScoreInfo();
         BeanUtils.copyProperties(teamScoreInfoResponse1, teamScoreInfo2);
         // log.info(teamScoreInfo1.toString());
         // log.info(teamScoreInfo2.toString());

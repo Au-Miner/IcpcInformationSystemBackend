@@ -58,6 +58,8 @@ public class CommonTool {
     }
 
     public String getChiNameByUserEmail(String userEmail) {
+        if (userEmail == null)
+            return "";
         if (Objects.equals(userEmail, ""))
             return "";
         UserDoExample userDoExample = new UserDoExample();
@@ -292,6 +294,13 @@ public class CommonTool {
         userDoExample.createCriteria().andUserEmailEqualTo(userEmail);
         List<UserDo> userDos = userDoMapper.selectByExample(userDoExample);
         return !userDos.isEmpty() && userDos.get(0).getIdentity() == 4;
+    }
+
+    public boolean judgeCompetitionTypeIfTeamCompetition(String competitionId) {
+        CompetitionDoExample competitionDoExample = new CompetitionDoExample();
+        competitionDoExample.createCriteria().andCompetitionIdEqualTo(competitionId);
+        List<CompetitionDo> competitionDos = competitionDoMapper.selectByExample(competitionDoExample);
+        return competitionDos.get(0).getCompetitionType() == 1;
     }
 
 }
