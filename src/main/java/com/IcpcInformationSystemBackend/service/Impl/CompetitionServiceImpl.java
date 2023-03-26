@@ -374,4 +374,13 @@ public class CompetitionServiceImpl implements CompetitionService {
             return ResultTool.error(EmAllException.DATABASE_ERR);
         return ResultTool.success();
     }
+
+    @Override
+    public Result checkTeamCompetitionType(String competitionId) {
+        if (!commonTool.judgeCompetitionIdIfExists(competitionId))
+            return ResultTool.error(EmAllException.NO_SUCH_COMPETITION);
+        if (!commonTool.judgeCompetitionTypeIfTeamCompetition(competitionId))
+            return ResultTool.error(EmAllException.COMPETITION_TYPE_ERROR);
+        return ResultTool.success();
+    }
 }

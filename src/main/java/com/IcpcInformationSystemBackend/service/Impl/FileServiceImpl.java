@@ -164,6 +164,7 @@ public class FileServiceImpl implements FileService {
         try {
             ArrayList<String> colHead = new ArrayList<>();
             if (commonTool.judgeCompetitionTypeIfTeamCompetition(competitionId)) {
+                log.info("11111111111111111111");
                 colHead.add("队伍中文名");
                 colHead.add("队伍英文名");
                 colHead.add("学校名");
@@ -175,6 +176,7 @@ public class FileServiceImpl implements FileService {
                 colHead.add("队伍身份");
             }
             else  {
+                log.info("2222222222222222222222");
                 colHead.add("学校名");
                 colHead.add("选手姓名");
                 colHead.add("队伍身份");
@@ -189,6 +191,7 @@ public class FileServiceImpl implements FileService {
             for (int i = 0; i < competitionEntryList2.size(); i++) {
                 XSSFRow tmp = sheet.createRow(i + 1);
                 if (commonTool.judgeCompetitionTypeIfTeamCompetition(competitionId)) {
+                    log.info("333333333333333333");
                     tmp.createCell(0).setCellValue(competitionEntryList2.get(i).getChiTeamName());
                     tmp.createCell(1).setCellValue(competitionEntryList2.get(i).getEngTeamName());
                     tmp.createCell(2).setCellValue(commonTool.getSchoolDoBySchoolId(competitionEntryList2.get(i).getSchoolId()).getChiSchoolName());
@@ -200,6 +203,7 @@ public class FileServiceImpl implements FileService {
                     tmp.createCell(8).setCellValue(competitionEntryList2.get(i).getType());
                 }
                 else {
+                    log.info("44444444444444444444444");
                     tmp.createCell(0).setCellValue(commonTool.getSchoolDoBySchoolId(competitionEntryList2.get(i).getSchoolId()).getChiSchoolName());
                     tmp.createCell(1).setCellValue(competitionEntryList2.get(i).getMember1chiName());
                     tmp.createCell(2).setCellValue(competitionEntryList2.get(i).getType());

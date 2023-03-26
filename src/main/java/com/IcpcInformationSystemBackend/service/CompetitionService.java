@@ -29,4 +29,6 @@ public interface CompetitionService {
     Result clearCompetitionScore(String competitionId);
 
     Result deleteCompetition(String competitionId);
+
+    Result checkTeamCompetitionType(String competitionId);
 }

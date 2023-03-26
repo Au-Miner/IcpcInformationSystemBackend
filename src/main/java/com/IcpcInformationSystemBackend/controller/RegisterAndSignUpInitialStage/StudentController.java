@@ -60,11 +60,14 @@ public class StudentController {
     }
 
     @PostMapping("/reSignUp4Competition")
-    @ApiOperation(value = "选手通过提交队伍信息来重新报名比赛（选手修改队伍信息并重新提交审核）")
+    @ApiOperation(value = "选手通过提交队伍信息来重新报名团队赛！！（选手修改队伍信息并重新提交审核）")
     public Result reSignUp4Competition(@ApiParam(name = "重新报名比赛创建队伍需要提供的信息", required = true) @Validated @RequestBody RegisterTeamInfo registerTeamInfo) {
-        Result result = teamService.deleteTeamInfo(registerTeamInfo.getCompetitionId(), registerTeamInfo.getTeamId());
-        if (result.getCode() != 200)
-            return result;
+        Result res1 = competitionService.checkTeamCompetitionType(registerTeamInfo.getCompetitionId());
+        if (res1.getCode() != 200)
+            return res1;
+        Result res2 = teamService.deleteTeamInfo(registerTeamInfo.getCompetitionId(), registerTeamInfo.getTeamId());
+        if (res2.getCode() != 200)
+            return res2;
         return teamService.studentSignUp4Competition(registerTeamInfo, false);
     }
 
